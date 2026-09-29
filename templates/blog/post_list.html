@@ -26,7 +26,8 @@
     </div>
   </header>
   {% else %}
-  {% include "includes/page_header.html" with title="Publicaciones" kicker="El estudio" lead="Textos sobre las materias que definen la operación de la empresa." %}
+  {% trans "Textos sobre las materias que definen la operación de la empresa." as blog_lead %}
+  {% include "includes/page_header.html" with title="Publicaciones" kicker="El estudio" lead=blog_lead %}
   {% endif %}
 {% endif %}
 

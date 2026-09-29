@@ -3,7 +3,8 @@
 {% block meta_description %}Respuestas a las preguntas más frecuentes sobre los servicios y planes legales de Inicia Legal.{% endblock %}
 
 {% block content %}
-{% include "includes/page_header.html" with title="Preguntas frecuentes" kicker="El estudio" lead="Si no encuentra la respuesta, puede escribirnos y le responderemos a la brevedad." %}
+{% trans "Respuestas sobre el estudio, los planes y la forma de trabajar con nosotros." as faq_lead %}
+{% include "includes/page_header.html" with title="Preguntas frecuentes" kicker="El estudio" lead=faq_lead %}
 <section class="section">
   <div class="container">
     <div class="row justify-content-center"><div class="col-lg-9">

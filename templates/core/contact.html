@@ -86,11 +86,6 @@
           <div class="share-links">{% for key, label, icon, link in site.social_links %}<a href="{{ link }}" target="_blank" rel="noopener" aria-label="{{ label }}"><i class="bi {{ icon }}"></i></a>{% endfor %}</div>
         </div>
         {% endif %}
-        <div class="card-il dark h-auto">
-          <div class="icon"><i class="bi bi-calendar-check"></i></div>
-          <h3>{% trans "Reunión inicial sin costo" %}</h3>
-          <p class="mb-0">{% trans "En la reunión inicial se revisa la situación jurídica de la empresa." %}</p>
-        </div>
       </div>
     </div>
     {% if site.map_embed_url %}

@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% block title %}Equipo · {{ site.site_name }}{% endblock %}
 {% block meta_description %}Conoce al equipo de abogados de Inicia Legal, especializados en materias civil, comercial, laboral, tributaria y penal económica.{% endblock %}
 
 {% block content %}
-{% include "includes/page_header.html" with title="Nuestro equipo" kicker="El estudio" lead="La empresa no depende de un solo abogado: cuenta con un equipo jurídico en las áreas críticas de su operación." %}
+{% trans "Abogados especializados por materia, coordinados para la empresa." as team_lead %}
+{% include "includes/page_header.html" with title="Nuestro equipo" kicker="El estudio" lead=team_lead %}
 <section class="section">
   <div class="container">
     <div class="team-roster">

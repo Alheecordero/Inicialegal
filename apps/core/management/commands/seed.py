@@ -88,6 +88,7 @@ class Command(BaseCommand):
         areas = self.seed_areas()
         sync_corporativo(stdout=self.stdout)
         sync_tecnologia_datos(stdout=self.stdout)
+        self._strip_service_cta_boilerplate()
         self.seed_services(areas)
         plans = self.seed_plan()
         self.seed_stats()
@@ -107,6 +108,26 @@ class Command(BaseCommand):
         if options["admin"]:
             self.seed_admin()
         self.stdout.write(self.style.SUCCESS("Contenido inicial cargado correctamente."))
+
+    def _strip_service_cta_boilerplate(self):
+        from apps.core.models import Service
+
+        snippets = (
+            "<p>Solicite una reunión para recibir una propuesta acorde a la empresa.</p>",
+            "<p>Solicite una reunión para recibir más información sobre este servicio.</p>",
+        )
+        updated = 0
+        for service in Service.objects.all().only("pk", "description"):
+            desc = service.description or ""
+            new_desc = desc
+            for snippet in snippets:
+                new_desc = new_desc.replace(snippet, "")
+            if new_desc != desc:
+                service.description = new_desc.strip() or desc
+                service.save(update_fields=["description"])
+                updated += 1
+        if updated:
+            self.stdout.write(f"· Servicios: párrafo CTA duplicado retirado en {updated} fichas")
 
     def _sin_negocio(self):
         """Sustituye «negocio» por «empresa» en todo el contenido publicado."""
@@ -349,7 +370,7 @@ class Command(BaseCommand):
                 name=name,
                 defaults={
                     "icon": icon, "area": areas.get(area), "short_description": short, "is_featured": featured, "order": 500 + i,
-                    "description": f"<p>{short}</p><p>Solicite una reunión para recibir una propuesta acorde a la empresa.</p>",
+                    "description": f"<p>{short}</p>",
                     "price_note": included.get(name, "Cotizar"),
                 },
             )

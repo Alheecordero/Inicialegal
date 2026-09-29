@@ -136,11 +136,7 @@ def sync_tecnologia_datos(*, stdout=None):
             slug = _service_slug(key)
             name = _service_name(text)
             short = text[:255]
-            desc = (
-                f"<p><strong>{section_title}</strong></p>"
-                f"<p>{text}</p>"
-                f"<p>Solicite una reunión para recibir una propuesta acorde a la empresa.</p>"
-            )
+            desc = f"<p><strong>{section_title}</strong></p><p>{text}</p>"
             Service.objects.update_or_create(
                 slug=slug,
                 defaults={

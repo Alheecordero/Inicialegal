@@ -111,7 +111,7 @@
     <div class="text-center mb-5 reveal">
       <div class="kicker center">{% trans "Especialidades" %}</div>
       <h2 class="section-title">{% trans "Áreas de práctica" %}</h2>
-      <p class="section-lead mx-auto">{% trans "Asesoría especializada en las materias que definen la operación de la empresa." %}</p>
+      <p class="section-lead mx-auto">{% trans "Grupos de práctica para las decisiones críticas de la operación empresarial." %}</p>
     </div>
   </div>
   <div class="area-accordion reveal" data-area-accordion>
@@ -147,7 +147,7 @@
       <div class="col-lg-{% if site.about_image %}6{% else %}8{% endif %} reveal about-copy">
         {% if site.about_kicker %}<div class="kicker">{{ site.about_kicker }}</div>{% endif %}
         <h2 class="section-title">{{ site.about_title }}</h2>
-        <div class="rich-content studio-copy">{{ site.about_text|safe }}</div>
+        <div class="rich-content studio-copy about-teaser">{{ site.about_text|striptags|truncatewords:42 }}</div>
         <a href="{% url 'core:about' %}" class="btn btn-navy mt-3">{% trans "Conozca nuestro estudio" %}</a>
       </div>
     </div>
@@ -259,7 +259,7 @@
       <div class="blog-home-copy">
         <div class="kicker">Publicaciones</div>
         <h2 class="section-title mb-2">{% trans "Publicaciones del estudio" %}</h2>
-        <p class="section-lead mb-3">Textos sobre las materias que definen la operación de la empresa.</p>
+        {% include "includes/blog_lead.html" with extra_class="mb-3" %}
         <span class="btn-link-arrow">Ver las publicaciones <i class="bi bi-arrow-right"></i></span>
       </div>
     </div>
@@ -280,9 +280,8 @@
       <div class="col-lg-4 reveal">
         <div class="kicker">{% trans "Preguntas frecuentes" %}</div>
         <h2 class="section-title">{% trans "Preguntas frecuentes" %}</h2>
-        <p class="section-lead">Si no encuentra la respuesta, puede escribirnos y le responderemos a la brevedad.</p>
-        <a href="{% url 'core:faq' %}" class="btn btn-outline-gold me-2 mb-2">{% trans "Ver todas" %}</a>
-        <a href="{% url 'core:contact' %}" class="btn btn-navy mb-2">Solicite una reunión</a>
+        <a href="{% url 'core:faq' %}" class="btn btn-outline-gold me-2 mb-2">{% trans "Ver todas las preguntas" %}</a>
+        <a href="{% url 'core:contact' %}" class="btn btn-navy mb-2">{% trans "Solicite una reunión" %}</a>
       </div>
       <div class="col-lg-8 reveal">
         <div class="accordion accordion-il" id="faqHome">

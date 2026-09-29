@@ -160,7 +160,7 @@
       <div class="col-lg-8 text-center">
         <div class="kicker center">Inversión</div>
         <h2 class="section-title">{{ plan.name }} anual</h2>
-        <p class="section-lead mx-auto mb-4">Acceso a respaldo jurídico permanente, equipo especializado y servicios legales preventivos durante todo el año.</p>
+        <p class="section-lead mx-auto mb-4">{% trans "Valor anual del plan y modalidad de pago." %}</p>
         <div class="price-box mb-4">
           {% if plan.currency == "UF" and plan.installment_amount %}
           <div class="small text-uppercase fw-bold text-gold" style="letter-spacing:.12em">{% trans "Cuota mensual" %}</div>
@@ -205,8 +205,7 @@
     <div class="row align-items-center g-4">
       <div class="col-lg-8">
         <div class="kicker" style="color:var(--il-gold-light)">Activemos el {{ plan.name }}</div>
-        <h2>El siguiente paso es confirmar la modalidad y agendar la reunión inicial de levantamiento legal.</h2>
-        <p class="mb-0">Desde la activación, la empresa cuenta con respaldo jurídico permanente, acceso a un equipo especializado y apoyo preventivo para sus decisiones durante todo el año.</p>
+        <h2>{% trans "Confirme la modalidad de pago y coordine la reunión inicial de levantamiento legal." %}</h2>
       </div>
       <div class="col-lg-4 text-lg-end">
         <a href="{% url 'core:contact' %}?plan={{ plan.slug }}" class="btn btn-gold btn-lg">{{ plan.cta_text }}</a>
