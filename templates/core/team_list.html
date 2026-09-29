@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Equipo · {{ site.site_name }}{% endblock %}
+{% block meta_description %}Conoce al equipo de abogados de Inicia Legal, especializados en materias civil, comercial, laboral, tributaria y penal económica.{% endblock %}
+
+{% block content %}
+{% include "includes/page_header.html" with title="Nuestro equipo" kicker="El estudio" lead="La empresa no depende de un solo abogado: cuenta con un equipo jurídico en las áreas críticas de su operación." %}
+<section class="section">
+  <div class="container">
+    <div class="team-roster">
+      {% for m in team %}
+      <article class="team-roster-card">
+        <div class="team-roster-photo">
+          {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% else %}<span class="avatar">{{ m.initials }}</span>{% endif %}
+        </div>
+        <div class="team-roster-body">
+          <div class="role">{{ m.role }}</div>
+          <h2 class="team-name">{{ m.name }}</h2>
+          {% if m.specialty %}<p class="specialty">{{ m.specialty }}</p>{% endif %}
+          {% if m.bio_lead %}<p class="bio">{{ m.bio_lead }}</p>{% endif %}
+          {% if m.areas.all %}
+          <ul class="team-home-areas">
+            {% for a in m.areas.all %}<li><a href="{{ a.get_absolute_url }}">{{ a.name }}</a></li>{% endfor %}
+          </ul>
+          {% endif %}
+          {% if m.education %}
+          <h3 class="team-label">Formación</h3>
+          <ul class="team-home-creds">
+            {% for line in m.education %}<li>{{ line }}</li>{% endfor %}
+          </ul>
+          {% endif %}
+          {% if m.practice_focus %}
+          <h3 class="team-label">Áreas de ejercicio</h3>
+          <p class="focus">{{ m.practice_focus }}</p>
+          {% endif %}
+          <a href="{{ m.get_absolute_url }}" class="btn-link-arrow">Ver perfil <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </article>
+      {% empty %}
+      <p class="text-center text-muted py-5 mb-0">Pronto presentaremos a nuestro equipo.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% include "includes/cta.html" %}
+{% endblock %}

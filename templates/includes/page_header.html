@@ -1,0 +1,18 @@
+{% load i18n %}
+{# Uso: {% include "includes/page_header.html" with title="..." lead="..." kicker="..." crumbs=crumbs %} #}
+<header class="page-header">
+  <div class="container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'core:home' %}">{% trans "Inicio" %}</a></li>
+        {% for c in crumbs %}
+          {% if c.url %}<li class="breadcrumb-item"><a href="{{ c.url }}">{{ c.title }}</a></li>{% else %}<li class="breadcrumb-item active" aria-current="page">{{ c.title }}</li>{% endif %}
+        {% endfor %}
+        {% if not crumbs %}<li class="breadcrumb-item active" aria-current="page">{{ title }}</li>{% endif %}
+      </ol>
+    </nav>
+    {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
+    <h1>{{ title }}</h1>
+    {% if lead %}<p class="lead mb-0">{{ lead }}</p>{% endif %}
+  </div>
+</header>

@@ -1,0 +1,16 @@
+{% load core_extras %}
+{% if site.cta_title %}
+<section class="cta-band section">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8">
+        <h2 class="mb-2">{{ site.cta_title }}</h2>
+        <p class="mb-0">{{ site.cta_text }}</p>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <a href="{{ site.cta_button_url|default:'/contacto/'|localized_href }}" class="btn btn-gold btn-lg">{{ site.cta_button_text|default:"Solicite una reunión" }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}

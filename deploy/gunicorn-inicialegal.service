@@ -1,0 +1,23 @@
+[Unit]
+Description=gunicorn daemon for Inicia Legal
+Requires=gunicorn-inicialegal.socket
+After=network.target postgresql.service
+
+[Service]
+Type=notify
+User=root
+Group=www-data
+WorkingDirectory=/var/www/inicialegal
+EnvironmentFile=/var/www/inicialegal/.env
+Environment=DJANGO_SETTINGS_MODULE=config.settings
+ExecStart=/var/www/inicialegal/venv/bin/gunicorn \
+    --access-logfile - \
+    --workers 3 \
+    --timeout 120 \
+    --bind unix:/run/gunicorn-inicialegal.sock \
+    config.wsgi:application
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

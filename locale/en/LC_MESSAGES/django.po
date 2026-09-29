@@ -1,0 +1,350 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: inicialegal\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Inicio"
+msgstr "Home"
+
+msgid "Nosotros"
+msgstr "The firm"
+
+msgid "Servicios"
+msgstr "Services"
+
+msgid "Todos los servicios"
+msgstr "All services"
+
+msgid "Áreas de práctica"
+msgstr "Practice areas"
+
+msgid "Planes"
+msgstr "Plans"
+
+msgid "Ver todos los planes"
+msgstr "View all plans"
+
+msgid "Equipo"
+msgstr "Team"
+
+msgid "Publicaciones"
+msgstr "Publications"
+
+msgid "Contacto"
+msgstr "Contact"
+
+msgid "Solicite una reunión"
+msgstr "Request a meeting"
+
+msgid "Abrir menú"
+msgstr "Open menu"
+
+msgid "Idioma"
+msgstr "Language"
+
+msgid "Sitio"
+msgstr "Site"
+
+msgid "Áreas"
+msgstr "Areas"
+
+msgid "Próximamente"
+msgstr "Coming soon"
+
+msgid "Newsletter"
+msgstr "Newsletter"
+
+msgid "Reciba las publicaciones del estudio."
+msgstr "Receive the firm's publications."
+
+msgid "Suscribirme"
+msgstr "Subscribe"
+
+msgid "Todos los derechos reservados."
+msgstr "All rights reserved."
+
+msgid "Configurar cookies"
+msgstr "Cookie settings"
+
+msgid "Los asuntos penales de personas naturales son atendidos por Abogadas Penalistas, firma relacionada."
+msgstr "Criminal matters of natural persons are handled by Abogadas Penalistas, a related firm."
+
+msgid "Escriba por WhatsApp"
+msgstr "Write on WhatsApp"
+
+msgid "¿Conversamos por WhatsApp?"
+msgstr "Shall we talk on WhatsApp?"
+
+msgid "Cerrar"
+msgstr "Close"
+
+msgid "Cerrar sin aceptar"
+msgstr "Close without accepting"
+
+msgid "Política de Privacidad"
+msgstr "Privacy Policy"
+
+msgid "Política de Cookies"
+msgstr "Cookie Policy"
+
+msgid "Aceptar"
+msgstr "Accept"
+
+msgid "Denegar"
+msgstr "Refuse"
+
+msgid "Ver preferencias"
+msgstr "View preferences"
+
+msgid "Preferencias de privacidad"
+msgstr "Privacy preferences"
+
+msgid "Elige qué categorías autorizas. Las cookies necesarias no pueden desactivarse porque permiten el funcionamiento básico del sitio."
+msgstr "Choose which categories you authorise. Necessary cookies cannot be switched off, because they allow the site to function."
+
+msgid "Necesarias"
+msgstr "Necessary"
+
+msgid "Siempre activas"
+msgstr "Always active"
+
+msgid "Seguridad del sitio, protección de formularios (CSRF) y recordar tu elección de consentimiento."
+msgstr "Site security, protection of forms (CSRF) and remembering your consent choice."
+
+msgid "Analíticas"
+msgstr "Analytics"
+
+msgid "Nos permiten medir visitas y entender cómo se usa el sitio para mejorarlo (Google Analytics, de forma agregada)."
+msgstr "They allow us to measure visits and understand how the site is used, so that we may improve it (Google Analytics, in aggregate form)."
+
+msgid "Marketing"
+msgstr "Marketing"
+
+msgid "Permiten personalizar publicidad y campañas, por ejemplo a través de Google Ads. Solo se activan si las aceptas."
+msgstr "They allow advertising and campaigns to be personalised, for example through Google Ads. They are activated only if you accept them."
+
+msgid "Guardar preferencias"
+msgstr "Save preferences"
+
+msgid "Aceptar todas"
+msgstr "Accept all"
+
+msgid "Volver"
+msgstr "Back"
+
+msgid "mensuales"
+msgstr "monthly"
+
+msgid "Cuota mensual"
+msgstr "Monthly instalment"
+
+msgid "Valor anual"
+msgstr "Annual amount"
+
+msgid "Plan anual de %(annual)s UF %(suffix)s, pagadero en %(n)s cuotas mensuales"
+msgstr "Annual plan of %(annual)s UF %(suffix)s, payable in %(n)s monthly instalments"
+
+msgid "Especialidades"
+msgstr "Specialties"
+
+msgid "Asesoría especializada en las materias que definen la operación de la empresa."
+msgstr "Specialised advice on the matters that shape the company's operations."
+
+msgid "Conozca el área"
+msgstr "See this area"
+
+msgid "Conozca nuestro estudio"
+msgstr "About the firm"
+
+msgid "Quienes te acompañan"
+msgstr "The lawyers who advise you"
+
+msgid "Ver perfil"
+msgstr "View profile"
+
+msgid "Planes de asesoría jurídica anual"
+msgstr "Annual legal advisory plans"
+
+msgid "Ver el plan"
+msgstr "View the plan"
+
+msgid "Lo que dicen nuestros clientes"
+msgstr "What our clients say"
+
+msgid "Publicaciones del estudio"
+msgstr "The firm's publications"
+
+msgid "Preguntas frecuentes"
+msgstr "Frequently asked questions"
+
+msgid "Ver todas"
+msgstr "View all"
+
+msgid "Cómo trabajamos"
+msgstr "How we work"
+
+msgid "Prevenir antes que corregir"
+msgstr "Prevent before correcting"
+
+msgid "Levantamiento legal"
+msgstr "Legal review"
+
+msgid "Reunión inicial para conocer la empresa, sus contratos, relaciones laborales y contingencias actuales."
+msgstr "An initial meeting to understand the company, its contracts, employment relationships and current contingencies."
+
+msgid "Plan de acción"
+msgstr "Action plan"
+
+msgid "Priorizamos lo urgente y diseñamos un orden legal permanente para la operación."
+msgstr "We prioritise what is urgent and design an ongoing legal order for the operation."
+
+msgid "Acompañamiento"
+msgstr "Ongoing support"
+
+msgid "Asesoría continua antes de firmar, contratar, despedir o negociar."
+msgstr "Continuous advice before signing, hiring, dismissing or negotiating."
+
+msgid "Defensa y representación"
+msgstr "Defence and representation"
+
+msgid "Si surge una contingencia, el equipo que ya conoce la empresa asume su representación."
+msgstr "If a contingency arises, the team that already knows the company assumes its representation."
+
+msgid "Solicite una reunión con Inicia Legal por formulario, correo, teléfono o WhatsApp."
+msgstr "Request a meeting with Inicia Legal by form, email, telephone or WhatsApp."
+
+msgid "La primera reunión no tiene costo. Indique la materia y le responderemos a la brevedad."
+msgstr "The first meeting is free of charge. Please indicate the matter and we will reply promptly."
+
+msgid "Formulario"
+msgstr "Form"
+
+msgid "Complete el formulario y un abogado del estudio le contactará."
+msgstr "Please complete the form and a lawyer of the firm will contact you."
+
+msgid "Nombre *"
+msgstr "Name *"
+
+msgid "Correo electrónico *"
+msgstr "Email *"
+
+msgid "Teléfono"
+msgstr "Telephone"
+
+msgid "Empresa"
+msgstr "Company"
+
+msgid "Plan de interés"
+msgstr "Plan of interest"
+
+msgid "Servicio de interés"
+msgstr "Service of interest"
+
+msgid "Asunto"
+msgstr "Subject"
+
+msgid "Mensaje *"
+msgstr "Message *"
+
+msgid "Enviar mensaje"
+msgstr "Send message"
+
+msgid "Datos de contacto"
+msgstr "Contact details"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Ubicación"
+msgstr "Location"
+
+msgid "Horario"
+msgstr "Hours"
+
+msgid "Síguenos"
+msgstr "Follow us"
+
+msgid "Reunión inicial sin costo"
+msgstr "Initial meeting free of charge"
+
+msgid "En la reunión inicial se revisa la situación jurídica de la empresa."
+msgstr "The initial meeting reviews the company's legal situation."
+
+msgid "Formación"
+msgstr "Education"
+
+msgid "Áreas de ejercicio"
+msgstr "Areas of practice"
+
+msgid "Esta página se publica en español. Aún no hay una versión en inglés revisada."
+msgstr "This page is published in Spanish. A reviewed English version is not yet available."
+
+msgid "Este artículo se publica en español. Aún no hay una versión en inglés revisada."
+msgstr "This article is published in Spanish. A reviewed English version is not yet available."
+
+msgid "Los artículos se publican en español. Aún no hay una versión en inglés revisada."
+msgstr "The articles are published in Spanish. A reviewed English version is not yet available."
+
+msgid "La empresa no depende de un solo abogado. Cuenta con un equipo."
+msgstr "The company does not depend on a single lawyer. It has a team."
+
+msgid "Un plan anual para las principales necesidades jurídicas de la empresa"
+msgstr "An annual plan for the company's principal legal needs"
+
+msgid "El valor del plan está en prevenir antes de corregir"
+msgstr "The value of the plan is in preventing before correcting"
+
+msgid "He leído y acepto la Política de Privacidad."
+msgstr "I have read and accept the Privacy Policy."
+
+msgid "Debe aceptar la Política de Privacidad para enviar su solicitud."
+msgstr "You must accept the Privacy Policy in order to send your request."
+
+msgid "Nombre y apellido"
+msgstr "First and last name"
+
+msgid "Nombre de su empresa (opcional)"
+msgstr "Name of your company (optional)"
+
+msgid "¿En qué podemos ayudarle?"
+msgstr "How may we help you?"
+
+msgid "Describa brevemente su situación o consulta."
+msgstr "Please describe your situation or query briefly."
+
+msgid "Seleccione un plan (opcional)"
+msgstr "Select a plan (optional)"
+
+msgid "Seleccione un servicio (opcional)"
+msgstr "Select a service (optional)"
+
+msgid "Correo electrónico"
+msgstr "Email"
+
+msgid "Su correo electrónico"
+msgstr "Your email address"
+
+msgid "Debe aceptar el tratamiento de su correo para suscribirse."
+msgstr "You must accept the processing of your email address in order to subscribe."
+
+msgid "Recibimos su mensaje. Le contactaremos a la brevedad."
+msgstr "We have received your message. We will contact you shortly."
+
+msgid "Revise los campos marcados e inténtelo nuevamente."
+msgstr "Please review the marked fields and try again."
+
+msgid "Gracias. Su suscripción quedó registrada."
+msgstr "Thank you. Your subscription has been registered."
+
+msgid "Ese correo ya estaba suscrito. Gracias."
+msgstr "That email address was already subscribed. Thank you."
+
+msgid "Ese correo ya estaba suscrito."
+msgstr "That email address was already subscribed."
+
+msgid "Ingrese un correo válido."
+msgstr "Please enter a valid email address."

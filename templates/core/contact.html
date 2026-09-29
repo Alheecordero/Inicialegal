@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load i18n core_extras %}
+{% block title %}{% trans "Contacto" %} · {{ site.site_name }}{% endblock %}
+{% block meta_description %}{% trans "Solicite una reunión con Inicia Legal por formulario, correo, teléfono o WhatsApp." %}{% endblock %}
+
+{% block content %}
+{% trans "Solicite una reunión" as page_title %}
+{% trans "Contacto" as page_kicker %}
+{% trans "La primera reunión no tiene costo. Indique la materia y le responderemos a la brevedad." as page_lead %}
+{% include "includes/page_header.html" with title=page_title kicker=page_kicker lead=page_lead %}
+
+<section class="section">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-7">
+        <div class="contact-card">
+          <h2 class="h3 mb-1">{% trans "Formulario" %}</h2>
+          <p class="text-muted mb-4">{% trans "Complete el formulario y un abogado del estudio le contactará." %}</p>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <input type="hidden" name="source" value="formulario-contacto">
+            {{ form.website }}
+            {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.name.id_for_label }}">{% trans "Nombre *" %}</label>
+                {{ form.name }}{% if form.name.errors %}<div class="invalid-feedback">{{ form.name.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.email.id_for_label }}">{% trans "Correo electrónico *" %}</label>
+                {{ form.email }}{% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.phone.id_for_label }}">{% trans "Teléfono" %}</label>
+                {{ form.phone }}{% if form.phone.errors %}<div class="invalid-feedback">{{ form.phone.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.company.id_for_label }}">{% trans "Empresa" %}</label>
+                {{ form.company }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.plan.id_for_label }}">{% trans "Plan de interés" %}</label>
+                {{ form.plan }}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ form.service.id_for_label }}">{% trans "Servicio de interés" %}</label>
+                {{ form.service }}
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="{{ form.subject.id_for_label }}">{% trans "Asunto" %}</label>
+                {{ form.subject }}
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="{{ form.message.id_for_label }}">{% trans "Mensaje *" %}</label>
+                {{ form.message }}{% if form.message.errors %}<div class="invalid-feedback">{{ form.message.errors.0 }}</div>{% endif %}
+              </div>
+              <div class="col-12">
+                <div class="consent-box">
+                  <div class="form-check">
+                    {{ form.accept }}
+                    <label class="form-check-label" for="{{ form.accept.id_for_label }}">{% if LANGUAGE_CODE == "en" %}I have read and accept the <a href="{{ site.privacy_policy_url|default:'/p/privacidad/'|localized_href }}">Privacy Policy</a> of Inicia Legal 360 – Estudio Jurídico SpA, the controller of my data.{% else %}He leído y acepto la <a href="{{ site.privacy_policy_url|default:'/p/privacidad/' }}">Política de Privacidad</a> de Inicia Legal 360 – Estudio Jurídico SpA, responsable del tratamiento de mis datos.{% endif %}</label>
+                  </div>
+                  <p class="consent-note">{% if LANGUAGE_CODE == "en" %}They will be used solely to manage and reply to my request and to arrange the initial meeting. I may exercise my rights of access, rectification, erasure, objection, portability and blocking, and withdraw my consent, by writing to <a href="mailto:contacto@inicialegal.cl">contacto@inicialegal.cl</a>.{% else %}Estos se usarán exclusivamente para gestionar y responder mi solicitud y coordinar la reunión inicial. Puedo ejercer mis derechos de acceso, rectificación, supresión, oposición, portabilidad y bloqueo, y retirar mi consentimiento, escribiendo a <a href="mailto:contacto@inicialegal.cl">contacto@inicialegal.cl</a>.{% endif %}</p>
+                  {% if form.accept.errors %}<div class="invalid-feedback">{{ form.accept.errors.0 }}</div>{% endif %}
+                </div>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-gold btn-lg w-100"><i class="bi bi-send me-1"></i> {% trans "Enviar mensaje" %}</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="sidebar-widget">
+          <h4>{% trans "Datos de contacto" %}</h4>
+          <div class="contact-info-item"><i class="bi bi-envelope"></i><div><strong>{% trans "Email" %}</strong><a href="mailto:{{ site.email }}">{{ site.email }}</a></div></div>
+          <div class="contact-info-item"><i class="bi bi-telephone"></i><div><strong>{% trans "Teléfono" %}</strong><a href="tel:{{ site.phone|cut:' ' }}">{{ site.phone }}</a></div></div>
+          <div class="contact-info-item"><i class="bi bi-whatsapp"></i><div><strong>WhatsApp</strong><a href="{{ site.whatsapp_link }}" target="_blank" rel="noopener">{% trans "Escriba por WhatsApp" %}</a></div></div>
+          {% if site.address or site.city %}<div class="contact-info-item"><i class="bi bi-geo-alt"></i><div><strong>{% trans "Ubicación" %}</strong><a href="https://www.google.com/maps/search/?api=1&query={{ site.address|urlencode }}%20{{ site.city|urlencode }}" target="_blank" rel="noopener">{{ site.address }}{% if site.address and site.city %}, {% endif %}{{ site.city }}</a></div></div>{% endif %}
+          {% if site.schedule %}<div class="contact-info-item"><i class="bi bi-clock"></i><div><strong>{% trans "Horario" %}</strong><span>{{ site.schedule }}</span></div></div>{% endif %}
+        </div>
+        {% if site.social_links %}
+        <div class="sidebar-widget">
+          <h4>{% trans "Síguenos" %}</h4>
+          <div class="share-links">{% for key, label, icon, link in site.social_links %}<a href="{{ link }}" target="_blank" rel="noopener" aria-label="{{ label }}"><i class="bi {{ icon }}"></i></a>{% endfor %}</div>
+        </div>
+        {% endif %}
+        <div class="card-il dark h-auto">
+          <div class="icon"><i class="bi bi-calendar-check"></i></div>
+          <h3>{% trans "Reunión inicial sin costo" %}</h3>
+          <p class="mb-0">{% trans "En la reunión inicial se revisa la situación jurídica de la empresa." %}</p>
+        </div>
+      </div>
+    </div>
+    {% if site.map_embed_url %}
+    <div class="map-wrap mt-5"><iframe src="{{ site.map_embed_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa"></iframe></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

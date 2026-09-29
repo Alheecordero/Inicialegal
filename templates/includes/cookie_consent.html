@@ -1,0 +1,55 @@
+{% load i18n core_extras %}
+{% if site.cookie_consent_enabled %}
+<div class="cookie-consent" id="cookieConsent" role="dialog" aria-modal="true" aria-labelledby="cookieConsentTitle" aria-describedby="cookieConsentText" hidden>
+  <div class="cookie-consent-backdrop" data-cookie-close></div>
+  <div class="cookie-consent-card">
+    <button type="button" class="cookie-consent-close" data-cookie-close aria-label="{% trans 'Cerrar sin aceptar' %}"><i class="bi bi-x-lg"></i></button>
+
+    <div class="cookie-consent-main" data-cookie-view="main">
+      <div class="cookie-consent-icon"><i class="bi bi-shield-lock"></i></div>
+      <h2 id="cookieConsentTitle" class="cookie-consent-title">{{ site.cookie_consent_title|default:"Gestionar consentimiento" }}</h2>
+      <p id="cookieConsentText" class="cookie-consent-text">{{ site.cookie_consent_text }}</p>
+      <p class="cookie-consent-links">
+        {% if site.privacy_policy_url %}<a href="{{ site.privacy_policy_url|localized_href }}">{% trans "Política de Privacidad" %}</a>{% endif %}
+        {% if site.cookie_policy_url %}<a href="{{ site.cookie_policy_url|localized_href }}">{% trans "Política de Cookies" %}</a>{% endif %}
+      </p>
+      <div class="cookie-consent-actions">
+        <button type="button" class="btn btn-gold" data-cookie-accept-all>{% trans "Aceptar" %}</button>
+        <button type="button" class="btn btn-outline-navy" data-cookie-deny>{% trans "Denegar" %}</button>
+        <button type="button" class="btn btn-link-navy" data-cookie-prefs>{% trans "Ver preferencias" %}</button>
+      </div>
+    </div>
+
+    <div class="cookie-consent-prefs" data-cookie-view="prefs" hidden>
+      <h2 class="cookie-consent-title">{% trans "Preferencias de privacidad" %}</h2>
+      <p class="cookie-consent-text">{% trans "Elige qué categorías autorizas. Las cookies necesarias no pueden desactivarse porque permiten el funcionamiento básico del sitio." %}</p>
+      <div class="cookie-pref">
+        <div class="cookie-pref-head">
+          <strong>{% trans "Necesarias" %}</strong>
+          <span class="cookie-pref-always">{% trans "Siempre activas" %}</span>
+        </div>
+        <p>{% trans "Seguridad del sitio, protección de formularios (CSRF) y recordar tu elección de consentimiento." %}</p>
+      </div>
+      <div class="cookie-pref">
+        <div class="cookie-pref-head">
+          <strong>{% trans "Analíticas" %}</strong>
+          <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" id="cookieAnalytics" data-cookie-cat="analytics"><label class="visually-hidden" for="cookieAnalytics">Analíticas</label></div>
+        </div>
+        <p>{% trans "Nos permiten medir visitas y entender cómo se usa el sitio para mejorarlo (Google Analytics, de forma agregada)." %}</p>
+      </div>
+      <div class="cookie-pref">
+        <div class="cookie-pref-head">
+          <strong>{% trans "Marketing" %}</strong>
+          <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" role="switch" id="cookieMarketing" data-cookie-cat="marketing"><label class="visually-hidden" for="cookieMarketing">Marketing</label></div>
+        </div>
+        <p>{% trans "Permiten personalizar publicidad y campañas, por ejemplo a través de Google Ads. Solo se activan si las aceptas." %}</p>
+      </div>
+      <div class="cookie-consent-actions">
+        <button type="button" class="btn btn-gold" data-cookie-save>{% trans "Guardar preferencias" %}</button>
+        <button type="button" class="btn btn-outline-navy" data-cookie-accept-all>{% trans "Aceptar todas" %}</button>
+        <button type="button" class="btn btn-link-navy" data-cookie-back>{% trans "Volver" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}

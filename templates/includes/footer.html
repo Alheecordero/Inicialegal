@@ -1,0 +1,76 @@
+{% load static i18n core_extras %}
+<footer class="footer">
+  <img class="footer-art" src="{% static 'img/footer-justicia.jpg' %}" alt="" aria-hidden="true">
+  <span class="footer-veil" aria-hidden="true"></span>
+  {% if site.monogram %}<span class="watermark" aria-hidden="true">{{ site.monogram }}</span>{% endif %}
+  <div class="container position-relative">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <div class="brand">
+          <img src="{% if site.logo_white %}{{ site.logo_white.url }}{% else %}{% static 'img/logo-white.png' %}{% endif %}" alt="{{ site.site_name }}">
+        </div>
+        <p>{{ site.footer_text }}</p>
+        <p class="small mb-0">{% trans "Los asuntos penales de personas naturales son atendidos por Abogadas Penalistas, firma relacionada." %}</p>
+        <div class="social mt-3">
+          {% for key, label, icon, link in site.social_links %}
+          <a href="{{ link }}" target="_blank" rel="noopener" aria-label="{{ label }}"><i class="bi {{ icon }}"></i></a>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>{% trans "Sitio" %}</h5>
+        <ul>
+          <li><a href="{% url 'core:home' %}">{% trans "Inicio" %}</a></li>
+          <li><a href="{% url 'core:about' %}">{% trans "Nosotros" %}</a></li>
+          <li><a href="{% url 'core:service_list' %}">{% trans "Servicios" %}</a></li>
+          <li><a href="{% url 'core:plan_list' %}">{% trans "Planes" %}</a></li>
+          <li><a href="{% url 'core:team_list' %}">{% trans "Equipo" %}</a></li>
+          <li><a href="{% url 'blog:post_list' %}">{% trans "Publicaciones" %}</a></li>
+          <li><a href="{% url 'core:faq' %}">{% trans "Preguntas frecuentes" %}</a></li>
+          <li><a href="{% url 'core:contact' %}">{% trans "Contacto" %}</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>{% trans "Áreas" %}</h5>
+        <ul>
+          {% for a in nav_areas %}
+          <li><a href="{% url 'core:area_detail' a.slug %}">{{ a.name }}</a></li>
+          {% empty %}
+          <li class="text-white-50">{% trans "Próximamente" %}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="footer-col footer-col-contact">
+        <h5>{% trans "Contacto" %}</h5>
+        <ul>
+          <li><i class="bi bi-envelope me-2 text-gold"></i><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
+          <li><i class="bi bi-telephone me-2 text-gold"></i><a href="tel:{{ site.phone|cut:' ' }}">{{ site.phone }}</a></li>
+          {% if site.address or site.city %}<li><i class="bi bi-geo-alt me-2 text-gold"></i><a href="https://www.google.com/maps/search/?api=1&query={{ site.address|urlencode }}%20{{ site.city|urlencode }}" target="_blank" rel="noopener">{{ site.address }}{% if site.address and site.city %}, {% endif %}{{ site.city }}</a></li>{% endif %}
+          {% if site.schedule %}<li><i class="bi bi-clock me-2 text-gold"></i>{{ site.schedule }}</li>{% endif %}
+        </ul>
+        <div class="newsletter mt-4">
+          <h5 class="mb-2">{% trans "Newsletter" %}</h5>
+          <p class="small mb-2">{% trans "Reciba las publicaciones del estudio." %}</p>
+          <form action="{% url 'core:newsletter' %}" method="post" data-newsletter>
+            {% csrf_token %}
+            <div class="input-group">
+              {{ newsletter_form.email }}
+              <button class="btn btn-gold" type="submit" aria-label="{% trans 'Suscribirme' %}"><i class="bi bi-send"></i></button>
+            </div>
+            {% include "includes/newsletter_consent.html" with consent_id="newsletter-accept-footer" %}
+            <div data-feedback class="small mt-2"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <div>© {% now "Y" %} {{ site.site_name }}. {% trans "Todos los derechos reservados." %}</div>
+      <div class="footer-links">
+        {% for pg in footer_pages %}<a href="{{ pg.get_absolute_url }}">{{ pg.title }}</a>{% endfor %}
+        {% if site.cookie_consent_enabled %}<a href="#" data-cookie-open>{% trans "Configurar cookies" %}</a>{% endif %}
+      </div>
+    </div>
+  </div>
+</footer>

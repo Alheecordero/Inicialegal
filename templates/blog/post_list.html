@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load core_extras i18n %}
+{% block title %}{% if category %}{{ category.name }} · {% elif tag %}#{{ tag.name }} · {% elif query %}Búsqueda: {{ query }} · {% endif %}Publicaciones · {{ site.site_name }}{% endblock %}
+{% block meta_description %}{% if category and category.description %}{{ category.description }}{% else %}Artículos y novedades legales para empresas y personas, escritos por el equipo de Inicia Legal.{% endif %}{% endblock %}
+
+{% block content %}
+{% if category %}
+  {% include "includes/page_header.html" with title=category.name kicker="Categoría" lead=category.description crumbs=crumbs %}
+{% elif tag %}
+  {% include "includes/page_header.html" with title="#"|add:tag.name kicker="Etiqueta" %}
+{% elif query %}
+  {% include "includes/page_header.html" with title="Resultados de búsqueda" kicker="Publicaciones" lead="Resultados para: "|add:query %}
+{% else %}
+  {% if blog_banner and blog_banner.image %}
+  <header class="page-header page-header-banner" style="--banner: url('{{ blog_banner.image.url }}'); --banner-m: url('{% if blog_banner.image_mobile %}{{ blog_banner.image_mobile.url }}{% else %}{{ blog_banner.image.url }}{% endif %}')">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Inicio</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Publicaciones</li>
+        </ol>
+      </nav>
+      {% if blog_banner.kicker %}<div class="kicker">{{ blog_banner.kicker }}</div>{% endif %}
+      {% if blog_banner.title %}<h1>{{ blog_banner.title|accent }}</h1>{% endif %}
+      {% if blog_banner.subtitle %}<p class="lead mb-0">{{ blog_banner.subtitle }}</p>{% endif %}
+    </div>
+  </header>
+  {% else %}
+  {% include "includes/page_header.html" with title="Publicaciones" kicker="El estudio" lead="Textos sobre las materias que definen la operación de la empresa." %}
+  {% endif %}
+{% endif %}
+
+<section class="section">
+  <div class="container">
+    {% if featured %}
+    <article class="featured-post mb-5">
+      {% if featured.cover_image %}<img src="{{ featured.cover_image.url }}" alt="{{ featured.title }}">{% endif %}
+      <div class="body">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          {% if featured.category %}<a class="cat-badge" href="{{ featured.category.get_absolute_url }}" style="background: {{ featured.category.color }}">{{ featured.category.name }}</a>{% endif %}
+          <span class="badge rounded-pill" style="background:var(--il-gold-light);color:var(--il-navy)"><i class="bi bi-star-fill me-1"></i>Destacado</span>
+        </div>
+        <h2><a href="{{ featured.get_absolute_url }}">{{ featured.title }}</a></h2>
+        <p class="d-none d-md-block">{{ featured.excerpt|truncatechars:220 }}</p>
+        <div class="post-meta"><span><i class="bi bi-person"></i>{{ featured.author_name }}</span><span><i class="bi bi-calendar3"></i>{{ featured.published_at|date:"d M Y" }}</span><span><i class="bi bi-clock"></i>{{ featured.reading_time }} min de lectura</span></div>
+      </div>
+    </article>
+    {% endif %}
+
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <div class="row g-4">
+          {% for post in page_obj %}
+          <div class="col-md-6">{% include "includes/post_card.html" %}</div>
+          {% empty %}
+          <div class="col-12 text-center text-muted py-5">
+            <i class="bi bi-journal-x fs-1 d-block mb-3 text-gold"></i>
+            {% if query %}No encontramos artículos para “{{ query }}”.{% else %}Aún no hay artículos publicados.{% endif %}
+            <div class="mt-3"><a href="{% url 'blog:post_list' %}" class="btn btn-outline-gold btn-sm">Ver todos los artículos</a></div>
+          </div>
+          {% endfor %}
+        </div>
+        {% include "includes/pagination.html" %}
+      </div>
+      <div class="col-lg-4">{% include "blog/includes/sidebar.html" %}</div>
+    </div>
+  </div>
+</section>
+{% include "includes/cta.html" %}
+{% endblock %}

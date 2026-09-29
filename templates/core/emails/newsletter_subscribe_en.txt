@@ -1,0 +1,24 @@
+{{ site_name }}
+{% if already_listed %}Newsletter · Subscription confirmed{% else %}Newsletter subscription confirmation{% endif %} · Reference {{ reference }}
+
+Dear subscriber,
+
+{% if already_listed %}Your address {{ email }} was already on our mailing list. We confirm that it remains active and that you will continue to receive our messages.{% else %}Thank you for subscribing to the {{ site_name }} newsletter. We confirm that we have registered {{ email }} to receive the firm's publications, regulatory circulars and information about our services.{% endif %}
+
+What to expect
+- Legal publications and updates from the firm.
+- Information on matters relevant to your company's operations.
+- Each message will include an unsubscribe link.
+
+If you wish to stop receiving these emails, you may use that link in any message or write to {{ office_email }}.
+
+Privacy Policy: {{ privacy_url }}
+Publications: {{ blog_url }}
+
+Kind regards,
+{{ site_name }}
+Corporate law firm
+{{ office_email }}
+{{ site_url }}
+
+Inicia Legal 360 – Estudio Jurídico SpA

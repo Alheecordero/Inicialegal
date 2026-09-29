@@ -1,0 +1,173 @@
+html[data-theme="light"],
+html[data-theme="dark"],
+:root {
+  --primary: #b5924c;
+  --secondary: #1f2e3a;
+  --accent: #f3eee3;
+  --primary-fg: #fff;
+  --body-fg: #1f2e3a;
+  --body-bg: #faf7f1;
+  --body-quiet-color: #6b7280;
+  --body-medium-color: #3d4a55;
+  --body-loud-color: #1f2e3a;
+  --header-color: #faf7f1;
+  --header-branding-color: #f3eee3;
+  --header-bg: #1f2e3a;
+  --header-link-color: #fff;
+  --breadcrumbs-fg: #6b7280;
+  --breadcrumbs-link-fg: #1f2e3a;
+  --breadcrumbs-bg: #f3eee3;
+  --link-fg: #8c7038;
+  --link-hover-color: #1f2e3a;
+  --link-selected-fg: #1f2e3a;
+  --hairline-color: #e6dfd0;
+  --border-color: #e6dfd0;
+  --darkened-bg: #f3eee3;
+  --selected-bg: #f3eee3;
+  --selected-row: #f6f0e4;
+  --button-fg: #1f2e3a;
+  --button-bg: #b5924c;
+  --button-hover-bg: #c4a56a;
+  --default-button-bg: #1f2e3a;
+  --default-button-hover-bg: #2c4152;
+  --font-family-primary: "Nunito Sans", "Segoe UI", sans-serif;
+}
+
+#header {
+  padding: 12px 24px;
+}
+
+#site-name a {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+
+#user-tools, #user-tools a, #logout-form button {
+  color: rgba(255, 255, 255, .86);
+}
+
+.module h2, .module caption, .inline-group h2 {
+  background: #1f2e3a;
+  color: #faf7f1;
+}
+
+.module {
+  border-radius: 14px;
+  overflow: hidden;
+  border-color: #e6dfd0;
+  background: #fff;
+}
+
+#content {
+  padding: 20px 24px 40px;
+}
+
+.il-hero h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 2rem;
+  margin: 0 0 .35rem;
+  color: #1f2e3a;
+}
+
+.il-kicker {
+  margin: 0 0 .2rem;
+  color: #8c7038;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.il-hero p:last-child {
+  margin: 0 0 1.25rem;
+  color: #6b7280;
+}
+
+.il-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.il-tile {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  background: #fff;
+  border: 1px solid #e6dfd0;
+  border-radius: 14px;
+  padding: 1rem 1.05rem;
+  text-decoration: none;
+}
+
+.il-tile:hover {
+  border-color: #b5924c;
+}
+
+.il-tile-num {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: 1.8rem;
+  color: #1f2e3a;
+  line-height: 1;
+}
+
+.il-tile-label {
+  color: #6b7280;
+  font-size: .82rem;
+  font-weight: 700;
+}
+
+.il-inbox table {
+  width: 100%;
+}
+
+.il-inbox td, .il-inbox th {
+  padding: .7rem .9rem;
+}
+
+.il-quiet {
+  color: #6b7280;
+  font-size: .82rem;
+}
+
+.il-badge {
+  display: inline-block;
+  border-radius: 999px;
+  padding: .15rem .55rem;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .02em;
+}
+
+.il-badge-new { background: #f3eee3; color: #8c7038; }
+.il-badge-in_progress { background: #e7eef3; color: #1f2e3a; }
+.il-badge-closed { background: #eef1ef; color: #5c6760; }
+
+body.login {
+  background: #1f2e3a;
+}
+
+body.login #header {
+  background: transparent;
+}
+
+body.login #content {
+  background: #faf7f1;
+  border: none;
+  border-radius: 18px;
+  padding: 28px 28px 18px;
+  box-shadow: 0 24px 50px -32px rgba(0, 0, 0, .65);
+}
+
+body.login .submit-row input {
+  background: #b5924c;
+  color: #1f2e3a;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .il-tiles { grid-template-columns: 1fr 1fr; }
+}

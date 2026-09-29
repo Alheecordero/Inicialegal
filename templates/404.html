@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Página no encontrada · {{ site.site_name }}{% endblock %}
+{% block content %}
+<section class="error-page bg-cream">
+  <div class="container">
+    <div class="code">404</div>
+    <h1 class="mb-3">No encontramos esta página</h1>
+    <p class="lead text-muted mb-4">Es posible que el enlace haya cambiado o que la página ya no exista.</p>
+    <a href="{% url 'core:home' %}" class="btn btn-gold me-2">Ir al inicio</a>
+    <a href="{% url 'blog:post_list' %}" class="btn btn-outline-gold">Visitar el blog</a>
+  </div>
+</section>
+{% endblock %}

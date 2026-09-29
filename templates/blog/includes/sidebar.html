@@ -1,0 +1,46 @@
+<aside class="blog-sidebar">
+  <div class="sidebar-widget">
+    <h4>Buscar</h4>
+    <form action="{% url 'blog:post_list' %}" method="get" role="search">
+      <div class="input-group">
+        <input type="search" name="q" class="form-control" placeholder="Buscar artículos…" value="{{ query|default:'' }}" aria-label="Buscar">
+        <button class="btn btn-gold" type="submit" aria-label="Buscar"><i class="bi bi-search"></i></button>
+      </div>
+    </form>
+  </div>
+  {% if categories %}
+  <div class="sidebar-widget">
+    <h4>Categorías</h4>
+    <ul>{% for c in categories %}<li><a href="{{ c.get_absolute_url }}"><span>{{ c.name }}</span><span class="count">{{ c.n }}</span></a></li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  {% if recent_posts %}
+  <div class="sidebar-widget">
+    <h4>Artículos recientes</h4>
+    {% for p in recent_posts %}
+    <div class="recent-post">
+      {% if p.cover_image %}<img src="{{ p.cover_image.url }}" alt="{{ p.title }}" loading="lazy">{% else %}<div class="ph"><i class="bi bi-journal-text"></i></div>{% endif %}
+      <div><a href="{{ p.get_absolute_url }}">{{ p.title|truncatechars:60 }}</a><small>{{ p.published_at|date:"d M Y" }}</small></div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% if popular_tags %}
+  <div class="sidebar-widget">
+    <h4>Etiquetas</h4>
+    <div class="tag-cloud">{% for t in popular_tags %}<a href="{{ t.get_absolute_url }}">#{{ t.name }}</a>{% endfor %}</div>
+  </div>
+  {% endif %}
+  <div class="card-il dark">
+    <div class="icon"><i class="bi bi-envelope-paper"></i></div>
+    <h4>Newsletter legal</h4>
+    <p>Reciba las publicaciones del estudio en su correo.</p>
+    <form action="{% url 'core:newsletter' %}" method="post" data-newsletter>
+      {% csrf_token %}
+      <input type="email" name="email" class="form-control mb-2" placeholder="Tu correo electrónico" required>
+      {% include "includes/newsletter_consent.html" with consent_id="newsletter-accept-sidebar" %}
+      <button class="btn btn-gold w-100 mt-2" type="submit">Suscribirme</button>
+      <div data-feedback class="small mt-2"></div>
+    </form>
+  </div>
+</aside>

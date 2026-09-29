@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Confirmación de recepción · {{ site_name }}</title>
+</head>
+<body style="margin:0;padding:0;background:#f3eee3;font-family:Georgia,'Times New Roman',serif;color:#1f2e3a;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3eee3;padding:32px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border-radius:4px;overflow:hidden;border:1px solid #e9dcc0;box-shadow:0 2px 8px rgba(31,46,58,.06);">
+          <tr>
+            <td style="background:#1f2e3a;padding:28px 32px 24px;text-align:center;">
+              <a href="{{ site_url }}" style="text-decoration:none;">
+                <img src="{{ logo_url }}" alt="{{ site_name }}" width="200" style="display:block;margin:0 auto 16px;max-width:200px;height:auto;border:0;">
+              </a>
+              <div style="width:48px;height:2px;background:#b5924c;margin:0 auto 14px;"></div>
+              <p style="margin:0;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#b5924c;font-family:'Segoe UI',Helvetica,Arial,sans-serif;font-weight:700;">Confirmación de recepción</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 32px 8px;font-family:'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.7;color:#1f2e3a;">
+              <p style="margin:0 0 6px;font-size:13px;color:#967739;letter-spacing:.06em;">Referencia {{ reference }}</p>
+              <p style="margin:0 0 20px;">Estimado/a <strong>{{ msg.name }}</strong>:</p>
+              <p style="margin:0 0 18px;">Gracias por contactar a <strong>{{ site_name }}</strong>. Confirmamos que hemos recibido su solicitud{% if plan_name %} relacionada con el <strong>{{ plan_name }}</strong>{% elif service_name %} sobre el servicio de <strong>{{ service_name }}</strong>{% endif %}.</p>
+              <p style="margin:0 0 24px;">Un abogado del estudio revisará su mensaje y se comunicará con usted a la brevedad, utilizando el correo o teléfono que indicó, dentro de nuestro horario de atención{% if site.schedule %} ({{ site.schedule }}){% endif %}.</p>
+
+              <p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#967739;font-weight:700;">Próximos pasos</p>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 24px;font-size:14px;line-height:1.65;color:#1f2e3a;">
+                <tr><td style="padding:6px 0;vertical-align:top;width:28px;color:#b5924c;font-weight:700;">1.</td><td style="padding:6px 0;">Revisión de su consulta por el equipo jurídico.</td></tr>
+                <tr><td style="padding:6px 0;vertical-align:top;color:#b5924c;font-weight:700;">2.</td><td style="padding:6px 0;">Contacto para coordinar la reunión inicial, sin costo, si corresponde a su materia.</td></tr>
+                <tr><td style="padding:6px 0;vertical-align:top;color:#b5924c;font-weight:700;">3.</td><td style="padding:6px 0;">Si desea añadir antecedentes, puede responder directamente a este correo.</td></tr>
+              </table>
+
+              {% if msg.subject or plan_name or service_name %}
+              <p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#967739;font-weight:700;">Resumen de su envío</p>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 24px;font-size:14px;line-height:1.65;background:#faf7f1;border:1px solid #e9dcc0;border-radius:4px;">
+                <tr><td style="padding:16px 18px;">
+                  {% if msg.subject %}<div style="margin-bottom:6px;"><span style="color:#5c6b76;">Asunto:</span> {{ msg.subject }}</div>{% endif %}
+                  {% if plan_name %}<div style="margin-bottom:6px;"><span style="color:#5c6b76;">Plan de interés:</span> {{ plan_name }}</div>{% endif %}
+                  {% if service_name %}<div style="margin-bottom:6px;"><span style="color:#5c6b76;">Servicio de interés:</span> {{ service_name }}</div>{% endif %}
+                  <div><span style="color:#5c6b76;">Fecha y hora:</span> {{ msg.created_at|date:"d/m/Y, H:i" }} hrs. (Chile)</div>
+                </td></tr>
+              </table>
+              {% endif %}
+
+              <p style="margin:0 0 8px;">Atentamente,</p>
+              <p style="margin:0 0 4px;font-weight:700;">{{ site_name }}</p>
+              <p style="margin:0 0 16px;font-size:14px;color:#5c6b76;">Estudio jurídico corporativo</p>
+              <p style="margin:0;font-size:14px;line-height:1.6;">
+                <a href="mailto:{{ office_email }}" style="color:#967739;text-decoration:none;">{{ office_email }}</a><br>
+                {% if site.phone %}<span style="color:#5c6b76;">{{ site.phone }}</span><br>{% endif %}
+                {% if site.address or site.city %}<span style="color:#5c6b76;">{{ site.address }}{% if site.address and site.city %}, {% endif %}{{ site.city }}</span><br>{% endif %}
+                <a href="{{ site_url }}" style="color:#967739;text-decoration:none;">{{ site_url|cut:"https://"|cut:"http://" }}</a>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 32px 28px;background:#faf7f1;border-top:1px solid #e9dcc0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;line-height:1.55;color:#5c6b76;text-align:center;">
+              Este mensaje confirma únicamente la recepción de su formulario. No constituye asesoría jurídica.<br>
+              Inicia Legal 360 – Estudio Jurídico SpA
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load humanize core_extras %}
+{% block title %}Planes legales para empresas · {{ site.site_name }}{% endblock %}
+{% block meta_description %}Planes de asesoría legal anual para pymes y empresas. Respaldo jurídico permanente durante todo el año.{% endblock %}
+
+{% block content %}
+{% include "includes/page_header.html" with title="Planes de asesoría jurídica anual" kicker="Planes anuales" lead="Cada plan indica su valor anual y los servicios que comprende." %}
+
+<section class="section">
+  <div class="container">
+    <div class="row g-4 justify-content-center">
+      {% for plan in plans %}
+      <div class="col-lg-{% if plans|length == 1 %}8{% elif plans|length == 2 %}6{% else %}4{% endif %} col-md-10">
+        <article class="plan-card plan-offer h-100 d-flex flex-column">
+          <div class="plan-head">
+            {% if plan.is_featured %}<span class="badge-featured">Recomendado</span>{% endif %}
+            <h3>{{ plan.name }}</h3>
+            {% include "includes/plan_price.html" %}
+          </div>
+          <div class="p-4 flex-grow-1 d-flex flex-column">
+            <ul class="plan-diff">
+              {% for f in plan.features.all %}<li><i class="{{ f.icon|ph }}"></i><div><strong>{{ f.title }}</strong>{% if f.text %}<span>{{ f.text }}</span>{% endif %}</div></li>{% endfor %}
+            </ul>
+            <div class="d-grid gap-2 mt-4">
+              <a href="{% url 'core:contact' %}?plan={{ plan.slug }}" class="btn btn-gold">{{ plan.cta_text }}</a>
+              <a href="{{ plan.get_absolute_url }}" class="btn btn-navy">Ver el plan</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center text-muted py-5">Pronto publicaremos nuestros planes. <a href="{% url 'core:contact' %}">Solicite una reunión</a> para más información.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% include "includes/cta.html" %}
+{% endblock %}

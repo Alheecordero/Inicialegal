@@ -1,0 +1,74 @@
+{% load static i18n core_extras %}
+{% with url_name=request.resolver_match.url_name ns=request.resolver_match.namespace %}
+{% if site.announcement %}
+<div class="announcement">
+  <div class="container">
+    {% if site.announcement_url %}<a href="{{ site.announcement_url|localized_href }}">{{ site.announcement }} <i class="bi bi-arrow-right-short"></i></a>{% else %}{{ site.announcement }}{% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div class="topbar d-none d-lg-block">
+  <div class="container d-flex justify-content-between align-items-center py-1">
+    <div class="d-flex gap-4">
+      <a href="mailto:{{ site.email }}"><i class="bi bi-envelope me-1 text-gold"></i>{{ site.email }}</a>
+      <a href="tel:{{ site.phone|cut:' ' }}"><i class="bi bi-telephone me-1 text-gold"></i>{{ site.phone }}</a>
+      {% if site.schedule %}<span class="text-muted"><i class="bi bi-clock me-1 text-gold"></i>{{ site.schedule }}</span>{% endif %}
+    </div>
+    <div class="social d-flex gap-1">
+      {% for key, label, icon, link in site.social_links %}
+      <a href="{{ link }}" target="_blank" rel="noopener" aria-label="{{ label }}"><i class="bi {{ icon }}"></i></a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-il sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'core:home' %}">
+      <img src="{% if site.logo %}{{ site.logo.url }}{% else %}{% static 'img/logo.png' %}{% endif %}" alt="{{ site.site_name }}">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="{% trans 'Abrir menú' %}">
+      <i class="bi bi-list fs-3 text-navy"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link {% if url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">{% trans "Inicio" %}</a></li>
+        <li class="nav-item"><a class="nav-link {% if url_name == 'about' %}active{% endif %}" href="{% url 'core:about' %}">{% trans "Nosotros" %}</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle {% if url_name == 'service_list' or url_name == 'service_detail' or url_name == 'area_detail' %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{% trans "Servicios" %}</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'core:service_list' %}"><i class="bi bi-grid me-2 text-gold"></i>{% trans "Todos los servicios" %}</a></li>
+            {% if nav_areas %}
+            <li><hr class="dropdown-divider"></li>
+            <li><span class="dropdown-header text-uppercase small">{% trans "Áreas de práctica" %}</span></li>
+            {% for a in nav_areas %}
+            <li><a class="dropdown-item" href="{% url 'core:area_detail' a.slug %}">{{ a.name }}</a></li>
+            {% endfor %}
+            {% endif %}
+          </ul>
+        </li>
+        {% if nav_plans %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle {% if url_name == 'plan_list' or url_name == 'plan_detail' %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{% trans "Planes" %}</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'core:plan_list' %}"><i class="bi bi-layers me-2 text-gold"></i>{% trans "Ver todos los planes" %}</a></li>
+            <li><hr class="dropdown-divider"></li>
+            {% for p in nav_plans %}
+            <li><a class="dropdown-item" href="{% url 'core:plan_detail' p.slug %}">{{ p.name }}</a></li>
+            {% endfor %}
+          </ul>
+        </li>
+        {% endif %}
+        <li class="nav-item"><a class="nav-link {% if url_name == 'team_list' or url_name == 'team_detail' %}active{% endif %}" href="{% url 'core:team_list' %}">{% trans "Equipo" %}</a></li>
+        <li class="nav-item"><a class="nav-link {% if ns == 'blog' %}active{% endif %}" href="{% url 'blog:post_list' %}">{% trans "Publicaciones" %}</a></li>
+        {% for pg in menu_pages %}
+        <li class="nav-item"><a class="nav-link" href="{{ pg.get_absolute_url }}">{{ pg.title }}</a></li>
+        {% endfor %}
+        <li class="nav-item"><a class="nav-link {% if url_name == 'contact' %}active{% endif %}" href="{% url 'core:contact' %}">{% trans "Contacto" %}</a></li>
+        <li class="nav-item ms-lg-2"><a class="btn btn-gold btn-sm btn-nav" href="{% url 'core:contact' %}"><i class="bi bi-calendar-check me-1"></i> {% trans "Solicite una reunión" %}</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% endwith %}

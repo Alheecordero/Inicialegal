@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+{% load static humanize core_extras i18n %}
+
+{% block extra_head %}
+{% for slide in hero_slides %}
+{% if slide.image or slide.image_mobile %}<link rel="preload" as="image" href="{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}">{% endif %}
+{% endfor %}
+{% endblock %}
+
+{% block content %}
+{# ---------- HERO ---------- #}
+{% if hero_slides %}
+<section class="hero hero-slider" data-hero-slider aria-roledescription="carrusel">
+  {% for slide in hero_slides %}
+  <div class="hero-slide hero-image hero-slide-{{ slide.variant }} hero-slide-{{ slide.key }}{% if not slide.image and not slide.image_mobile %} hero-slide-plain{% endif %}{% if forloop.first %} is-active{% endif %}"{% if slide.image or slide.image_mobile %} style="--hero-bg: url('{% if slide.image %}{{ slide.image.url }}{% else %}{{ slide.image_mobile.url }}{% endif %}'); --hero-bg-m: url('{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}')"{% endif %}{% if not forloop.first %} aria-hidden="true"{% endif %}>
+    {% if slide.image or slide.image_mobile %}<img class="hero-slide-photo" src="{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}" alt="" width="960" height="420" decoding="async"{% if forloop.first %} fetchpriority="high"{% endif %}>{% endif %}
+    <div class="container hero-content">
+      {% if slide.variant == "plan" and plans %}
+      {% if slide.kicker %}<div class="kicker center hero-plan-kicker">{{ slide.kicker }}</div>{% endif %}
+      <div class="hero-plan-grid">
+        {% for plan in plans %}
+        <article class="hero-plan-card">
+          <div class="hero-plan-top">
+            {% if plan.is_featured %}<span class="hero-plan-badge">Recomendado</span>{% endif %}
+            <h2>{{ plan.name }}</h2>
+          </div>
+          <div class="hero-plan-body">
+            {% if plan.currency == "UF" and plan.installment_amount %}
+            <p class="hero-plan-price">{{ plan.installment_amount|floatformat:"-2" }} UF <small>{% trans "mensuales" %} {{ plan.price_suffix }}</small></p>
+            <p class="hero-plan-note">{% blocktrans with annual=plan.price_annual|floatformat:0 suffix=plan.price_suffix n=plan.installments %}Plan anual de {{ annual }} UF {{ suffix }}, pagadero en {{ n }} cuotas mensuales{% endblocktrans %}.</p>
+            {% elif plan.price_annual %}
+            <p class="hero-plan-price">{% if plan.currency == "UF" %}{{ plan.price_annual|floatformat:0 }} UF{% else %}${{ plan.price_annual|floatformat:0|intcomma }}{% endif %} <small>{{ plan.price_suffix }}</small></p>
+            {% if plan.payment_modality %}<p class="hero-plan-note">{{ plan.payment_modality }}</p>{% endif %}
+            {% endif %}
+            <ul class="hero-plan-features">
+              {% if has_difference %}
+              {% for f in plan.offer_features %}<li><strong>{{ f.title }}.</strong> {{ f.text }}</li>{% endfor %}
+              {% else %}
+              {% for f in plan.features.all %}<li>{{ f.title }}</li>{% endfor %}
+              {% endif %}
+            </ul>
+            {% if has_difference %}<p class="hero-plan-note">Más el respaldo incluido en ambos planes.</p>{% endif %}
+            <a href="{{ plan.get_absolute_url }}" class="btn btn-gold btn-sm mt-auto">{% trans "Ver el plan" %}</a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="row align-items-center">
+        <div class="col-lg-8 col-xl-7">
+          {% if slide.kicker %}<div class="kicker">{{ slide.kicker }}</div>{% endif %}
+          {% if slide.title %}<h1>{{ slide.title|accent }}</h1>{% endif %}
+          {% if slide.subtitle %}<p class="lead">{{ slide.subtitle }}</p>{% endif %}
+          {% if slide.primary_text or slide.secondary_text %}
+          <div class="hero-actions">
+            {% if slide.primary_text %}<a href="{{ slide.primary_url|localized_href }}" class="btn btn-gold">{{ slide.primary_text }} <i class="bi bi-arrow-right ms-1"></i></a>{% endif %}
+            {% if slide.secondary_text %}<a href="{{ slide.secondary_url|localized_href }}" class="btn btn-outline-light hero-btn-secondary">{{ slide.secondary_text }}</a>{% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+  <div class="hero-dots" role="tablist" aria-label="Diapositivas de la portada">
+    {% for slide in hero_slides %}
+    <button type="button" class="{% if forloop.first %}is-active{% endif %}" data-hero-dot="{{ forloop.counter0 }}" role="tab" aria-label="{{ slide.kicker|default:slide.title|default:slide.key }}"{% if forloop.first %} aria-selected="true"{% endif %}></button>
+    {% endfor %}
+  </div>
+</section>
+{% else %}
+<section class="hero{% if site.hero_image %} hero-image{% endif %}"{% if site.hero_image %} style="--hero-bg: url('{{ site.hero_image.url }}'); --hero-bg-m: url('{% if site.hero_image_mobile %}{{ site.hero_image_mobile.url }}{% else %}{{ site.hero_image.url }}{% endif %}')"{% endif %}>
+  <div class="container hero-content">
+    <div class="row align-items-center">
+      <div class="col-lg-8 col-xl-7">
+        {% if site.hero_kicker %}<div class="kicker">{{ site.hero_kicker }}</div>{% endif %}
+        <h1>{{ site.hero_title|accent }}</h1>
+        <p class="lead">{{ site.hero_subtitle }}</p>
+        <div class="hero-actions">
+          <a href="{{ site.hero_primary_url|localized_href }}" class="btn btn-gold">{{ site.hero_primary_text }} <i class="bi bi-arrow-right ms-1"></i></a>
+          {% if site.hero_secondary_text %}<a href="{{ site.hero_secondary_url|localized_href }}" class="btn btn-outline-light hero-btn-secondary">{{ site.hero_secondary_text }}</a>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- CIFRAS ---------- #}
+{% if stats %}
+<section class="stats-strip">
+  <div class="container">
+    <div class="row g-0">
+      {% for s in stats %}
+      <div class="col-6 col-md stat-item" style="--d: {{ forloop.counter0 }}">
+        {% if s.icon %}<i class="{{ s.icon|ph }} text-gold fs-4 d-block mb-1"></i>{% endif %}
+        <div class="value" data-count="{{ s.value }}">{{ s.value }}</div>
+        <div class="label">{{ s.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- ÁREAS ---------- #}
+{% if areas %}
+<section class="section section-areas" id="areas">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <div class="kicker center">{% trans "Especialidades" %}</div>
+      <h2 class="section-title">{% trans "Áreas de práctica" %}</h2>
+      <p class="section-lead mx-auto">{% trans "Asesoría especializada en las materias que definen la operación de la empresa." %}</p>
+    </div>
+  </div>
+  <div class="area-accordion reveal" data-area-accordion>
+      {% for a in areas %}
+      <a href="{{ a.get_absolute_url }}" class="area-acc-item{% if forloop.first %} is-active{% endif %}"{% if a.image %} style="background-image:url('{{ a.image.url }}')"{% endif %} aria-label="{{ a.name }}">
+        <span class="area-acc-index">0{{ forloop.counter }}</span>
+        <div class="area-acc-content">
+          <i class="{{ a.icon|ph }} area-acc-icon"></i>
+          <h3>{{ a.name }}</h3>
+          <div class="area-acc-desc">
+            <p>{{ a.short_description }}</p>
+            <span class="area-acc-more">{% trans "Conozca el área" %} <i class="bi bi-arrow-right"></i></span>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+{# ---------- NOSOTROS Y EQUIPO ---------- #}
+{% if site.about_title %}
+<section class="section bg-cream" id="nosotros">
+  <div class="container">
+    <div class="row align-items-center g-5 about-fusion">
+      {% if site.about_image %}
+      <div class="col-lg-6 reveal">
+        <figure class="about-figure">
+          <img src="{{ site.about_image.url }}" alt="{{ site.about_title }}" loading="lazy">
+        </figure>
+      </div>
+      {% endif %}
+      <div class="col-lg-{% if site.about_image %}6{% else %}8{% endif %} reveal about-copy">
+        {% if site.about_kicker %}<div class="kicker">{{ site.about_kicker }}</div>{% endif %}
+        <h2 class="section-title">{{ site.about_title }}</h2>
+        <div class="rich-content studio-copy">{{ site.about_text|safe }}</div>
+        <a href="{% url 'core:about' %}" class="btn btn-navy mt-3">{% trans "Conozca nuestro estudio" %}</a>
+      </div>
+    </div>
+    {% if team %}
+    <div class="text-center mb-5 mt-5 reveal">
+      <div class="kicker center">{% trans "Equipo" %}</div>
+      <h2 class="section-title">{% trans "Quienes te acompañan" %}</h2>
+    </div>
+    <div class="row g-4">
+      {% for m in team %}
+      <div class="col-lg-6 reveal">
+        <a href="{{ m.get_absolute_url }}" class="team-home-card">
+          <div class="team-home-photo">
+            {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% else %}<span class="avatar">{{ m.initials }}</span>{% endif %}
+          </div>
+          <div class="team-home-body">
+            <div class="role">{{ m.role }}</div>
+            <h3>{{ m.name }}</h3>
+            {% if m.specialty %}<p class="specialty">{{ m.specialty }}</p>{% endif %}
+            {% if m.areas.all %}
+            <ul class="team-home-areas">
+              {% for a in m.areas.all %}<li>{{ a.name }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+            {% if m.credentials %}
+            <ul class="team-home-creds">
+              {% for line in m.credentials %}<li>{{ line }}</li>{% endfor %}
+            </ul>
+            {% endif %}
+            <span class="btn-link-arrow mt-auto">{% trans "Ver perfil" %} <i class="bi bi-arrow-right"></i></span>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{# ---------- PLANES ---------- #}
+{% if plans %}
+<section class="section bg-cream-2" id="plan">
+  <div class="container">
+    <div class="text-center mb-4 reveal">
+      <div class="kicker center">Planes anuales</div>
+      <h2 class="section-title">{% trans "Planes de asesoría jurídica anual" %}</h2>
+    </div>
+    <div class="row g-4 justify-content-center">
+      {% for plan in plans %}
+      <div class="col-lg-6">
+        <article class="plan-card plan-offer h-100 d-flex flex-column">
+          <div class="plan-head">
+            {% if plan.is_featured %}<span class="badge-featured">Recomendado</span>{% endif %}
+            <h3>{{ plan.name }}</h3>
+            {% include "includes/plan_price.html" %}
+          </div>
+          <div class="p-4 d-flex flex-column flex-grow-1">
+            <ul class="plan-diff">
+              {% for f in plan.features.all %}
+              <li><i class="{{ f.icon|ph }}"></i><div><strong>{{ f.title }}</strong>{% if f.text %}<span>{{ f.text }}</span>{% endif %}</div></li>
+              {% endfor %}
+            </ul>
+            <div class="d-flex flex-wrap gap-2 mt-4">
+              <a href="{% url 'core:contact' %}?plan={{ plan.slug }}" class="btn btn-gold">{{ plan.cta_text }}</a>
+              <a href="{{ plan.get_absolute_url }}" class="btn btn-outline-navy">{% trans "Ver el plan" %}</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- TESTIMONIOS ---------- #}
+{% if testimonials %}
+<section class="section bg-cream">
+  <div class="container">
+    <div class="text-center mb-5 reveal">
+      <div class="kicker center">Testimonios</div>
+      <h2 class="section-title">{% trans "Lo que dicen nuestros clientes" %}</h2>
+    </div>
+    <div class="row g-4">
+      {% for t in testimonials %}
+      <div class="col-md-6 col-lg-4 reveal">
+        <div class="testimonial">
+          <div class="stars">{% for _ in t.stars %}<i class="bi bi-star-fill"></i>{% endfor %}</div>
+          <blockquote>“{{ t.quote }}”</blockquote>
+          <div class="who">
+            {% if t.photo %}<img src="{{ t.photo.url }}" alt="{{ t.client_name }}" loading="lazy">{% else %}<span class="avatar">{{ t.client_name|first }}</span>{% endif %}
+            <div><strong>{{ t.client_name }}</strong><small>{{ t.position }}{% if t.position and t.company %} · {% endif %}{{ t.company }}</small></div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- BLOG ---------- #}
+{% if posts %}
+<section class="section">
+  <a href="{% url 'blog:post_list' %}" class="blog-home-banner">
+    <img src="{% static 'img/blog-portada.jpg' %}" alt="Fachada de un tribunal clásico al atardecer">
+    <div class="container">
+      <div class="blog-home-copy">
+        <div class="kicker">Publicaciones</div>
+        <h2 class="section-title mb-2">{% trans "Publicaciones del estudio" %}</h2>
+        <p class="section-lead mb-3">Textos sobre las materias que definen la operación de la empresa.</p>
+        <span class="btn-link-arrow">Ver las publicaciones <i class="bi bi-arrow-right"></i></span>
+      </div>
+    </div>
+  </a>
+  <div class="container">
+    <div class="row g-4">
+      {% for post in posts %}<div class="col-md-6 col-lg-4 reveal">{% include "includes/post_card.html" %}</div>{% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# ---------- FAQ ---------- #}
+{% if faqs %}
+<section class="section bg-cream">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4 reveal">
+        <div class="kicker">{% trans "Preguntas frecuentes" %}</div>
+        <h2 class="section-title">{% trans "Preguntas frecuentes" %}</h2>
+        <p class="section-lead">Si no encuentra la respuesta, puede escribirnos y le responderemos a la brevedad.</p>
+        <a href="{% url 'core:faq' %}" class="btn btn-outline-gold me-2 mb-2">{% trans "Ver todas" %}</a>
+        <a href="{% url 'core:contact' %}" class="btn btn-navy mb-2">Hacer una consulta</a>
+      </div>
+      <div class="col-lg-8 reveal">
+        <div class="accordion accordion-il" id="faqHome">
+          {% for f in faqs %}
+          <div class="accordion-item">
+            <h3 class="accordion-header">
+              <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ f.pk }}" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">{{ f.question }}</button>
+            </h3>
+            <div id="faq{{ f.pk }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#faqHome">
+              <div class="accordion-body">{{ f.answer|linebreaks }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% include "includes/cta.html" %}
+{% endblock %}

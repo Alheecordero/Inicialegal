@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ page.title }} · {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ page.meta_description|default:page.subtitle|default:site.meta_description }}{% endblock %}
+{% block og_title %}{{ page.title }} · {{ site.site_name }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_header.html" with title=page.title lead=page.subtitle %}
+<section class="section">
+  <div class="container">
+    <div class="rich-content mx-auto" style="max-width:860px">{{ page.content|safe }}</div>
+    <p class="text-muted small text-center mt-5">Última actualización: {{ page.updated_at|date:"d \d\e F \d\e Y" }}</p>
+  </div>
+</section>
+{% endblock %}

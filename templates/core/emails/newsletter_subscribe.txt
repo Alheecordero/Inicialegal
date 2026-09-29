@@ -1,0 +1,25 @@
+{{ site_name }}
+{% if already_listed %}Newsletter · Suscripción registrada{% else %}Confirmación de suscripción al newsletter{% endif %} · Referencia {{ reference }}
+
+Estimado/a suscriptor/a:
+
+{% if already_listed %}Su correo {{ email }} ya figuraba en nuestra lista de publicaciones. Confirmamos que sigue activo y que mantiene su preferencia para recibir nuestros envíos.{% else %}Gracias por suscribirse al newsletter de {{ site_name }}. Confirmamos que hemos registrado su correo {{ email }} para recibir publicaciones del estudio, circulares normativas e información sobre nuestros servicios.{% endif %}
+
+Qué puede esperar
+- Publicaciones y novedades jurídicas del estudio.
+- Información sobre materias relevantes para la operación de su empresa.
+- Cada envío incluirá un enlace para darse de baja.
+
+Si desea dejar de recibir estos correos, podrá usar ese enlace en cualquier mensaje o escribir a {{ office_email }}.
+
+Política de Privacidad: {{ privacy_url }}
+Publicaciones: {{ blog_url }}
+
+Atentamente,
+{{ site_name }}
+Estudio jurídico corporativo
+{{ office_email }}
+{% if site.phone %}{{ site.phone }}
+{% endif %}{{ site_url }}
+
+Inicia Legal 360 – Estudio Jurídico SpA

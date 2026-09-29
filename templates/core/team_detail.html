@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ member.name }} · {{ member.role }} · {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ member.name }}, {{ member.role }}{% if member.specialty %} en {{ member.specialty }}{% endif %} en Inicia Legal.{% endblock %}
+{% block og_type %}profile{% endblock %}
+{% block og_title %}{{ member.name }} · {{ site.site_name }}{% endblock %}
+{% block og_image %}{% if member.photo %}{{ site_url }}{{ member.photo.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block content %}
+<header class="page-header">
+  <div class="container">
+    <nav aria-label="breadcrumb"><ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="{% url 'core:home' %}">{% trans "Inicio" %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'core:team_list' %}">{% trans "Equipo" %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ member.name }}</li>
+    </ol></nav>
+  </div>
+</header>
+<section class="section">
+  <div class="container">
+    <article class="team-roster-card">
+      <div class="team-roster-photo">
+        {% if member.photo %}<img src="{{ member.photo.url }}" alt="{{ member.name }}">{% else %}<span class="avatar">{{ member.initials }}</span>{% endif %}
+      </div>
+      <div class="team-roster-body">
+        <div class="role">{{ member.role }}</div>
+        <h1 class="team-name">{{ member.name }}</h1>
+        {% if member.specialty %}<p class="specialty">{{ member.specialty }}</p>{% endif %}
+        {% if member.bio_lead %}<p class="bio">{{ member.bio_lead }}</p>{% endif %}
+        {% if member.areas.all %}
+        <ul class="team-home-areas">
+          {% for a in member.areas.all %}<li><a href="{{ a.get_absolute_url }}">{{ a.name }}</a></li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% if member.education %}
+        <h2 class="team-label">{% trans "Formación" %}</h2>
+        <ul class="team-home-creds">
+          {% for line in member.education %}<li>{{ line }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% if member.practice_focus %}
+        <h2 class="team-label">{% trans "Áreas de ejercicio" %}</h2>
+        <p class="focus">{{ member.practice_focus }}</p>
+        {% endif %}
+        <div class="team-roster-actions">
+          {% if member.email %}<a class="btn btn-gold" href="mailto:{{ member.email }}"><i class="bi bi-envelope me-1"></i>{{ member.email }}</a>{% endif %}
+          {% if member.linkedin %}<a class="btn btn-outline-navy" href="{{ member.linkedin }}" target="_blank" rel="noopener"><i class="bi bi-linkedin me-1"></i>LinkedIn</a>{% endif %}
+          <a class="btn btn-outline-navy" href="{% url 'core:contact' %}"><i class="bi bi-calendar-check me-1"></i>{% trans "Solicite una reunión" %}</a>
+        </div>
+      </div>
+    </article>
+
+    {% if posts %}
+    <h2 class="h3 mt-5 mb-4">Artículos de {{ member.name.split.0 }}</h2>
+    <div class="row g-4">{% for post in posts %}<div class="col-md-6 col-lg-4">{% include "includes/post_card.html" %}</div>{% endfor %}</div>
+    {% endif %}
+  </div>
+</section>
+{% include "includes/cta.html" %}
+{% endblock %}

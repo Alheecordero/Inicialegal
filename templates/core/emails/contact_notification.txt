@@ -1,0 +1,32 @@
+{{ site_name }} · Nuevo contacto web
+=====================================
+
+SOLICITANTE
+-----------
+Nombre:    {{ msg.name }}
+Correo:    {{ msg.email }}
+Teléfono:  {{ msg.phone|default:"—" }}
+Empresa:   {{ msg.company|default:"—" }}
+
+INTERÉS
+-------
+Plan:      {% if plan_name %}{{ plan_name }}{% else %}—{% endif %}
+Servicio:  {% if service_name %}{{ service_name }}{% else %}—{% endif %}
+Asunto:    {{ msg.subject|default:"—" }}
+
+MENSAJE
+-------
+{{ msg.message }}
+
+REGISTRO
+--------
+Recibido:   {{ msg.created_at|date:"d/m/Y H:i" }} (hora de Chile)
+Origen:     {{ source_label }}
+Estado:     {{ status_label }}
+Privacidad: {% if msg.privacy_accepted %}aceptó la Política de Privacidad{% else %}sin registro de aceptación{% endif %}
+
+Abrir en el panel:
+{{ admin_url }}
+
+---
+Responda a este correo para escribir directamente a {{ msg.email }}.

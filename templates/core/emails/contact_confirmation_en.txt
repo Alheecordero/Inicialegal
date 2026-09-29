@@ -1,0 +1,30 @@
+{{ site_name }}
+Confirmation of receipt · Reference {{ reference }}
+
+Dear {{ msg.name }},
+
+Thank you for contacting {{ site_name }}. We confirm that we have received your request{% if plan_name %} regarding the {{ plan_name }}{% elif service_name %} concerning our {{ service_name }} service{% endif %}.
+
+A lawyer of the firm will review your message and contact you shortly using the email address or telephone number you provided, during our business hours{% if site.schedule %} ({{ site.schedule }}){% endif %}.
+
+Next steps
+1. Review of your enquiry by our legal team.
+2. We will contact you to arrange an initial meeting, free of charge, where appropriate.
+3. If you wish to provide further information, you may reply directly to this email.
+
+Summary of your submission
+{% if msg.subject %}Subject: {{ msg.subject }}
+{% endif %}{% if plan_name %}Plan of interest: {{ plan_name }}
+{% endif %}{% if service_name %}Service of interest: {{ service_name }}
+{% endif %}Date and time: {{ msg.created_at|date:"d/m/Y H:i" }} (Chile time)
+
+Kind regards,
+{{ site_name }}
+Corporate law firm
+{{ office_email }}
+{% if site.phone %}{{ site.phone }}
+{% endif %}{% if site.address or site.city %}{{ site.address }}{% if site.address and site.city %}, {% endif %}{{ site.city }}
+{% endif %}{{ site_url }}
+
+This message confirms only that your form was received. It does not constitute legal advice.
+Inicia Legal 360 – Estudio Jurídico SpA

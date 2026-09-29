@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}{{ area.name }} · Áreas de práctica · {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ area.short_description }}{% endblock %}
+{% block og_title %}{{ area.name }} · {{ site.site_name }}{% endblock %}
+{% block og_description %}{{ area.short_description }}{% endblock %}
+
+{% block content %}
+<header class="page-header page-header-icon">
+  {% if area.image %}
+  <img class="page-header-photo" src="{{ area.image.url }}" alt="" width="840" height="420">
+  {% else %}
+  <i class="page-header-mark {{ area.icon|ph }}" aria-hidden="true"></i>
+  {% endif %}
+  <div class="container">
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'core:home' %}#areas">Áreas de práctica</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ area.name }}</li>
+    </ol></nav>
+    <div class="kicker">Grupo de práctica</div>
+    <h1><i class="{{ area.icon|ph }} text-gold me-2"></i>{{ area.name }}</h1>
+    <p class="lead mb-0">{{ area.short_description }}</p>
+  </div>
+</header>
+
+<section class="section">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <div class="rich-content">{{ area.description|safe }}</div>
+
+        {% if services %}
+        <h2 class="h3 mt-5 mb-4">Servicios en {{ area.name }}</h2>
+        <div class="row g-3">
+          {% for s in services %}
+          <div class="col-md-6"><div class="feature-row"><i class="feature-mark {{ s.icon|ph }}" aria-hidden="true"></i><div class="icon"><i class="{{ s.icon|ph }}"></i></div><div><h4><a href="{{ s.get_absolute_url }}" class="text-navy stretched-link">{{ s.name }}</a></h4><p>{{ s.short_description }}</p></div></div></div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if members %}
+        <h2 class="h3 mt-5 mb-4">Abogados de esta área</h2>
+        <div class="row g-4">
+          {% for m in members %}
+          <div class="col-6 col-md-4"><a href="{{ m.get_absolute_url }}" class="team-card d-block">{% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" class="photo">{% else %}<div class="avatar">{{ m.initials }}</div>{% endif %}<h3>{{ m.name }}</h3><div class="role">{{ m.role }}</div></a></div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+      <aside class="col-lg-4">
+        <div class="contact-card mb-4">
+          <h3 class="h4 mb-2">Solicite una reunión</h3>
+          <p class="text-muted">La primera reunión no tiene costo.</p>
+          <a href="{% url 'core:contact' %}" class="btn btn-gold w-100 mb-2">Solicite una reunión</a>
+          <a href="{{ site.whatsapp_link }}" target="_blank" rel="noopener" class="btn btn-outline-gold w-100"><i class="bi bi-whatsapp me-1"></i> WhatsApp</a>
+        </div>
+        {% if other_areas %}
+        <div class="sidebar-widget">
+          <h4>Otras áreas</h4>
+          <ul>{% for a in other_areas %}<li><a href="{{ a.get_absolute_url }}"><span><i class="{{ a.icon|ph }} me-2 text-gold"></i>{{ a.name }}</span><i class="bi bi-chevron-right small"></i></a></li>{% endfor %}</ul>
+        </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% if posts %}
+<section class="section bg-cream">
+  <div class="container">
+    <h2 class="section-title mb-4">Artículos sobre {{ area.name }}</h2>
+    <div class="row g-4">{% for post in posts %}<div class="col-md-4">{% include "includes/post_card.html" %}</div>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+{% include "includes/cta.html" %}
+{% endblock %}

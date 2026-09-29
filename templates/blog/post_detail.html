@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ post.seo_title }} · Blog {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ post.seo_description|truncatechars:158 }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.seo_title }}{% endblock %}
+{% block og_description %}{{ post.seo_description|truncatechars:200 }}{% endblock %}
+{% block og_image %}{% if post.cover_image %}{{ site_url }}{{ post.cover_image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+{% block extra_head %}
+<meta property="article:published_time" content="{{ post.published_at|date:'c' }}">
+<meta property="article:author" content="{{ post.author_name }}">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","headline":"{{ post.title|escapejs }}","datePublished":"{{ post.published_at|date:'c' }}","dateModified":"{{ post.updated_at|date:'c' }}","author":{"@type":"Person","name":"{{ post.author_name|escapejs }}"},"publisher":{"@type":"Organization","name":"{{ site.site_name|escapejs }}"},"description":"{{ post.seo_description|escapejs }}"{% if post.cover_image %},"image":"{{ site_url }}{{ post.cover_image.url }}"{% endif %},"mainEntityOfPage":"{{ site_url }}{{ post.get_absolute_url }}"}
+</script>
+{% endblock %}
+
+{% block content %}
+{% if not post.is_published %}
+<div class="alert alert-warning text-center rounded-0 mb-0"><i class="bi bi-eye me-1"></i> Vista previa: este artículo aún no está publicado.</div>
+{% endif %}
+<header class="post-hero">
+  <div class="container">
+    <div class="row justify-content-center"><div class="col-lg-9 text-center">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb justify-content-center">
+        <li class="breadcrumb-item"><a href="{% url 'core:home' %}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'blog:post_list' %}">Publicaciones</a></li>
+        {% if post.category %}<li class="breadcrumb-item"><a href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a></li>{% endif %}
+      </ol></nav>
+      {% if post.category %}<a class="cat-badge mb-3" href="{{ post.category.get_absolute_url }}" style="background: {{ post.category.color }}">{{ post.category.name }}</a>{% endif %}
+      <h1 class="mb-3">{{ post.title }}</h1>
+      <div class="post-meta justify-content-center">
+        <span><i class="bi bi-person"></i>{{ post.author_name }}</span>
+        <span><i class="bi bi-calendar3"></i>{{ post.published_at|date:"d \d\e F \d\e Y" }}</span>
+        <span><i class="bi bi-clock"></i>{{ post.reading_time }} min de lectura</span>
+        {% if post.views %}<span><i class="bi bi-eye"></i>{{ post.views }} visitas</span>{% endif %}
+      </div>
+    </div></div>
+  </div>
+</header>
+
+<section class="section pt-0">
+  <div class="container">
+    {% if post.cover_image %}
+    <div class="row justify-content-center"><div class="col-lg-10 post-cover-wrap">
+      <img src="{{ post.cover_image.url }}" alt="{{ post.cover_caption|default:post.title }}" class="post-cover">
+      {% if post.cover_caption %}<div class="small text-muted text-center mt-2">{{ post.cover_caption }}</div>{% endif %}
+    </div></div>
+    {% else %}<div class="pt-5"></div>{% endif %}
+
+    <div class="row g-5">
+      <div class="col-lg-8">
+        <article class="rich-content">{{ post.content|safe }}</article>
+
+        {% if post.tags.all %}
+        <div class="tag-cloud mt-4">{% for t in post.tags.all %}<a href="{{ t.get_absolute_url }}">#{{ t.name }}</a>{% endfor %}</div>
+        {% endif %}
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-4 py-4 border-top border-bottom">
+          <div class="fw-bold text-navy">Compartir:</div>
+          <div class="share-links">
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ site_url }}{{ post.get_absolute_url|urlencode }}" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ site_url }}{{ post.get_absolute_url|urlencode }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="https://twitter.com/intent/tweet?url={{ site_url }}{{ post.get_absolute_url|urlencode }}&text={{ post.title|urlencode }}" target="_blank" rel="noopener" aria-label="X"><i class="bi bi-twitter-x"></i></a>
+            <a href="https://wa.me/?text={{ post.title|urlencode }}%20{{ site_url }}{{ post.get_absolute_url|urlencode }}" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+            <a href="#" class="d-none" data-share aria-label="Compartir"><i class="bi bi-share"></i></a>
+          </div>
+        </div>
+
+        {% if post.areas.all %}
+        <div class="card-il dark mt-4 h-auto">
+          <div class="row align-items-center g-3">
+            <div class="col-md-8"><h4 class="mb-1">Asesoría en {{ post.areas.all|join:", "|default:"la materia de esta publicación" }}</h4><p class="mb-0">Solicite una reunión si su empresa requiere revisar esta materia.</p></div>
+            <div class="col-md-4 text-md-end"><a href="{% url 'core:contact' %}" class="btn btn-gold">Agendar asesoría</a></div>
+          </div>
+        </div>
+        {% endif %}
+
+        <nav class="row g-3 mt-4" aria-label="Navegación entre artículos">
+          <div class="col-md-6">{% if prev_post %}<a href="{{ prev_post.get_absolute_url }}" class="card-il d-block"><small class="text-muted"><i class="bi bi-arrow-left me-1"></i>Artículo anterior</small><div class="fw-bold text-navy mt-1">{{ prev_post.title|truncatechars:70 }}</div></a>{% endif %}</div>
+          <div class="col-md-6 text-md-end">{% if next_post %}<a href="{{ next_post.get_absolute_url }}" class="card-il d-block"><small class="text-muted">Artículo siguiente<i class="bi bi-arrow-right ms-1"></i></small><div class="fw-bold text-navy mt-1">{{ next_post.title|truncatechars:70 }}</div></a>{% endif %}</div>
+        </nav>
+
+        {# Comentarios #}
+        <section id="comentarios" class="mt-5">
+          <h2 class="h3 mb-4">Comentarios {% if comments %}<span class="text-muted fs-6">({{ comments|length }})</span>{% endif %}</h2>
+          {% for c in comments %}
+          <div class="comment">
+            <div class="avatar">{{ c.initials }}</div>
+            <div class="flex-grow-1">
+              <div class="d-flex justify-content-between flex-wrap gap-2"><strong class="text-navy">{{ c.name }}</strong><small class="text-muted">{{ c.created_at|date:"d M Y, H:i" }}</small></div>
+              <p class="mb-2 mt-1">{{ c.body|linebreaksbr }}</p>
+              {% if post.allow_comments %}<button type="button" class="btn btn-link btn-sm p-0 text-gold fw-bold" data-reply="{{ c.pk }}" data-reply-name="{{ c.name }}"><i class="bi bi-reply me-1"></i>Responder</button>{% endif %}
+              {% for r in c.replies.all %}{% if r.is_approved %}
+              <div class="replies mt-3"><div class="comment pt-3"><div class="avatar">{{ r.initials }}</div><div><div class="d-flex justify-content-between flex-wrap gap-2"><strong class="text-navy">{{ r.name }}</strong><small class="text-muted">{{ r.created_at|date:"d M Y, H:i" }}</small></div><p class="mb-0 mt-1">{{ r.body|linebreaksbr }}</p></div></div></div>
+              {% endif %}{% endfor %}
+            </div>
+          </div>
+          {% empty %}
+          <p class="text-muted">Sé el primero en comentar este artículo.</p>
+          {% endfor %}
+
+          {% if post.allow_comments %}
+          <div class="contact-card mt-4" id="commentForm">
+            <h3 class="h4 mb-1">Deja tu comentario</h3>
+            <p class="text-muted small mb-3">Tu correo no será publicado. Los comentarios son moderados antes de aparecer.</p>
+            <div class="alert alert-light border d-none" data-reply-note>Respondiendo a <strong><span></span></strong> · <a href="#" data-cancel-reply>cancelar</a></div>
+            <form method="post" action="{{ post.get_absolute_url }}#comentarios" novalidate>
+              {% csrf_token %}
+              {{ form.website }}
+              <input type="hidden" name="parent" value="">
+              <div class="row g-3">
+                <div class="col-md-6"><label class="form-label" for="{{ form.name.id_for_label }}">Nombre *</label>{{ form.name }}{% if form.name.errors %}<div class="invalid-feedback">{{ form.name.errors.0 }}</div>{% endif %}</div>
+                <div class="col-md-6"><label class="form-label" for="{{ form.email.id_for_label }}">Correo *</label>{{ form.email }}{% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors.0 }}</div>{% endif %}</div>
+                <div class="col-12"><label class="form-label" for="{{ form.body.id_for_label }}">Comentario *</label>{{ form.body }}{% if form.body.errors %}<div class="invalid-feedback">{{ form.body.errors.0 }}</div>{% endif %}</div>
+                <div class="col-12"><button type="submit" class="btn btn-gold">Publicar comentario</button></div>
+              </div>
+            </form>
+          </div>
+          {% endif %}
+        </section>
+      </div>
+      <div class="col-lg-4">{% include "blog/includes/sidebar.html" %}</div>
+    </div>
+  </div>
+</section>
+
+{% if related %}
+<section class="section bg-cream">
+  <div class="container">
+    <h2 class="section-title mb-4">Artículos relacionados</h2>
+    <div class="row g-4">{% for post in related %}<div class="col-md-4">{% include "includes/post_card.html" %}</div>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+{% include "includes/cta.html" %}
+{% endblock %}

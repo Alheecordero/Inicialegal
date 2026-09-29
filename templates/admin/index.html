@@ -1,0 +1,88 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static log %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" href="{% static "admin/css/dashboard.css" %}">{% endblock %}
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div id="content-main" class="il-panel">
+  <section class="il-hero">
+    <p class="il-kicker">Panel</p>
+    <h1>Hola{% if user.get_short_name %}, {{ user.get_short_name }}{% endif %}</h1>
+    <p>Negocio reúne las solicitudes y el newsletter. Edición del sitio reúne el contenido público.</p>
+  </section>
+
+  <section class="il-tiles">
+    <a class="il-tile" href="{% url 'admin:core_contactmessage_changelist' %}?status__exact=new">
+      <span class="il-tile-num">{{ il_new_messages }}</span>
+      <span class="il-tile-label">Solicitudes nuevas</span>
+    </a>
+    <a class="il-tile" href="{% url 'admin:core_newslettersubscriber_changelist' %}">
+      <span class="il-tile-num">{{ il_subscribers }}</span>
+      <span class="il-tile-label">Suscriptores activos</span>
+    </a>
+    <a class="il-tile" href="{% url 'admin:blog_post_changelist' %}">
+      <span class="il-tile-num">{{ il_posts }}</span>
+      <span class="il-tile-label">Publicaciones en línea</span>
+    </a>
+    <a class="il-tile" href="{% url 'admin:core_sitesettings_changelist' %}">
+      <span class="il-tile-num">Sitio</span>
+      <span class="il-tile-label">Datos, redes y pie</span>
+    </a>
+  </section>
+
+  <section class="il-inbox module">
+    <h2>Últimas solicitudes</h2>
+    {% if il_recent_messages %}
+    <table>
+      <thead>
+        <tr><th>Persona</th><th>Plan</th><th>Estado</th><th>Fecha</th></tr>
+      </thead>
+      <tbody>
+        {% for msg in il_recent_messages %}
+        <tr>
+          <td><a href="{% url 'admin:core_contactmessage_change' msg.pk %}">{{ msg.name }}</a><br><span class="il-quiet">{{ msg.email }}</span></td>
+          <td>{{ msg.plan|default:"—" }}</td>
+          <td><span class="il-badge il-badge-{{ msg.status }}">{{ msg.get_status_display }}</span></td>
+          <td>{{ msg.created_at|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="il-quiet">Todavía no hay solicitudes.</p>
+    {% endif %}
+  </section>
+
+  {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+  <div class="module" id="recent-actions-module">
+    <h2>{% translate 'Recent actions' %}</h2>
+    <h3>{% translate 'My actions' %}</h3>
+    {% get_admin_log 10 as admin_log for_user user %}
+    {% if not admin_log %}
+    <p>{% translate 'None available' %}</p>
+    {% else %}
+    <ul class="actionlist">
+      {% for entry in admin_log %}
+      <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+        {% if entry.is_deletion or not entry.get_admin_url %}
+          {{ entry.object_repr }}
+        {% else %}
+          <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+        {% endif %}
+        <br>
+        <span class="mini quiet">{% if entry.content_type %}{{ entry.content_type.name }}{% else %}{% translate 'Unknown content' %}{% endif %}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

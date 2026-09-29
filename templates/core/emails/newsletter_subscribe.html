@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if already_listed %}Suscripción al newsletter{% else %}Confirmación de suscripción{% endif %} · {{ site_name }}</title>
+</head>
+<body style="margin:0;padding:0;background:#f3eee3;font-family:Georgia,'Times New Roman',serif;color:#1f2e3a;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3eee3;padding:32px 12px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border-radius:4px;overflow:hidden;border:1px solid #e9dcc0;box-shadow:0 2px 8px rgba(31,46,58,.06);">
+          <tr>
+            <td style="background:#1f2e3a;padding:28px 32px 24px;text-align:center;">
+              <a href="{{ site_url }}" style="text-decoration:none;">
+                <img src="{{ logo_url }}" alt="{{ site_name }}" width="200" style="display:block;margin:0 auto 16px;max-width:200px;height:auto;border:0;">
+              </a>
+              <div style="width:48px;height:2px;background:#b5924c;margin:0 auto 14px;"></div>
+              <p style="margin:0;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#b5924c;font-family:'Segoe UI',Helvetica,Arial,sans-serif;font-weight:700;">{% if already_listed %}Newsletter{% else %}Confirmación de suscripción{% endif %}</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px 32px 8px;font-family:'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.7;color:#1f2e3a;">
+              <p style="margin:0 0 6px;font-size:13px;color:#967739;letter-spacing:.06em;">Referencia {{ reference }}</p>
+              <p style="margin:0 0 20px;">Estimado/a suscriptor/a:</p>
+              {% if already_listed %}
+              <p style="margin:0 0 18px;">Su correo <strong>{{ email }}</strong> ya figuraba en nuestra lista de publicaciones. Confirmamos que <strong>sigue activo</strong> y que mantiene su preferencia para recibir nuestros envíos.</p>
+              {% else %}
+              <p style="margin:0 0 18px;">Gracias por suscribirse al newsletter de <strong>{{ site_name }}</strong>. Confirmamos que hemos registrado su correo <strong>{{ email }}</strong> para recibir publicaciones del estudio, circulares normativas e información sobre nuestros servicios.</p>
+              {% endif %}
+
+              <p style="margin:0 0 10px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#967739;font-weight:700;">Qué puede esperar</p>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 24px;font-size:14px;line-height:1.65;color:#1f2e3a;">
+                <tr><td style="padding:6px 0;vertical-align:top;width:28px;color:#b5924c;font-weight:700;">·</td><td style="padding:6px 0;">Publicaciones y novedades jurídicas del estudio.</td></tr>
+                <tr><td style="padding:6px 0;vertical-align:top;color:#b5924c;font-weight:700;">·</td><td style="padding:6px 0;">Información sobre materias relevantes para la operación de su empresa.</td></tr>
+                <tr><td style="padding:6px 0;vertical-align:top;color:#b5924c;font-weight:700;">·</td><td style="padding:6px 0;">Cada envío incluirá un enlace para darse de baja.</td></tr>
+              </table>
+
+              <p style="margin:0 0 24px;font-size:14px;color:#5c6b76;">Si desea dejar de recibir estos correos, podrá usar ese enlace en cualquier mensaje o escribir a <a href="mailto:{{ office_email }}" style="color:#967739;">{{ office_email }}</a>.</p>
+
+              <p style="margin:0 0 8px;">Atentamente,</p>
+              <p style="margin:0 0 4px;font-weight:700;">{{ site_name }}</p>
+              <p style="margin:0 0 16px;font-size:14px;color:#5c6b76;">Estudio jurídico corporativo</p>
+              <p style="margin:0;font-size:14px;line-height:1.6;">
+                <a href="mailto:{{ office_email }}" style="color:#967739;text-decoration:none;">{{ office_email }}</a><br>
+                <a href="{{ blog_url }}" style="color:#967739;text-decoration:none;">Ver publicaciones</a> ·
+                <a href="{{ privacy_url }}" style="color:#967739;text-decoration:none;">Política de Privacidad</a>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px 32px 28px;background:#faf7f1;border-top:1px solid #e9dcc0;font-family:'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;line-height:1.55;color:#5c6b76;text-align:center;">
+              Inicia Legal 360 – Estudio Jurídico SpA
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

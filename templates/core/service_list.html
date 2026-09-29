@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}Servicios legales{% if current_area %} · {{ current_area.name }}{% endif %} · {{ site.site_name }}{% endblock %}
+{% block meta_description %}Servicios legales de Inicia Legal para empresas y personas: contratos, laboral, tributario, defensa y más.{% endblock %}
+
+{% block content %}
+{% include "includes/page_header.html" with title="Servicios" kicker="Qué hacemos" lead="Asesoría jurídica para las principales necesidades de la empresa." %}
+
+<section class="section">
+  <div class="container">
+    {% if areas %}
+    <div class="d-flex flex-wrap gap-2 mb-5 justify-content-center">
+      <a href="{% url 'core:service_list' %}" class="btn btn-sm {% if not current_area %}btn-gold{% else %}btn-outline-gold{% endif %}">Todos</a>
+      {% for a in areas %}<a href="?area={{ a.slug }}" class="btn btn-sm {% if current_area == a %}btn-gold{% else %}btn-outline-gold{% endif %}">{{ a.name }}</a>{% endfor %}
+    </div>
+    {% endif %}
+    <div class="row g-4">
+      {% for s in services %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card-il">
+          <div class="icon"><i class="{{ s.icon|ph }}"></i></div>
+          {% if s.area %}<div class="small text-gold fw-bold text-uppercase mb-1" style="letter-spacing:.1em">{{ s.area.name }}</div>{% endif %}
+          <h3>{{ s.name }}</h3>
+          <p>{{ s.short_description }}</p>
+          {% if s.price_note %}<div class="small fw-bold text-navy mb-2">{{ s.price_note }}</div>{% endif %}
+          <a href="{{ s.get_absolute_url }}" class="btn-link-arrow stretched-link">Más información <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center text-muted py-5">Aún no hay servicios publicados en esta categoría.</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% include "includes/cta.html" %}
+{% endblock %}

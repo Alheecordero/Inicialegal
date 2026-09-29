@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+{% load humanize core_extras i18n %}
+{% block title %}{{ plan.name }} · {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ plan.summary|truncatechars:158 }}{% endblock %}
+{% block og_title %}{{ plan.name }} · {{ site.site_name }}{% endblock %}
+{% block og_description %}{{ plan.summary|truncatechars:200 }}{% endblock %}
+{% block og_image %}{% if plan.image %}{{ site_url }}{{ plan.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block content %}
+{# Portada del plan #}
+<section class="hero">
+  <div class="container hero-content">
+    <nav aria-label="breadcrumb"><ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{% url 'core:home' %}">{% trans "Inicio" %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'core:plan_list' %}">{% trans "Planes" %}</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ plan.name }}</li>
+    </ol></nav>
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <div class="kicker">Propuesta de valor</div>
+        <h1 class="display-serif">{{ plan.name }}</h1>
+        {% if plan.tagline %}<p class="lead text-gold fw-bold fs-4">{{ plan.tagline }}</p>{% endif %}
+        <p class="lead">{{ plan.summary }}</p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+          <a href="{% url 'core:contact' %}?plan={{ plan.slug }}" class="btn btn-gold btn-lg">{{ plan.cta_text }}</a>
+          <a href="#inversion" class="btn btn-outline-gold btn-lg">Ver inversión</a>
+          {% if plan.brochure %}<a href="{{ plan.brochure.url }}" target="_blank" rel="noopener" class="btn btn-link-arrow btn-lg"><i class="bi bi-file-earmark-pdf me-1"></i> Descargar propuesta</a>{% endif %}
+        </div>
+      </div>
+      <div class="col-lg-5">
+        {% if plan.image %}<img src="{{ plan.image.url }}" alt="{{ plan.name }}" class="rounded-il shadow-il w-100">{% else %}
+        <div class="price-box">
+          <div class="small text-uppercase fw-bold text-gold" style="letter-spacing:.12em">Asesoría legal continua</div>
+          <div class="font-serif fs-2 text-navy my-2">Equipo especializado.<br>Prevención real.</div>
+          {% if plan.price_annual %}
+          <div class="text-muted">{% trans "Valor anual" %} <strong class="text-navy">{% if plan.currency == "UF" %}{{ plan.price_annual|floatformat:0 }} UF{% else %}${{ plan.price_annual|floatformat:0|intcomma }}{% endif %}</strong> {{ plan.price_suffix }}</div>
+          {% elif plan.price_installment %}
+          <div class="text-muted">Desde <strong class="text-navy">${{ plan.price_installment|floatformat:0|intcomma }}</strong> {{ plan.price_suffix }} mensuales</div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{# Problema / solución #}
+{% if plan.problem_text or plan.solution_text %}
+<section class="section">
+  <div class="container">
+    <div class="row g-4">
+      {% if plan.problem_text %}
+      <div class="col-lg-6">
+        <div class="card-il h-100">
+          <div class="icon"><i class="bi bi-exclamation-triangle"></i></div>
+          <div class="kicker">El problema</div>
+          <h2 class="h3">{{ plan.problem_title|default:"Muchas Pymes toman decisiones legales cuando el problema ya comenzó." }}</h2>
+          <p class="mb-0">{{ plan.problem_text|linebreaksbr }}</p>
+        </div>
+      </div>
+      {% endif %}
+      {% if plan.solution_text %}
+      <div class="col-lg-6">
+        <div class="card-il dark h-100">
+          <div class="icon"><i class="bi bi-shield-check"></i></div>
+          <div class="kicker">La solución</div>
+          <h2 class="h3">{{ plan.solution_title|default:plan.name }}</h2>
+          <p class="mb-0">{{ plan.solution_text|linebreaksbr }}</p>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# Áreas #}
+{% if areas %}
+<section class="section bg-cream">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-4">
+        <div class="kicker">Equipo jurídico especializado</div>
+        <h2 class="section-title">{% trans "La empresa no depende de un solo abogado. Cuenta con un equipo." %}</h2>
+        <p class="section-lead">Acceso a abogados especializados en las áreas clave para la operación empresarial.</p>
+        <div class="d-flex align-items-baseline gap-2"><span class="big-percent" style="font-size:4rem">{{ areas|length }}</span><span class="text-uppercase fw-bold text-navy" style="letter-spacing:.12em">Especialidades<br>clave</span></div>
+      </div>
+      <div class="col-lg-8">
+        <div class="row g-3">
+          {% for a in areas %}
+          <div class="col-md-6"><div class="feature-row"><div class="icon"><i class="{{ a.icon|ph }}"></i></div><div><h4><a href="{{ a.get_absolute_url }}" class="text-navy stretched-link">{{ a.name }}</a></h4><p>{{ a.short_description }}</p></div></div></div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# Servicios incluidos #}
+{% if plan.features.all %}
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="kicker center">Servicios incluidos</div>
+      <h2 class="section-title">{% trans "Un plan anual para las principales necesidades jurídicas de la empresa" %}</h2>
+    </div>
+    <div class="row g-4">
+      {% for f in plan.features.all %}
+      <div class="col-md-6 col-lg-4"><div class="feature-row"><div class="icon"><i class="{{ f.icon|ph }}"></i></div><div><h4>{{ f.title }}</h4><p>{{ f.text }}</p></div></div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# Beneficios #}
+{% if plan.benefits.all %}
+<section class="section bg-cream">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="kicker center">Beneficios para la empresa</div>
+      <h2 class="section-title">{% trans "El valor del plan está en prevenir antes de corregir" %}</h2>
+    </div>
+    <div class="row g-4 numbered">
+      {% for b in plan.benefits.all %}
+      <div class="col-md-6 col-lg-4"><div class="card-il d-flex gap-3"><span class="num"></span><div><h3>{{ b.title }}</h3><p class="mb-0">{{ b.text }}</p></div></div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# Beneficio preferente #}
+{% if plan.discount_badge %}
+<section class="section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-4 text-center"><div class="small text-uppercase fw-bold text-gold" style="letter-spacing:.2em">Beneficio preferente</div><div class="big-percent">{% if "%" in plan.discount_badge %}{{ plan.discount_badge|cut:"Hasta "|cut:" de descuento en servicios adicionales" }}{% else %}<i class="bi bi-star"></i>{% endif %}</div><div class="fw-bold text-navy">La empresa queda en categoría de cliente preferente.</div></div>
+      <div class="col-lg-8">
+        <h2 class="section-title">{{ plan.discount_badge }}</h2>
+        <div class="divider-gold"></div>
+        <p class="section-lead">{{ plan.discount_text|default:"Al contratar el plan, la empresa accede a una tarifa preferente para servicios jurídicos adicionales que no estén incluidos. Este beneficio aplica sobre honorarios profesionales de Inicia Legal, previa evaluación y cotización del servicio requerido." }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# Descripción extendida #}
+{% if plan.description %}
+<section class="section-sm"><div class="container"><div class="rich-content mx-auto" style="max-width:860px">{{ plan.description|safe }}</div></div></section>
+{% endif %}
+
+{# Inversión #}
+{% if plan.price_annual or plan.price_installment %}
+<section class="section bg-cream-2" id="inversion">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center">
+        <div class="kicker center">Inversión</div>
+        <h2 class="section-title">{{ plan.name }} anual</h2>
+        <p class="section-lead mx-auto mb-4">Acceso a respaldo jurídico permanente, equipo especializado y servicios legales preventivos durante todo el año.</p>
+        <div class="price-box mb-4">
+          {% if plan.currency == "UF" and plan.installment_amount %}
+          <div class="small text-uppercase fw-bold text-gold" style="letter-spacing:.12em">{% trans "Cuota mensual" %}</div>
+          <div class="amount">{{ plan.installment_amount|floatformat:"-2" }} UF <small>{% trans "mensuales" %} {{ plan.price_suffix }}</small></div>
+          <div class="fw-bold text-navy mt-3">{% blocktrans with annual=plan.price_annual|floatformat:0 suffix=plan.price_suffix n=plan.installments %}Plan anual de {{ annual }} UF {{ suffix }}, pagadero en {{ n }} cuotas mensuales{% endblocktrans %}.</div>
+          {% elif plan.price_annual %}
+          <div class="small text-uppercase fw-bold text-gold" style="letter-spacing:.12em">{% trans "Valor anual" %}</div>
+          <div class="amount">{% if plan.currency == "UF" %}{{ plan.price_annual|floatformat:0 }} UF{% else %}${{ plan.price_annual|floatformat:0|intcomma }}{% endif %} <small>{{ plan.price_suffix }}</small></div>
+          {% endif %}
+          {% if plan.price_note %}<div class="small text-muted mt-3">{{ plan.price_note }}</div>{% endif %}
+        </div>
+        <div class="discount-badge mb-4"><i class="bi bi-shield-check"></i>Respaldo permanente. Decisiones legales con mayor seguridad.</div>
+        <div><a href="{% url 'core:contact' %}?plan={{ plan.slug }}" class="btn btn-gold btn-lg">{{ plan.cta_text }}</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{# FAQ del plan #}
+{% if faqs %}
+<section class="section">
+  <div class="container">
+    <div class="row justify-content-center"><div class="col-lg-9">
+      <div class="text-center mb-4"><div class="kicker center">Preguntas frecuentes</div><h2 class="section-title">Sobre el {{ plan.name }}</h2></div>
+      <div class="accordion accordion-il" id="faqPlan">
+        {% for f in faqs %}
+        <div class="accordion-item">
+          <h3 class="accordion-header"><button class="accordion-button {% if not forloop.first %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#pf{{ f.pk }}">{{ f.question }}</button></h3>
+          <div id="pf{{ f.pk }}" class="accordion-collapse collapse {% if forloop.first %}show{% endif %}" data-bs-parent="#faqPlan"><div class="accordion-body">{{ f.answer|linebreaks }}</div></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div></div>
+  </div>
+</section>
+{% endif %}
+
+{# Siguiente paso #}
+<section class="cta-band section">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8">
+        <div class="kicker" style="color:var(--il-gold-light)">Activemos el {{ plan.name }}</div>
+        <h2>El siguiente paso es confirmar la modalidad y agendar la reunión inicial de levantamiento legal.</h2>
+        <p class="mb-0">Desde la activación, la empresa cuenta con respaldo jurídico permanente, acceso a un equipo especializado y apoyo preventivo para sus decisiones durante todo el año.</p>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <a href="{% url 'core:contact' %}?plan={{ plan.slug }}" class="btn btn-gold btn-lg">{{ plan.cta_text }}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if other_plans %}
+<section class="section-sm bg-cream">
+  <div class="container">
+    <h2 class="h4 mb-3">Otros planes</h2>
+    <div class="row g-3">{% for p in other_plans %}<div class="col-md-4"><div class="card-il"><h3>{{ p.name }}</h3><p>{{ p.summary|truncatechars:120 }}</p><a href="{{ p.get_absolute_url }}" class="btn-link-arrow stretched-link">Ver plan <i class="bi bi-arrow-right"></i></a></div></div>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Error interno · {{ site.site_name }}{% endblock %}
+{% block content %}
+<section class="error-page bg-cream">
+  <div class="container">
+    <div class="code">500</div>
+    <h1 class="mb-3">Ocurrió un error inesperado</h1>
+    <p class="lead text-muted mb-4">Estamos trabajando para solucionarlo. Intenta nuevamente en unos minutos.</p>
+    <a href="{% url 'core:home' %}" class="btn btn-gold">Volver al inicio</a>
+  </div>
+</section>
+{% endblock %}

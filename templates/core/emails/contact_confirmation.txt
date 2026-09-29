@@ -1,0 +1,30 @@
+{{ site_name }}
+Confirmación de recepción · Referencia {{ reference }}
+
+Estimado/a {{ msg.name }}:
+
+Gracias por contactar a {{ site_name }}. Confirmamos que hemos recibido su solicitud{% if plan_name %} relacionada con el {{ plan_name }}{% elif service_name %} sobre el servicio de {{ service_name }}{% endif %}.
+
+Un abogado del estudio revisará su mensaje y se comunicará con usted a la brevedad, utilizando el correo o teléfono que indicó, dentro de nuestro horario de atención{% if site.schedule %} ({{ site.schedule }}){% endif %}.
+
+Próximos pasos
+1. Revisión de su consulta por el equipo jurídico.
+2. Contacto para coordinar la reunión inicial, sin costo, si corresponde a su materia.
+3. Si desea añadir antecedentes, puede responder directamente a este correo.
+
+Resumen de su envío
+{% if msg.subject %}Asunto: {{ msg.subject }}
+{% endif %}{% if plan_name %}Plan de interés: {{ plan_name }}
+{% endif %}{% if service_name %}Servicio de interés: {{ service_name }}
+{% endif %}Fecha y hora: {{ msg.created_at|date:"d/m/Y H:i" }} hrs. (Chile)
+
+Atentamente,
+{{ site_name }}
+Estudio jurídico corporativo
+{{ office_email }}
+{% if site.phone %}{{ site.phone }}
+{% endif %}{% if site.address or site.city %}{{ site.address }}{% if site.address and site.city %}, {% endif %}{{ site.city }}
+{% endif %}{{ site_url }}
+
+Este mensaje confirma únicamente la recepción de su formulario. No constituye asesoría jurídica.
+Inicia Legal 360 – Estudio Jurídico SpA

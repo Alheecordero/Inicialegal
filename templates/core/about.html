@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load static core_extras i18n %}
+{% block title %}{% trans "Nosotros" %} · {{ site.site_name }}{% endblock %}
+{% block meta_description %}Conoce a Inicia Legal: {{ site.about_title }}. {{ site.tagline }}{% endblock %}
+
+{% block content %}
+{% include "includes/page_header.html" with title="Nosotros" kicker=site.about_kicker lead=site.tagline %}
+
+<section class="section">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6 order-lg-2">
+        {% if site.about_image %}
+          <figure class="about-figure"><img src="{{ site.about_image.url }}" alt="{{ site.about_title }}"></figure>
+        {% elif site.hero_image %}
+          <figure class="about-figure"><img src="{{ site.hero_image.url }}" alt="{{ site.about_title }}"></figure>
+        {% endif %}
+      </div>
+      <div class="col-lg-6 order-lg-1">
+        <h2 class="section-title">{{ site.about_title }}</h2>
+        <div class="divider-gold"></div>
+        <div class="rich-content">{{ site.about_text|safe }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if stats %}
+<section class="stats-strip">
+  <div class="container">
+    <div class="row g-0">
+      {% for s in stats %}
+      <div class="col-6 col-md stat-item"><div class="value">{{ s.value }}</div><div class="label">{{ s.label }}</div></div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section bg-cream">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="kicker center">{% trans "Cómo trabajamos" %}</div>
+      <h2 class="section-title">{% trans "Prevenir antes que corregir" %}</h2>
+    </div>
+    <div class="row g-4 numbered">
+      <div class="col-md-6 col-lg-3"><div class="card-il"><span class="num mb-3"></span><h3>{% trans "Levantamiento legal" %}</h3><p>{% trans "Reunión inicial para conocer la empresa, sus contratos, relaciones laborales y contingencias actuales." %}</p></div></div>
+      <div class="col-md-6 col-lg-3"><div class="card-il"><span class="num mb-3"></span><h3>{% trans "Plan de acción" %}</h3><p>{% trans "Priorizamos lo urgente y diseñamos un orden legal permanente para la operación." %}</p></div></div>
+      <div class="col-md-6 col-lg-3"><div class="card-il"><span class="num mb-3"></span><h3>{% trans "Acompañamiento" %}</h3><p>{% trans "Asesoría continua antes de firmar, contratar, despedir o negociar." %}</p></div></div>
+      <div class="col-md-6 col-lg-3"><div class="card-il"><span class="num mb-3"></span><h3>{% trans "Defensa y representación" %}</h3><p>{% trans "Si surge una contingencia, el equipo que ya conoce la empresa asume su representación." %}</p></div></div>
+    </div>
+  </div>
+</section>
+
+{% if areas %}
+<section class="section">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="kicker center">{% trans "Especialidades" %}</div>
+      <h2 class="section-title">{% trans "Áreas de práctica" %}</h2>
+    </div>
+    <div class="row g-4">
+      {% for a in areas %}
+      <div class="col-md-6 col-xl">
+        <a href="{{ a.get_absolute_url }}" class="area-tile h-100">
+          {% if a.image %}<img src="{{ a.image.url }}" alt="{{ a.name }}" loading="lazy">{% endif %}
+          <i class="{{ a.icon|ph }} area-icon"></i><h3>{{ a.name }}</h3><p>{{ a.short_description }}</p>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if team %}
+<section class="section bg-cream">
+  <div class="container">
+    <div class="text-center mb-5">
+      <div class="kicker center">{% trans "Equipo" %}</div>
+      <h2 class="section-title">{% trans "Quienes te acompañan" %}</h2>
+    </div>
+    <div class="row g-4 justify-content-center">
+      {% for m in team %}
+      <div class="col-6 col-md-4 col-lg-3">
+        <a href="{{ m.get_absolute_url }}" class="team-card d-block">
+          {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" class="photo" loading="lazy">{% else %}<div class="avatar">{{ m.initials }}</div>{% endif %}
+          <h3>{{ m.name }}</h3><div class="role">{{ m.role }}</div>{% if m.specialty %}<div class="specialty">{{ m.specialty }}</div>{% endif %}
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if testimonials %}
+<section class="section">
+  <div class="container">
+    <div class="row g-4">
+      {% for t in testimonials %}
+      <div class="col-md-4">
+        <div class="testimonial">
+          <div class="stars">{% for _ in t.stars %}<i class="bi bi-star-fill"></i>{% endfor %}</div>
+          <blockquote>“{{ t.quote }}”</blockquote>
+          <div class="who">{% if t.photo %}<img src="{{ t.photo.url }}" alt="{{ t.client_name }}">{% else %}<span class="avatar">{{ t.client_name|first }}</span>{% endif %}<div><strong>{{ t.client_name }}</strong><small>{{ t.position }}{% if t.position and t.company %} · {% endif %}{{ t.company }}</small></div></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% include "includes/cta.html" %}
+{% endblock %}

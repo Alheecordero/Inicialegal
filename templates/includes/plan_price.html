@@ -1,0 +1,11 @@
+{% load humanize i18n %}
+{% if plan.currency == "UF" and plan.installment_amount %}
+<div class="plan-price">{{ plan.installment_amount|floatformat:"-2" }} UF <small>{% trans "mensuales" %} {{ plan.price_suffix }}</small></div>
+<div class="plan-meta">{% blocktrans with annual=plan.price_annual|floatformat:0 suffix=plan.price_suffix n=plan.installments %}Plan anual de {{ annual }} UF {{ suffix }}, pagadero en {{ n }} cuotas mensuales{% endblocktrans %}{% if plan.discount_badge %} · {{ plan.discount_badge }}{% endif %}</div>
+{% elif plan.price_annual %}
+<div class="plan-price">{% if plan.currency == "UF" %}{{ plan.price_annual|floatformat:0 }} UF{% else %}${{ plan.price_annual|floatformat:0|intcomma }}{% endif %} <small>{{ plan.price_suffix }}</small></div>
+<div class="plan-meta">
+  {% if plan.payment_modality %}{{ plan.payment_modality }}{% endif %}
+  {% if plan.discount_badge %}{% if plan.payment_modality %} · {% endif %}{{ plan.discount_badge }}{% endif %}
+</div>
+{% endif %}

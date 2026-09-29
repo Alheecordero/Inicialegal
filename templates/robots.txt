@@ -1,0 +1,11 @@
+{% if site_indexing %}User-agent: *
+Disallow: /admin/
+Disallow: /gestion/
+Disallow: /ckeditor5/
+Allow: /
+
+Sitemap: {{ site_url }}/sitemap.xml
+{% else %}# Sitio en desarrollo: no indexar.
+User-agent: *
+Disallow: /
+{% endif %}
