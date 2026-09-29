@@ -7,7 +7,6 @@ CORPORATIVO_AREA_SLUG = "corporativo"
 CORPORATIVO = {
     "short": "Derecho societario, contratación comercial, transacciones y litigación civil y comercial.",
     "intro": [
-        "Derecho societario, contratación comercial, transacciones y litigación civil y comercial.",
         (
             "El grupo Corporativo asesora a empresas en la estructuración, el funcionamiento y el crecimiento "
             "de sus sociedades, así como en las relaciones contractuales que sostienen su operación. Acompañamos "
@@ -20,6 +19,7 @@ CORPORATIVO = {
             "de la empresa."
         ),
     ],
+    "services_heading": "Servicios corporativos",
     "sections": [
         {
             "title": "Derecho societario",
@@ -103,12 +103,14 @@ def build_corporativo_html() -> str:
     parts = []
     for para in CORPORATIVO["intro"]:
         parts.append(f"<p>{para}</p>")
+    heading = CORPORATIVO.get("services_heading")
+    if heading:
+        parts.append(f'<h2 class="h3 mt-5 mb-4">{heading}</h2>')
     for section in CORPORATIVO["sections"]:
         parts.append(f"<h3>{section['title']}</h3>")
-        if section.get("lead_em"):
-            parts.append(f"<p><em>{section['lead_em']}</em></p>")
-        elif section.get("lead"):
-            parts.append(f"<p>{section['lead']}</p>")
+        lead = section.get("lead_em") or section.get("lead")
+        if lead:
+            parts.append(f"<p><em>{lead}</em></p>")
         parts.append("<ul>")
         for _key, text in section["items"]:
             parts.append(f"<li>{text}</li>")

@@ -56,6 +56,11 @@ def attach_image(instance, field_name, filename, save=True):
 
 from apps.blog.models import Category, Post, Tag
 from apps.core.corporativo_content import CORPORATIVO_SHORT, build_corporativo_html, sync_corporativo
+from apps.core.tecnologia_datos_content import (
+    TECNOLOGIA_DATOS_SHORT,
+    build_tecnologia_datos_html,
+    sync_tecnologia_datos,
+)
 from apps.core.models import (
     FAQ,
     Page,
@@ -82,6 +87,7 @@ class Command(BaseCommand):
         self.seed_settings()
         areas = self.seed_areas()
         sync_corporativo(stdout=self.stdout)
+        sync_tecnologia_datos(stdout=self.stdout)
         self.seed_services(areas)
         plans = self.seed_plan()
         self.seed_stats()
@@ -200,6 +206,20 @@ class Command(BaseCommand):
         s.cta_title = "Solicite una reunión"
         s.cta_text = "La primera reunión no tiene costo."
         s.cta_button_text = "Solicite una reunión"
+        if s.hero_primary_text in ("Agenda una asesoría", "Agendar asesoría"):
+            s.hero_primary_text = "Solicite una reunión"
+            changed = True
+        if s.hero_secondary_text == "Conoce nuestros planes":
+            s.hero_secondary_text = "Conozca nuestros planes"
+            changed = True
+        legacy_cookie_markers = ("atender tus solicitudes", "Puedes aceptar", "configurar tus preferencias")
+        if s.cookie_consent_text and any(m in s.cookie_consent_text for m in legacy_cookie_markers):
+            s.cookie_consent_text = SiteSettings._meta.get_field("cookie_consent_text").default
+            changed = True
+        legacy_footer = "Acompañamos tus decisiones"
+        if s.footer_text and legacy_footer in s.footer_text:
+            s.footer_text = SiteSettings._meta.get_field("footer_text").default
+            changed = True
         s.about_kicker = "Nosotros"
         s.about_title = "Criterio jurídico para las decisiones de la empresa"
         s.about_text = (
@@ -217,6 +237,7 @@ class Command(BaseCommand):
             "Estudio jurídico corporativo. Asesoramos a empresas en derecho societario, laboral, "
             "tributario, penal económico y compliance."
         )
+        s.cookie_consent_text = SiteSettings._meta.get_field("cookie_consent_text").default
         s.meta_description = (
             "Estudio jurídico corporativo en Las Condes. Asesoría a empresas en derecho societario, "
             "laboral, tributario, penal económico y compliance."
@@ -241,8 +262,7 @@ class Command(BaseCommand):
             ("derecho-laboral", "Derecho laboral", "Laboral", "bi-people", "reunion-laboral.jpg",
              "Reglamento interno, jornada, auditoría laboral y juicios laborales.",
              "<p>Acompañamos a la empresa en el cumplimiento laboral y en la defensa de sus contingencias.</p>"
-             "<h3>Áreas</h3><ul><li>Derecho laboral</li></ul>"
-             "<h3>Servicios representativos</h3><ul>"
+             '<h2 class="h3 mt-5 mb-4">Servicios laborales</h2><ul>'
              "<li>Reglamento interno con protocolo de la Ley N.º 21.643</li>"
              "<li>Adecuación de jornada a la Ley N.º 21.561</li>"
              "<li>Pactos de horas extraordinarias</li>"
@@ -252,8 +272,7 @@ class Command(BaseCommand):
              "Planificación, reestructuraciones y regularizaciones ante el Servicio de Impuestos Internos.",
              "<p>Orientamos las decisiones de la empresa cuando tienen efecto tributario y en su relación "
              "con el Servicio de Impuestos Internos.</p>"
-             "<h3>Áreas</h3><ul><li>Derecho tributario</li></ul>"
-             "<h3>Servicios representativos</h3><ul>"
+             '<h2 class="h3 mt-5 mb-4">Servicios tributarios</h2><ul>'
              "<li>Planificación tributaria</li>"
              "<li>Reestructuraciones con efecto tributario</li>"
              "<li>Regularizaciones ante el Servicio de Impuestos Internos</li>"
@@ -263,28 +282,18 @@ class Command(BaseCommand):
             ("derecho-penal-economico", "Derecho penal económico", "Penal económico y compliance", "bi-shield-lock", "justicia-lupa.jpg",
              "Modelos de prevención de delitos, programas de cumplimiento e investigaciones internas.",
              "<p>Prevenimos y analizamos la responsabilidad penal de la persona jurídica y de su administración.</p>"
-             "<h3>Áreas</h3><ul><li>Derecho penal económico</li><li>Modelos de prevención de delitos</li><li>Compliance</li></ul>"
-             "<h3>Servicios representativos</h3><ul>"
+             '<h2 class="h3 mt-5 mb-4">Servicios en penal económico y compliance</h2><ul>'
              "<li>Modelos de prevención conforme a las Leyes N.º 20.393 y N.º 21.595</li>"
              "<li>Programas de cumplimiento</li>"
              "<li>Investigaciones internas</li>"
              "<li>Canal de denuncias</li></ul>"),
             ("tecnologia-y-datos", None, "Tecnología y datos", "bi-laptop", "banner-blog.jpg",
-             "Protección de datos personales y ciberseguridad de la empresa.",
-             "<p>Acompañamos a la empresa en el régimen de datos personales y en los contratos de su operación tecnológica.</p>"
-             "<h3>Áreas</h3><ul><li>Protección de datos personales</li><li>Ciberseguridad</li></ul>"
-             "<h3>Servicios representativos</h3><ul>"
-             "<li>Adecuación a la Ley N.º 21.719</li>"
-             "<li>Políticas de privacidad y términos y condiciones</li>"
-             "<li>Contratos tecnológicos</li>"
-             "<li>Cumplimiento de la Ley N.º 21.663</li>"
-             "<li>Marco de ciberseguridad</li></ul>"),
+             TECNOLOGIA_DATOS_SHORT, build_tecnologia_datos_html()),
             ("propiedad-industrial", None, "Propiedad industrial", "bi-award", "marca-registrada.jpg",
              "Registro y defensa de marcas y patentes.",
              "<p>Protegemos los signos distintivos de la empresa ante el Instituto Nacional de Propiedad Industrial "
              "y el Tribunal de Propiedad Industrial.</p>"
-             "<h3>Áreas</h3><ul><li>Marcas</li><li>Patentes</li></ul>"
-             "<h3>Servicios representativos</h3><ul>"
+             '<h2 class="h3 mt-5 mb-4">Servicios en propiedad industrial</h2><ul>'
              "<li>Registro de marcas ante el Instituto Nacional de Propiedad Industrial</li>"
              "<li>Oposiciones</li>"
              "<li>Defensa y apelaciones ante el Tribunal de Propiedad Industrial</li></ul>"),
@@ -477,11 +486,14 @@ class Command(BaseCommand):
             rows = [
                 (f"¿Qué incluye el {plan.name}?", includes),
                 ("¿Cuál es la duración del plan?", "El plan tiene una vigencia anual y puede pagarse en hasta 12 cuotas."),
-                ("¿Qué pasa si necesito un servicio que no está incluido?", "Como cliente del plan accedes a una tarifa preferente de hasta 15% de descuento sobre honorarios profesionales de Inicia Legal, previa evaluación y cotización."),
+                ("¿Qué pasa si necesito un servicio que no está incluido?", "Como cliente del plan accede a una tarifa preferente de hasta 15% de descuento sobre honorarios profesionales de Inicia Legal, previa evaluación y cotización."),
                 ("¿Cómo se activa el plan?", "Se confirma la modalidad de pago y se coordina la reunión inicial. Desde ese momento la empresa cuenta con respaldo jurídico permanente."),
             ]
             for i, (q, a) in enumerate(rows):
                 FAQ.objects.update_or_create(question=q, plan=plan, defaults={"answer": a, "order": i})
+        FAQ.objects.filter(answer__contains="accedes a una tarifa preferente").update(
+            answer="Como cliente del plan accede a una tarifa preferente de hasta 15% de descuento sobre honorarios profesionales de Inicia Legal, previa evaluación y cotización."
+        )
         self.stdout.write("· Preguntas frecuentes")
 
     def seed_team(self, areas):

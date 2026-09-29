@@ -30,15 +30,6 @@
       <div class="col-lg-8">
         <div class="rich-content">{{ area.description|safe }}</div>
 
-        {% if services %}
-        <h2 class="h3 mt-5 mb-4">Servicios en {{ area.name }}</h2>
-        <div class="row g-3">
-          {% for s in services %}
-          <div class="col-md-6"><div class="feature-row"><i class="feature-mark {{ s.icon|ph }}" aria-hidden="true"></i><div class="icon"><i class="{{ s.icon|ph }}"></i></div><div><h4><a href="{{ s.get_absolute_url }}" class="text-navy stretched-link">{{ s.name }}</a></h4><p>{{ s.short_description }}</p></div></div></div>
-          {% endfor %}
-        </div>
-        {% endif %}
-
         {% if members %}
         <h2 class="h3 mt-5 mb-4">Abogados de esta área</h2>
         <div class="row g-4">

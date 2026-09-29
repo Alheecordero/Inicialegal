@@ -58,9 +58,9 @@
                 <div class="consent-box">
                   <div class="form-check">
                     {{ form.accept }}
-                    <label class="form-check-label" for="{{ form.accept.id_for_label }}">{% if LANGUAGE_CODE == "en" %}I have read and accept the <a href="{{ site.privacy_policy_url|default:'/p/privacidad/'|localized_href }}">Privacy Policy</a> of Inicia Legal 360 – Estudio Jurídico SpA, the controller of my data.{% else %}He leído y acepto la <a href="{{ site.privacy_policy_url|default:'/p/privacidad/' }}">Política de Privacidad</a> de Inicia Legal 360 – Estudio Jurídico SpA, responsable del tratamiento de mis datos.{% endif %}</label>
+                    <label class="form-check-label" for="{{ form.accept.id_for_label }}">He leído y acepto la <a href="{{ site.privacy_policy_url|default:'/p/privacidad/' }}">Política de Privacidad</a> de Inicia Legal 360 – Estudio Jurídico SpA, responsable del tratamiento de mis datos.</label>
                   </div>
-                  <p class="consent-note">{% if LANGUAGE_CODE == "en" %}They will be used solely to manage and reply to my request and to arrange the initial meeting. I may exercise my rights of access, rectification, erasure, objection, portability and blocking, and withdraw my consent, by writing to <a href="mailto:contacto@inicialegal.cl">contacto@inicialegal.cl</a>.{% else %}Estos se usarán exclusivamente para gestionar y responder mi solicitud y coordinar la reunión inicial. Puedo ejercer mis derechos de acceso, rectificación, supresión, oposición, portabilidad y bloqueo, y retirar mi consentimiento, escribiendo a <a href="mailto:contacto@inicialegal.cl">contacto@inicialegal.cl</a>.{% endif %}</p>
+                  <p class="consent-note">Estos se usarán exclusivamente para gestionar y responder mi solicitud y coordinar la reunión inicial. Puedo ejercer mis derechos de acceso, rectificación, supresión, oposición, portabilidad y bloqueo, y retirar mi consentimiento, escribiendo a <a href="mailto:contacto@inicialegal.cl">contacto@inicialegal.cl</a>.</p>
                   {% if form.accept.errors %}<div class="invalid-feedback">{{ form.accept.errors.0 }}</div>{% endif %}
                 </div>
               </div>

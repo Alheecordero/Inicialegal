@@ -154,7 +154,7 @@
     {% if team %}
     <div class="text-center mb-5 mt-5 reveal">
       <div class="kicker center">{% trans "Equipo" %}</div>
-      <h2 class="section-title">{% trans "Quienes te acompañan" %}</h2>
+      <h2 class="section-title">{% trans "Quiénes le acompañan" %}</h2>
     </div>
     <div class="row g-4">
       {% for m in team %}
@@ -282,7 +282,7 @@
         <h2 class="section-title">{% trans "Preguntas frecuentes" %}</h2>
         <p class="section-lead">Si no encuentra la respuesta, puede escribirnos y le responderemos a la brevedad.</p>
         <a href="{% url 'core:faq' %}" class="btn btn-outline-gold me-2 mb-2">{% trans "Ver todas" %}</a>
-        <a href="{% url 'core:contact' %}" class="btn btn-navy mb-2">Hacer una consulta</a>
+        <a href="{% url 'core:contact' %}" class="btn btn-navy mb-2">Solicite una reunión</a>
       </div>
       <div class="col-lg-8 reveal">
         <div class="accordion accordion-il" id="faqHome">

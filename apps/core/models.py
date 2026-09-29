@@ -75,7 +75,7 @@ class SiteSettings(models.Model):
     youtube = models.URLField("YouTube", blank=True)
 
     # Hero
-    hero_kicker = models.CharField("texto superior del hero", max_length=120, blank=True, default="Tu empresa, con respaldo legal")
+    hero_kicker = models.CharField("texto superior del hero", max_length=120, blank=True, default="Su empresa, con respaldo legal")
     hero_title = models.CharField(
         "título del hero", max_length=200, default="Soluciones legales para empresas que *quieren crecer*",
         help_text="Encierra entre asteriscos la parte que quieres destacar en dorado. Ej: Soluciones legales para empresas que *quieren crecer*",
@@ -86,9 +86,9 @@ class SiteSettings(models.Model):
     )
     hero_image = models.ImageField("imagen del hero", upload_to="site/", blank=True, help_text="Horizontal, idealmente 2560×1080 px o mayor.")
     hero_image_mobile = models.ImageField("imagen del hero (móvil)", upload_to="site/", blank=True, help_text="Opcional. Vertical o cuadrada (ej. 1200×1400 px). Si se deja vacía se usa la imagen principal.")
-    hero_primary_text = models.CharField("botón principal (texto)", max_length=60, default="Agenda una asesoría")
+    hero_primary_text = models.CharField("botón principal (texto)", max_length=60, default="Solicite una reunión")
     hero_primary_url = models.CharField("botón principal (URL)", max_length=200, default="/contacto/")
-    hero_secondary_text = models.CharField("botón secundario (texto)", max_length=60, blank=True, default="Conoce nuestros planes")
+    hero_secondary_text = models.CharField("botón secundario (texto)", max_length=60, blank=True, default="Conozca nuestros planes")
     hero_secondary_url = models.CharField("botón secundario (URL)", max_length=200, blank=True, default="/planes/")
 
     # Sección "Nosotros" en el home
@@ -98,16 +98,16 @@ class SiteSettings(models.Model):
     about_image = models.ImageField("nosotros · imagen", upload_to="site/", blank=True)
 
     # Llamado a la acción final
-    cta_title = models.CharField("CTA · título", max_length=200, blank=True, default="¿Tu empresa está tomando decisiones legales a tiempo?")
-    cta_text = models.TextField("CTA · texto", blank=True, default="Conversemos. Agenda una reunión inicial sin costo y descubre cómo podemos acompañarte durante todo el año.")
-    cta_button_text = models.CharField("CTA · botón", max_length=60, blank=True, default="Contáctanos")
+    cta_title = models.CharField("CTA · título", max_length=200, blank=True, default="¿Su empresa está tomando decisiones legales a tiempo?")
+    cta_text = models.TextField("CTA · texto", blank=True, default="Conversemos. La primera reunión no tiene costo.")
+    cta_button_text = models.CharField("CTA · botón", max_length=60, blank=True, default="Solicite una reunión")
     cta_button_url = models.CharField("CTA · URL", max_length=200, blank=True, default="/contacto/")
 
     # SEO / otros
     meta_description = models.CharField("meta descripción por defecto", max_length=160, blank=True, default="Inicia Legal: asesoría legal preventiva para pymes y empresas en Chile. Plan Legal Advance, contratos, laboral, tributario y penal económico.")
     meta_keywords = models.CharField("palabras clave", max_length=255, blank=True, default="abogados, asesoría legal empresas, plan legal, pymes, Chile")
     google_analytics_id = models.CharField("Google Analytics ID", max_length=30, blank=True, help_text="Ej: G-XXXXXXXXXX")
-    footer_text = models.TextField("texto del pie de página", blank=True, default="Estudio jurídico especializado en asesoría legal preventiva para empresas. Acompañamos tus decisiones con un equipo experto en materias civil, comercial, laboral, tributaria y penal económica.")
+    footer_text = models.TextField("texto del pie de página", blank=True, default="Estudio jurídico corporativo. Asesoramos a empresas en derecho societario, laboral, tributario, penal económico y compliance.")
     announcement = models.CharField("barra de anuncio", max_length=200, blank=True, help_text="Texto opcional que se muestra sobre el menú. Dejar vacío para ocultar.")
     announcement_url = models.CharField("URL del anuncio", max_length=200, blank=True)
     monogram = models.CharField("monograma decorativo", max_length=4, blank=True, default="IL", help_text="Letras gigantes que se muestran como marca de agua en el pie de página y la banda de contacto. Dejar vacío para ocultar.")
@@ -119,9 +119,9 @@ class SiteSettings(models.Model):
         "texto del aviso", blank=True,
         default=(
             "Este sitio web utiliza cookies y otras tecnologías, y trata los datos personales que nos proporcionas para "
-            "ofrecer una mejor experiencia, atender tus solicitudes y cumplir las finalidades descritas en nuestra Política "
-            "de Privacidad, de conformidad con la Ley N.° 21.719 sobre Protección de Datos Personales. Puedes aceptar, "
-            "rechazar o configurar tus preferencias en cualquier momento."
+            "ofrecer una mejor experiencia, atender sus solicitudes y cumplir las finalidades descritas en nuestra Política "
+            "de Privacidad, de conformidad con la Ley N.° 21.719 sobre Protección de Datos Personales. Puede aceptar, "
+            "rechazar o configurar sus preferencias en cualquier momento."
         ),
     )
     cookie_policy_url = models.CharField("URL de la política de cookies", max_length=200, blank=True, default="/p/politica-de-cookies/")
