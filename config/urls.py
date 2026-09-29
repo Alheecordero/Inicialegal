@@ -34,7 +34,6 @@ urlpatterns = [
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
         name="robots",
     ),
-    path("asistente/", include("apps.assistant.urls", namespace="assistant")),
     path("blog/", include("apps.blog.urls", namespace="blog")),
     path("", include("apps.core.urls", namespace="core")),
 ]

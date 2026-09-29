@@ -18,15 +18,6 @@ env = environ.Env(
     CONTACT_NOTIFY_EMAIL=(str, "contacto@inicialegal.cl"),
     SITE_URL=(str, "http://127.0.0.1:8000"),
     SITE_INDEXING=(bool, True),
-    ASSISTANT_ENABLED=(bool, True),
-    ASSISTANT_API_URL=(str, ""),
-    ASSISTANT_API_KEY=(str, ""),
-    ASSISTANT_MODEL=(str, "gpt-4o-mini"),
-    ASSISTANT_TIMEOUT=(int, 20),
-    ASSISTANT_MAX_INPUT_CHARS=(int, 900),
-    ASSISTANT_MAX_CONTEXT_ITEMS=(int, 5),
-    ASSISTANT_RATE_LIMIT=(int, 12),
-    ASSISTANT_LOG_CONVERSATIONS=(bool, False),
 )
 environ.Env.read_env(BASE_DIR / ".env")
 
@@ -51,7 +42,6 @@ INSTALLED_APPS = [
     "django_ckeditor_5",
     "apps.core",
     "apps.blog",
-    "apps.assistant",
 ]
 
 MIDDLEWARE = [
@@ -137,16 +127,6 @@ CONTACT_CLIENT_FROM_EMAIL = env(
     default=f"Inicia Legal <{env('CONTACT_NOTIFY_EMAIL')}>",
 )
 
-# Asistente conversacional
-ASSISTANT_ENABLED = env("ASSISTANT_ENABLED")
-ASSISTANT_API_URL = env("ASSISTANT_API_URL")
-ASSISTANT_API_KEY = env("ASSISTANT_API_KEY")
-ASSISTANT_MODEL = env("ASSISTANT_MODEL")
-ASSISTANT_TIMEOUT = env("ASSISTANT_TIMEOUT")
-ASSISTANT_MAX_INPUT_CHARS = env("ASSISTANT_MAX_INPUT_CHARS")
-ASSISTANT_MAX_CONTEXT_ITEMS = env("ASSISTANT_MAX_CONTEXT_ITEMS")
-ASSISTANT_RATE_LIMIT = env("ASSISTANT_RATE_LIMIT")
-ASSISTANT_LOG_CONVERSATIONS = env("ASSISTANT_LOG_CONVERSATIONS")
 # Ruta del panel. No usar /admin/: es la dirección que prueban los escáneres.
 ADMIN_PATH = "gestion/"
 
