@@ -5,9 +5,7 @@ SERVICE_SLUG_PREFIX = "tecnologia-datos"
 
 TECNOLOGIA_DATOS = {
     "short": "Protección de datos personales y ciberseguridad de la empresa.",
-    "intro": [
-        "Acompañamos a la empresa en el régimen de datos personales y en los contratos de su operación tecnológica.",
-    ],
+    "intro": [],
     "services_heading": "Servicios en tecnología y datos",
     "sections": [
         {
