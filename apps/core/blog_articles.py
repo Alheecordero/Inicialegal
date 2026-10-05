@@ -3,6 +3,9 @@
 El texto se conserva tal como fue escrito.
 """
 
+from apps.core.blog_article_reorganizacion import CONTENT as REORGANIZACION_CONTENT
+from apps.core.blog_article_reorganizacion import TITLE as REORGANIZACION_TITLE
+
 ARTICLES = [{'title': 'SpA: la sociedad preferida por los emprendedores en Chile (y cuándo no conviene '
            'usarla)',
   'content': '<p>Si eres emprendedor en Chile, seguramente ya escuchaste hablar de la '
@@ -550,5 +553,13 @@ ARTICLES = [{'title': 'SpA: la sociedad preferida por los emprendedores en Chile
   'author': 'Ángela Montiel',
   'category': 'Societario',
   'area': 'Tecnología y datos',
+  'featured': False,
+  'cover': 'blog-terminos-condiciones.jpg'},
+ {'title': REORGANIZACION_TITLE,
+  'content': REORGANIZACION_CONTENT,
+  'published': '2026-10-04T10:00:00',
+  'author': 'Ángela Montiel',
+  'category': 'Societario',
+  'area': 'Corporativo',
   'featured': True,
-  'cover': 'blog-terminos-condiciones.jpg'}]
+  'cover': 'blog-reorganizacion-empresarial.jpg'}]
