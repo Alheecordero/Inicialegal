@@ -13,6 +13,7 @@ from apps.core.sitemaps import (
     PracticeAreaSitemap,
     ServiceSitemap,
     StaticViewSitemap,
+    TeamSitemap,
 )
 
 sitemaps = {
@@ -21,6 +22,7 @@ sitemaps = {
     "areas": PracticeAreaSitemap,
     "planes": PlanSitemap,
     "paginas": PageSitemap,
+    "equipo": TeamSitemap,
     "blog": PostSitemap,
 }
 
@@ -34,6 +36,15 @@ urlpatterns = [
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
         name="robots",
     ),
+    path(
+        "googlef65bbc244d1047fc.html",
+        TemplateView.as_view(template_name="googlef65bbc244d1047fc.html", content_type="text/html"),
+    ),
+    path(
+        "BingSiteAuth.xml",
+        TemplateView.as_view(template_name="BingSiteAuth.xml", content_type="application/xml"),
+    ),
+    path("asistente/", include("apps.assistant.urls", namespace="assistant")),
     path("blog/", include("apps.blog.urls", namespace="blog")),
     path("", include("apps.core.urls", namespace="core")),
 ]
