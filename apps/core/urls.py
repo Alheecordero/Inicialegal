@@ -6,6 +6,8 @@ app_name = "core"
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("instagram/", views.instagram, name="instagram"),
+    path("ig/", views.instagram_short, name="instagram_short"),
     path("nosotros/", views.about, name="about"),
     path("servicios/", views.service_list, name="service_list"),
     path("servicios/<slug:slug>/", views.service_detail, name="service_detail"),

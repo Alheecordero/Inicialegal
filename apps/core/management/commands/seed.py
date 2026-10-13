@@ -519,7 +519,7 @@ class Command(BaseCommand):
 
     def seed_team(self, areas):
         data = [
-            ("angela-montiel", "Ángela María Montiel Báez", "Socia fundadora", "Abogada corporativa", "angela-montiel.jpg", "",
+            ("angela-montiel", "Ángela María Montiel Báez", "Socia fundadora", "Abogada corporativa", "angela-montiel-v2.jpg", "",
              ["Corporativo", "Tributario", "Tecnología y datos"],
              "<p><strong>Ángela María Montiel Báez</strong> es abogada corporativa y socia fundadora de Inicia Legal. "
              "Acompaña a empresas y pymes en la estructuración de sus relaciones contractuales, la prevención de "

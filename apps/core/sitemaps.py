@@ -1,7 +1,7 @@
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
-from .models import Page, Plan, PracticeArea, Service
+from .models import Page, Plan, PracticeArea, Service, TeamMember
 
 
 class StaticViewSitemap(Sitemap):
@@ -36,6 +36,13 @@ class PlanSitemap(ServiceSitemap):
 
     def items(self):
         return Plan.objects.filter(is_active=True)
+
+
+class TeamSitemap(ServiceSitemap):
+    priority = 0.6
+
+    def items(self):
+        return TeamMember.objects.filter(is_active=True)
 
 
 class PageSitemap(ServiceSitemap):

@@ -1,6 +1,6 @@
 <article class="post-card">
   <a href="{{ post.get_absolute_url }}" class="thumb" aria-label="{{ post.title }}">
-    {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="{{ post.title }}" loading="lazy">{% else %}<div class="no-img"><i class="bi bi-journal-text"></i></div>{% endif %}
+    {% if post.cover_image %}<img src="{{ post.cover_image.url }}" alt="{{ post.title }}" width="1200" height="675" decoding="async" loading="lazy">{% else %}<div class="no-img"><i class="bi bi-journal-text"></i></div>{% endif %}
   </a>
   <div class="body">
     <div class="d-flex justify-content-between align-items-center mb-2">

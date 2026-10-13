@@ -26,7 +26,7 @@
 <nav class="navbar navbar-expand-lg navbar-il sticky-top">
   <div class="container">
     <a class="navbar-brand" href="{% url 'core:home' %}">
-      <img src="{% if site.logo %}{{ site.logo.url }}{% else %}{% static 'img/logo.png' %}{% endif %}" alt="{{ site.site_name }}">
+      <img src="{% if site.logo %}{{ site.logo.url }}{% else %}{% static 'img/logo.png' %}{% endif %}" alt="{{ site.site_name }}" width="480" height="160" decoding="async">
     </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="{% trans 'Abrir menú' %}">
       <i class="bi bi-list fs-3 text-navy"></i>
