@@ -6,7 +6,7 @@
   <title>{% block title %}{{ site.site_name }} · {{ site.tagline }}{% endblock %}</title>
   <meta name="description" content="{% block meta_description %}{{ site.meta_description }}{% endblock %}">
   {% if site.meta_keywords %}<meta name="keywords" content="{{ site.meta_keywords }}">{% endif %}
-  <link rel="canonical" href="{{ site_url }}{{ request.path }}">
+  <link rel="canonical" href="{% block canonical %}{{ site_url }}{{ request.path }}{% endblock %}">
   {% block hreflang %}
   <link rel="alternate" hreflang="es-CL" href="{{ site_url }}{{ canonical_path }}">
   {% endblock %}
@@ -25,13 +25,17 @@
   <link rel="icon" type="image/png" href="{% if site.favicon %}{{ site.favicon.url }}{% else %}{% static 'img/favicon.png' %}{% endif %}">
   <link rel="alternate" type="application/rss+xml" title="Blog {{ site.site_name }}" href="{% url 'blog_feed' %}">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,700;0,6..12,800;1,6..12,400&display=swap" rel="stylesheet">
+  <link rel="preload" href="{% static 'fonts/nunito-sans-400.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'fonts/playfair-display-500.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css" rel="stylesheet">
-  <link href="{% static 'css/main.css' %}?v=30" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/light/style.css" rel="stylesheet">
+  </noscript>
+  <link href="{% static 'css/main.css' %}?v=43" rel="stylesheet">
   {% block extra_head %}{% endblock %}
 
   {# Analytics se carga desde main.js solo si el usuario acepta cookies analíticas (Ley 21.719) #}
@@ -61,10 +65,12 @@
     <i class="bi bi-whatsapp"></i>
     <span class="tip">{% trans "¿Conversamos por WhatsApp?" %}</span>
   </a>
+  {% if assistant_enabled and request.resolver_match.url_name != "instagram" %}{% include "includes/assistant_widget.html" %}{% endif %}
   {% include "includes/cookie_consent.html" %}
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script src="{% static 'js/main.js' %}"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script defer src="{% static 'js/main.js' %}?v=8"></script>
+  {% if assistant_enabled and request.resolver_match.url_name != "instagram" %}<script defer src="{% static 'js/assistant.js' %}?v=2"></script>{% endif %}
   {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -12,6 +12,7 @@ def site_context(request):
         "site": SiteSettings.load(),
         "site_url": settings.SITE_URL,
         "site_indexing": settings.SITE_INDEXING,
+        "assistant_enabled": settings.ASSISTANT_ENABLED,
         "canonical_path": canonical,
         "nav_areas": PracticeArea.objects.filter(is_active=True).only("name", "slug"),
         "nav_services": Service.objects.filter(is_active=True).only("name", "slug")[:8],

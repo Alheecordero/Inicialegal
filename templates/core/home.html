@@ -2,9 +2,12 @@
 {% load static humanize core_extras i18n %}
 
 {% block extra_head %}
-{% for slide in hero_slides %}
-{% if slide.image or slide.image_mobile %}<link rel="preload" as="image" href="{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}">{% endif %}
-{% endfor %}
+{% if hero_slides %}
+{% with slide=hero_slides.0 %}
+{% if slide.image %}<link rel="preload" as="image" href="{{ slide.image.url }}" media="(min-width: 768px)" fetchpriority="high">{% endif %}
+{% if slide.image_mobile %}<link rel="preload" as="image" href="{{ slide.image_mobile.url }}" media="(max-width: 767.98px)" fetchpriority="high">{% elif slide.image %}<link rel="preload" as="image" href="{{ slide.image.url }}" media="(max-width: 767.98px)" fetchpriority="high">{% endif %}
+{% endwith %}
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -12,8 +15,8 @@
 {% if hero_slides %}
 <section class="hero hero-slider" data-hero-slider aria-roledescription="carrusel">
   {% for slide in hero_slides %}
-  <div class="hero-slide hero-image hero-slide-{{ slide.variant }} hero-slide-{{ slide.key }}{% if not slide.image and not slide.image_mobile %} hero-slide-plain{% endif %}{% if forloop.first %} is-active{% endif %}"{% if slide.image or slide.image_mobile %} style="--hero-bg: url('{% if slide.image %}{{ slide.image.url }}{% else %}{{ slide.image_mobile.url }}{% endif %}'); --hero-bg-m: url('{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}')"{% endif %}{% if not forloop.first %} aria-hidden="true"{% endif %}>
-    {% if slide.image or slide.image_mobile %}<img class="hero-slide-photo" src="{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}" alt="" width="960" height="420" decoding="async"{% if forloop.first %} fetchpriority="high"{% endif %}>{% endif %}
+  <div class="hero-slide hero-image hero-slide-{{ slide.variant }} hero-slide-{{ slide.key }}{% if not slide.image and not slide.image_mobile %} hero-slide-plain{% endif %}{% if forloop.first %} is-active{% endif %}"{% if slide.image or slide.image_mobile %}{% if forloop.first %} style="--hero-bg: url('{% if slide.image %}{{ slide.image.url }}{% else %}{{ slide.image_mobile.url }}{% endif %}'); --hero-bg-m: url('{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}');"{% else %} data-hero-bg="{% if slide.image %}{{ slide.image.url }}{% else %}{{ slide.image_mobile.url }}{% endif %}" data-hero-bg-m="{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}"{% endif %}{% endif %}{% if not forloop.first %} aria-hidden="true"{% endif %}>
+    {% if slide.image or slide.image_mobile %}<picture><source media="(max-width: 767.98px)" {% if forloop.first %}srcset="{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}"{% else %}data-srcset="{% if slide.image_mobile %}{{ slide.image_mobile.url }}{% else %}{{ slide.image.url }}{% endif %}"{% endif %}><img class="hero-slide-photo" alt="" width="960" height="420" decoding="async"{% if forloop.first %} fetchpriority="high"{% endif %}></picture>{% endif %}
     <div class="container hero-content">
       {% if slide.variant == "plan" and plans %}
       {% if slide.kicker %}<div class="kicker center hero-plan-kicker">{{ slide.kicker }}</div>{% endif %}
@@ -116,7 +119,7 @@
   </div>
   <div class="area-accordion reveal" data-area-accordion>
       {% for a in areas %}
-      <a href="{{ a.get_absolute_url }}" class="area-acc-item{% if forloop.first %} is-active{% endif %}"{% if a.image %} style="background-image:url('{{ a.image.url }}')"{% endif %} aria-label="{{ a.name }}">
+      <a href="{{ a.get_absolute_url }}" class="area-acc-item{% if forloop.first %} is-active{% endif %}"{% if a.image %} data-bg="{{ a.image.url }}"{% endif %} aria-label="{{ a.name }}">
         <span class="area-acc-index">0{{ forloop.counter }}</span>
         <div class="area-acc-content">
           <i class="{{ a.icon|ph }} area-acc-icon"></i>
@@ -140,14 +143,14 @@
       {% if site.about_image %}
       <div class="col-lg-6 reveal">
         <figure class="about-figure">
-          <img src="{{ site.about_image.url }}" alt="{{ site.about_title }}" loading="lazy">
+          <img src="{{ site.about_image.url }}" alt="{{ site.about_title }}" decoding="async" loading="lazy">
         </figure>
       </div>
       {% endif %}
       <div class="col-lg-{% if site.about_image %}6{% else %}8{% endif %} reveal about-copy">
         {% if site.about_kicker %}<div class="kicker">{{ site.about_kicker }}</div>{% endif %}
         <h2 class="section-title">{{ site.about_title }}</h2>
-        <div class="rich-content studio-copy about-teaser">{{ site.about_text|striptags|truncatewords:42 }}</div>
+        <div class="rich-content studio-copy">{{ site.about_text|safe }}</div>
         <a href="{% url 'core:about' %}" class="btn btn-navy mt-3">{% trans "Conozca nuestro estudio" %}</a>
       </div>
     </div>
@@ -161,10 +164,9 @@
       <div class="col-lg-6 reveal">
         <a href="{{ m.get_absolute_url }}" class="team-home-card">
           <div class="team-home-photo">
-            {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% else %}<span class="avatar">{{ m.initials }}</span>{% endif %}
+            {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" width="640" height="800" decoding="async" loading="lazy">{% else %}<span class="avatar">{{ m.initials }}</span>{% endif %}
           </div>
           <div class="team-home-body">
-            <div class="role">{{ m.role }}</div>
             <h3>{{ m.name }}</h3>
             {% if m.specialty %}<p class="specialty">{{ m.specialty }}</p>{% endif %}
             {% if m.areas.all %}
@@ -254,7 +256,7 @@
 {% if posts %}
 <section class="section">
   <a href="{% url 'blog:post_list' %}" class="blog-home-banner">
-    <img src="{% static 'img/blog-portada.jpg' %}" alt="Fachada de un tribunal clásico al atardecer">
+    <img src="{% static 'img/blog-portada.webp' %}" alt="Fachada de un tribunal clásico al atardecer" width="1200" height="614" decoding="async" loading="lazy">
     <div class="container">
       <div class="blog-home-copy">
         <div class="kicker">Publicaciones</div>
