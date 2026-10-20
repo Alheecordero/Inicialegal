@@ -351,3 +351,27 @@ msgstr "Please enter a valid email address."
 
 msgid "Empresas que acompañamos y confían en nosotros"
 msgstr "Companies we work with and trust us"
+
+msgid "Nuestra forma de trabajar"
+msgstr "How we work"
+
+msgid "Comprendemos su negocio antes de recomendar"
+msgstr "We understand your business before we advise"
+
+msgid "Ordenamos el riesgo jurídico con criterio preventivo"
+msgstr "We manage legal risk with a preventive approach"
+
+msgid "Equipo multidisciplinario, una sola conversación"
+msgstr "One multidisciplinary team, one conversation"
+
+msgid "Seis grupos de práctica para decisiones de gobierno corporativo, contratos, cumplimiento normativo y crecimiento."
+msgstr "Six practice groups for corporate governance, contracts, compliance and growth decisions."
+
+msgid "Consulte por esta área"
+msgstr "Enquire about this practice area"
+
+msgid "Plan Legal Pyme para respaldo recurrente. Plan Legal Advance si necesita más contratos a medida y cobertura de juicio laboral."
+msgstr "Plan Legal Pyme for ongoing support. Plan Legal Advance if you need more bespoke contracts and labour litigation coverage."
+
+msgid "Conversemos sin costo"
+msgstr "Talk to us at no cost"

@@ -4,7 +4,7 @@ AREA_SLUG = "tecnologia-y-datos"
 SERVICE_SLUG_PREFIX = "tecnologia-datos"
 
 TECNOLOGIA_DATOS = {
-    "short": "Protección de datos personales y ciberseguridad de la empresa.",
+    "short": "Protección de datos y ciberseguridad para operar con cumplimiento digital.",
     "intro": [],
     "services_heading": "Servicios en tecnología y datos",
     "sections": [

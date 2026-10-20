@@ -5,7 +5,7 @@ from django.utils.text import slugify
 CORPORATIVO_AREA_SLUG = "corporativo"
 
 CORPORATIVO = {
-    "short": "Derecho societario, contratación comercial, transacciones y litigación civil y comercial.",
+    "short": "Societario, contratos y transacciones para crecer con gobierno corporativo y cumplimiento.",
     "intro": [
         (
             "El grupo Corporativo asesora a empresas en la estructuración, el funcionamiento y el crecimiento "

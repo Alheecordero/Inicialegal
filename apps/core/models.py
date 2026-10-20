@@ -46,7 +46,7 @@ class SiteSettings(models.Model):
     site_name = models.CharField("nombre del sitio", max_length=100, default="Inicia Legal")
     tagline = models.CharField(
         "eslogan", max_length=200, blank=True,
-        default="Respaldo legal permanente para empresas que quieren operar con seguridad.",
+        default="Respaldo legal anual para pymes y empresas en crecimiento en Chile",
     )
     logo = models.ImageField("logo", upload_to="site/", blank=True, help_text="Si se deja vacío se usa el logo por defecto.")
     logo_white = models.ImageField("logo blanco (pie de página)", upload_to="site/", blank=True)
@@ -76,20 +76,26 @@ class SiteSettings(models.Model):
     youtube = models.URLField("YouTube", blank=True)
 
     # Hero
-    hero_kicker = models.CharField("texto superior del hero", max_length=120, blank=True, default="Su empresa, con respaldo legal")
+    hero_kicker = models.CharField(
+        "texto superior del hero", max_length=120, blank=True,
+        default="Estudio jurídico para pymes y empresas en crecimiento",
+    )
     hero_title = models.CharField(
-        "título del hero", max_length=200, default="Soluciones legales para empresas que *quieren crecer*",
-        help_text="Encierra entre asteriscos la parte que quieres destacar en dorado. Ej: Soluciones legales para empresas que *quieren crecer*",
+        "título del hero", max_length=200, default="Respaldo legal *con criterio de negocio*",
+        help_text="Encierra entre asteriscos la parte que quieres destacar en dorado. Ej: Respaldo legal *con criterio de negocio*",
     )
     hero_subtitle = models.TextField(
         "subtítulo del hero", blank=True,
-        default="Acompañamos a emprendedores, e-commerce, startups y pymes en cada etapa de su empresa, con asesoría estratégica, clara y orientada a resultados.",
+        default=(
+            "Equipo integral en societario, contratos, laboral, tributario, compliance y datos. "
+            "Planes anuales desde 5 UF mensuales + IVA. Atención presencial en Santiago y remota en todo Chile."
+        ),
     )
     hero_image = models.ImageField("imagen del hero", upload_to="site/", blank=True, help_text="Horizontal, idealmente 2560×1080 px o mayor.")
     hero_image_mobile = models.ImageField("imagen del hero (móvil)", upload_to="site/", blank=True, help_text="Opcional. Vertical o cuadrada (ej. 1200×1400 px). Si se deja vacía se usa la imagen principal.")
-    hero_primary_text = models.CharField("botón principal (texto)", max_length=60, default="Solicite una reunión")
+    hero_primary_text = models.CharField("botón principal (texto)", max_length=60, default="Agende una conversación inicial")
     hero_primary_url = models.CharField("botón principal (URL)", max_length=200, default="/contacto/")
-    hero_secondary_text = models.CharField("botón secundario (texto)", max_length=60, blank=True, default="Conozca nuestros planes")
+    hero_secondary_text = models.CharField("botón secundario (texto)", max_length=60, blank=True, default="Ver planes desde 5 UF")
     hero_secondary_url = models.CharField("botón secundario (URL)", max_length=200, blank=True, default="/planes/")
 
     # Sección "Nosotros" en el home
@@ -99,16 +105,37 @@ class SiteSettings(models.Model):
     about_image = models.ImageField("nosotros · imagen", upload_to="site/", blank=True)
 
     # Llamado a la acción final
-    cta_title = models.CharField("CTA · título", max_length=200, blank=True, default="¿Su empresa está tomando decisiones legales a tiempo?")
-    cta_text = models.TextField("CTA · texto", blank=True, default="Conversemos. La primera reunión no tiene costo.")
-    cta_button_text = models.CharField("CTA · botón", max_length=60, blank=True, default="Solicite una reunión")
+    cta_title = models.CharField("CTA · título", max_length=200, blank=True, default="¿Su empresa toma decisiones legales a tiempo?")
+    cta_text = models.TextField(
+        "CTA · texto", blank=True,
+        default=(
+            "Conversemos sobre su situación jurídica. La primera reunión no tiene costo. "
+            "Atención presencial en Santiago y remota en todo Chile."
+        ),
+    )
+    cta_button_text = models.CharField("CTA · botón", max_length=60, blank=True, default="Agende una conversación")
     cta_button_url = models.CharField("CTA · URL", max_length=200, blank=True, default="/contacto/")
 
     # SEO / otros
-    meta_description = models.CharField("meta descripción por defecto", max_length=160, blank=True, default="Inicia Legal: asesoría legal preventiva para pymes y empresas en Chile. Plan Legal Advance, contratos, laboral, tributario y penal económico.")
-    meta_keywords = models.CharField("palabras clave", max_length=255, blank=True, default="abogados, asesoría legal empresas, plan legal, pymes, Chile")
+    meta_description = models.CharField(
+        "meta descripción por defecto", max_length=160, blank=True,
+        default=(
+            "Estudio jurídico en Santiago. Respaldo legal anual para pymes: societario, laboral, "
+            "tributario, compliance y planes desde 5 UF mensuales."
+        ),
+    )
+    meta_keywords = models.CharField(
+        "palabras clave", max_length=255, blank=True,
+        default="abogados empresas Chile, asesoría legal pymes, plan legal, compliance, gobierno corporativo, Santiago",
+    )
     google_analytics_id = models.CharField("Google Analytics ID", max_length=30, blank=True, help_text="Ej: G-XXXXXXXXXX")
-    footer_text = models.TextField("texto del pie de página", blank=True, default="Estudio jurídico corporativo. Asesoramos a empresas en derecho societario, laboral, tributario, penal económico y compliance.")
+    footer_text = models.TextField(
+        "texto del pie de página", blank=True,
+        default=(
+            "Estudio jurídico corporativo en Santiago. Respaldo legal anual, cumplimiento normativo y "
+            "equipo multidisciplinario para empresas en crecimiento."
+        ),
+    )
     announcement = models.CharField("barra de anuncio", max_length=200, blank=True, help_text="Texto opcional que se muestra sobre el menú. Dejar vacío para ocultar.")
     announcement_url = models.CharField("URL del anuncio", max_length=200, blank=True)
     monogram = models.CharField("monograma decorativo", max_length=4, blank=True, default="IL", help_text="Letras gigantes que se muestran como marca de agua en el pie de página y la banda de contacto. Dejar vacío para ocultar.")

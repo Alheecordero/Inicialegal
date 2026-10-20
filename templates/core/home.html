@@ -90,6 +90,16 @@
 </section>
 {% endif %}
 
+<section class="value-strip" aria-label="{% trans 'Nuestra forma de trabajar' %}">
+  <div class="container">
+    <ul class="value-strip-list">
+      <li><i class="bi bi-diagram-3" aria-hidden="true"></i><span>{% trans "Comprendemos su negocio antes de recomendar" %}</span></li>
+      <li><i class="bi bi-shield-check" aria-hidden="true"></i><span>{% trans "Ordenamos el riesgo jurídico con criterio preventivo" %}</span></li>
+      <li><i class="bi bi-people" aria-hidden="true"></i><span>{% trans "Equipo multidisciplinario, una sola conversación" %}</span></li>
+    </ul>
+  </div>
+</section>
+
 {# ---------- CIFRAS ---------- #}
 {% if stats %}
 <section class="stats-strip">
@@ -114,7 +124,7 @@
     <div class="text-center mb-5 reveal">
       <div class="kicker center">{% trans "Especialidades" %}</div>
       <h2 class="section-title">{% trans "Áreas de práctica" %}</h2>
-      <p class="section-lead mx-auto">{% trans "Grupos de práctica para las decisiones críticas de la operación empresarial." %}</p>
+      <p class="section-lead mx-auto">{% trans "Seis grupos de práctica para decisiones de gobierno corporativo, contratos, cumplimiento normativo y crecimiento." %}</p>
     </div>
   </div>
   <div class="area-accordion reveal" data-area-accordion>
@@ -126,7 +136,7 @@
           <h3>{{ a.name }}</h3>
           <div class="area-acc-desc">
             <p>{{ a.short_description }}</p>
-            <span class="area-acc-more">{% trans "Conozca el área" %} <i class="bi bi-arrow-right"></i></span>
+            <span class="area-acc-more">{% trans "Consulte por esta área" %} <i class="bi bi-arrow-right"></i></span>
           </div>
         </div>
       </a>
@@ -214,6 +224,7 @@
     <div class="text-center mb-4 reveal">
       <div class="kicker center">Planes anuales</div>
       <h2 class="section-title">{% trans "Planes de asesoría jurídica anual" %}</h2>
+      <p class="section-lead mx-auto">{% trans "Plan Legal Pyme para respaldo recurrente. Plan Legal Advance si necesita más contratos a medida y cobertura de juicio laboral." %}</p>
     </div>
     <div class="row g-4 justify-content-center">
       {% for plan in plans %}
@@ -222,6 +233,7 @@
           <div class="plan-head">
             {% if plan.is_featured %}<span class="badge-featured">Recomendado</span>{% endif %}
             <h3>{{ plan.name }}</h3>
+            {% if plan.tagline %}<p class="plan-card-tagline">{{ plan.tagline }}</p>{% endif %}
             {% include "includes/plan_price.html" %}
           </div>
           <div class="p-4 d-flex flex-column flex-grow-1">
@@ -300,7 +312,7 @@
         <div class="kicker">{% trans "Preguntas frecuentes" %}</div>
         <h2 class="section-title">{% trans "Preguntas frecuentes" %}</h2>
         <a href="{% url 'core:faq' %}" class="btn btn-outline-gold me-2 mb-2">{% trans "Ver todas las preguntas" %}</a>
-        <a href="{% url 'core:contact' %}" class="btn btn-navy mb-2">{% trans "Solicite una reunión" %}</a>
+        <a href="{% url 'core:contact' %}" class="btn btn-navy mb-2">{% trans "Conversemos sin costo" %}</a>
       </div>
       <div class="col-lg-8 reveal">
         <div class="accordion accordion-il" id="faqHome">

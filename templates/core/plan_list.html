@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% load humanize core_extras %}
 {% block title %}Planes legales para empresas · {{ site.site_name }}{% endblock %}
-{% block meta_description %}Planes de asesoría legal anual para pymes y empresas. Respaldo jurídico permanente durante todo el año.{% endblock %}
+{% block meta_description %}Planes Legal Pyme y Advance en UF: respaldo jurídico anual, contratos, auditoría laboral y equipo multidisciplinario en Santiago.{% endblock %}
 
 {% block content %}
-{% include "includes/page_header.html" with title="Planes de asesoría jurídica anual" kicker="Planes anuales" lead="Cada plan indica su valor anual y los servicios que comprende." %}
+{% include "includes/page_header.html" with title="Planes de asesoría jurídica anual" kicker="Planes anuales" lead="Plan Legal Pyme (desde 5 UF mensuales + IVA) para respaldo recurrente. Plan Legal Advance si necesita más contratos a medida y un juicio laboral incluido." %}
 
 <section class="section">
   <div class="container">
@@ -15,6 +15,7 @@
           <div class="plan-head">
             {% if plan.is_featured %}<span class="badge-featured">Recomendado</span>{% endif %}
             <h3>{{ plan.name }}</h3>
+            {% if plan.tagline %}<p class="plan-card-tagline">{{ plan.tagline }}</p>{% endif %}
             {% include "includes/plan_price.html" %}
           </div>
           <div class="p-4 flex-grow-1 d-flex flex-column">

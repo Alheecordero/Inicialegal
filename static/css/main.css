@@ -277,6 +277,30 @@ img { max-width: 100%; height: auto; }
   .about-fusion .about-copy .btn-navy:hover { background: var(--il-gold-dark); border-color: var(--il-gold-dark); }
 }
 
+/* Franja de valor (metodología comercial) */
+.value-strip {
+  background: var(--il-cream-2);
+  border-bottom: 1px solid var(--il-border);
+  padding: 1.15rem 0;
+}
+.value-strip-list {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: .85rem 1.75rem;
+}
+.value-strip-list li {
+  display: flex; align-items: center; gap: .55rem;
+  color: var(--il-navy); font-size: .95rem; font-weight: 600;
+}
+.value-strip-list i { color: var(--il-gold-dark); font-size: 1.15rem; flex-shrink: 0; }
+@media (max-width: 575.98px) {
+  .value-strip-list { flex-direction: column; align-items: flex-start; padding: 0 .25rem; }
+}
+.plan-card-tagline {
+  margin: .35rem 0 0; font-size: .92rem; line-height: 1.45; color: rgba(255,255,255,.88);
+  font-weight: 500;
+}
+.plan-offer .plan-card-tagline { color: var(--il-muted); }
+
 /* Cifras: una franja baja, igual en escritorio y móvil */
 .stats-strip { background: var(--il-navy); color: #fff; }
 .stats-strip .row { flex-wrap: nowrap; }

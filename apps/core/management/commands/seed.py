@@ -55,6 +55,12 @@ def attach_image(instance, field_name, filename, save=True):
     return True
 
 from apps.blog.models import Category, Post, Tag
+from apps.core.commercial_copy import (
+    AREA_SHORTS,
+    HERO_SLIDES,
+    PLAN_TAGLINES,
+    apply_site_settings,
+)
 from apps.core.corporativo_content import CORPORATIVO_SHORT, build_corporativo_html, sync_corporativo
 from apps.core.tecnologia_datos_content import (
     TECNOLOGIA_DATOS_SHORT,
@@ -223,15 +229,6 @@ class Command(BaseCommand):
         if s.city in ("Santiago, Chile", "Las Condes, Santiago"):
             s.city = SiteSettings._meta.get_field("city").default
             changed = True
-        s.cta_title = "Solicite una reunión"
-        s.cta_text = "La primera reunión no tiene costo."
-        s.cta_button_text = "Solicite una reunión"
-        if s.hero_primary_text in ("Agenda una asesoría", "Agendar asesoría"):
-            s.hero_primary_text = "Solicite una reunión"
-            changed = True
-        if s.hero_secondary_text == "Conoce nuestros planes":
-            s.hero_secondary_text = "Conozca nuestros planes"
-            changed = True
         legacy_cookie_markers = ("atender tus solicitudes", "Puedes aceptar", "configurar tus preferencias")
         if s.cookie_consent_text and any(m in s.cookie_consent_text for m in legacy_cookie_markers):
             s.cookie_consent_text = SiteSettings._meta.get_field("cookie_consent_text").default
@@ -240,35 +237,22 @@ class Command(BaseCommand):
         if s.footer_text and legacy_footer in s.footer_text:
             s.footer_text = SiteSettings._meta.get_field("footer_text").default
             changed = True
-        s.about_kicker = "Nosotros"
-        s.about_title = "Criterio jurídico para las decisiones de la empresa"
-        s.about_text = (
-            "<p>Inicia Legal es un estudio jurídico corporativo que asesora a empresas en crecimiento "
-            "en las materias que definen su operación; derecho societario y contractual, laboral, tributario, "
-            "penal económico y compliance, protección de datos, ciberseguridad, y propiedad industrial.</p>"
-            "<p>Nuestra práctica se funda en un principio: las contingencias jurídicas de una empresa se resuelven "
-            "con mayor eficacia antes de que se produzcan. Por ello, acompañamos a nuestros clientes de manera "
-            "permanente en la celebración de sus contratos, la gestión de sus relaciones laborales, su estructuración "
-            "societaria y su cumplimiento normativo.</p>"
-            "<p>Cada asunto es conducido por abogados especializados en el área respectiva, con el rigor técnico "
-            "de un gran estudio y una comprensión cercana de la empresa de cada cliente.</p>"
-        )
-        s.footer_text = (
-            "Estudio jurídico corporativo. Asesoramos a empresas en derecho societario, laboral, "
-            "tributario, penal económico y compliance."
-        )
-        s.cookie_consent_text = SiteSettings._meta.get_field("cookie_consent_text").default
-        s.meta_description = (
-            "Estudio jurídico corporativo en Santiago. Asesoría a empresas en derecho societario, "
-            "laboral, tributario, penal económico y compliance."
-        )
+        if changed:
+            s.save()
+        apply_site_settings()
+        s = SiteSettings.load()
         s.google_analytics_id = "G-RH0BM2DENP"
         s.youtube = "https://www.youtube.com/@IniciaLegal"
         s.linkedin = "https://www.linkedin.com/company/inicia-legal/"
         s.instagram = "https://www.instagram.com/inicialegal.cl/?hl=es"
-        changed = True
-        if changed:
-            s.save()
+        s.save(
+            update_fields=[
+                "google_analytics_id",
+                "youtube",
+                "linkedin",
+                "instagram",
+            ]
+        )
         attach_image(s, "hero_image", "oficina-panoramica.jpg")
         attach_image(s, "about_image", "asesoria-manos.jpg")
         self.stdout.write("· Configuración del sitio")
@@ -280,7 +264,7 @@ class Command(BaseCommand):
             ("corporativo", "Derecho societario", "Corporativo", "bi-building", "societario.jpg",
              CORPORATIVO_SHORT, build_corporativo_html()),
             ("derecho-laboral", "Derecho laboral", "Laboral", "bi-people", "reunion-laboral.jpg",
-             "Reglamento interno, jornada, auditoría laboral y juicios laborales.",
+             AREA_SHORTS["derecho-laboral"],
              "<p>Acompañamos a la empresa en el cumplimiento laboral y en la defensa de sus contingencias.</p>"
              '<h2 class="h3 mt-5 mb-4">Servicios laborales</h2><ul>'
              "<li>Reglamento interno con protocolo de la Ley N.º 21.643</li>"
@@ -289,7 +273,7 @@ class Command(BaseCommand):
              "<li>Auditoría laboral</li>"
              "<li>Juicios laborales</li></ul>"),
             ("derecho-tributario", "Derecho tributario", "Tributario", "bi-calculator", "informes-financieros.jpg",
-             "Planificación, reestructuraciones y regularizaciones ante el Servicio de Impuestos Internos.",
+             AREA_SHORTS["derecho-tributario"],
              "<p>Orientamos las decisiones de la empresa cuando tienen efecto tributario y en su relación "
              "con el Servicio de Impuestos Internos.</p>"
              '<h2 class="h3 mt-5 mb-4">Servicios tributarios</h2><ul>'
@@ -300,7 +284,7 @@ class Command(BaseCommand):
              "<li>Defensa ante notificaciones, citaciones y fiscalizaciones del Servicio de Impuestos Internos</li>"
              "<li>Due diligence tributario</li></ul>"),
             ("derecho-penal-economico", "Derecho penal económico", "Penal económico y compliance", "bi-shield-lock", "justicia-lupa.jpg",
-             "Modelos de prevención de delitos, programas de cumplimiento e investigaciones internas.",
+             AREA_SHORTS["derecho-penal-economico"],
              "<p>Prevenimos y analizamos la responsabilidad penal de la persona jurídica y de su administración.</p>"
              '<h2 class="h3 mt-5 mb-4">Servicios en penal económico y compliance</h2><ul>'
              "<li>Modelos de prevención conforme a las Leyes N.º 20.393 y N.º 21.595</li>"
@@ -310,7 +294,7 @@ class Command(BaseCommand):
             ("tecnologia-y-datos", None, "Tecnología y datos", "bi-laptop", "banner-blog.jpg",
              TECNOLOGIA_DATOS_SHORT, build_tecnologia_datos_html()),
             ("propiedad-industrial", None, "Propiedad industrial", "bi-award", "marca-registrada.jpg",
-             "Registro y defensa de marcas y patentes.",
+             AREA_SHORTS["propiedad-industrial"],
              "<p>Protegemos los signos distintivos de la empresa ante el Instituto Nacional de Propiedad Industrial "
              "y el Tribunal de Propiedad Industrial.</p>"
              '<h2 class="h3 mt-5 mb-4">Servicios en propiedad industrial</h2><ul>'
@@ -329,7 +313,7 @@ class Command(BaseCommand):
             obj.name = name
             obj.slug = slug
             obj.icon = icon
-            obj.short_description = short
+            obj.short_description = AREA_SHORTS.get(slug, short)
             obj.description = desc
             obj.order = i
             obj.show_on_home = True
@@ -382,7 +366,7 @@ class Command(BaseCommand):
             "con clientes o proveedores y consultas legales resueltas tarde pueden generar costos, multas, demandas "
             "y pérdida de tiempo directivo.\n\nEl riesgo no siempre se ve al inicio, pero aparece cuando la empresa ya está expuesta."
         )
-        tagline = "Respaldo jurídico permanente para empresas que quieren operar con seguridad, orden y prevención legal."
+        tagline = "Respaldo jurídico anual con equipo multidisciplinario durante todo el año."
         summary = (
             "Un servicio jurídico anual para que la empresa cuente con respaldo legal permanente, "
             "asesoría preventiva y acompañamiento estratégico en sus decisiones más importantes."
@@ -424,7 +408,7 @@ class Command(BaseCommand):
                 slug=slug,
                 defaults={
                     "name": spec["name"],
-                    "tagline": tagline,
+                    "tagline": PLAN_TAGLINES.get(slug, tagline),
                     "summary": summary,
                     "problem_title": "Muchas Pymes toman decisiones legales cuando el problema ya comenzó.",
                     "problem_text": shared_problem,
@@ -595,32 +579,36 @@ class Command(BaseCommand):
 
     def seed_hero(self):
         slides = [
-            ("principal", "overlay", 0, "oficina-panoramica.jpg", "oficina-panoramica-m.jpg",
-             "Estudio jurídico corporativo",
-             "Rigor jurídico. *Visión de empresa.*",
-             "Asesoría especializada en derecho societario, laboral, tributario, penal económico y compliance, protección de datos y propiedad industrial.",
-             "Conozca nuestras áreas", "/#areas", "", ""),
-            ("banners", "overlay", 1, "hero-publicaciones.jpg", None,
-             "Publicaciones",
-             "Lo que conviene saber *antes de firmar*",
-             "Artículos prácticos sobre contratos, laboral, tributario, penal económico y propiedad industrial.",
-             "Ver las publicaciones", "/blog/", "", ""),
-            ("planes", "overlay", 2, "hero-respaldo.jpg", None,
-             "Asesoría permanente",
-             "Respaldo *anual*",
-             "Planes de asesoría jurídica para empresas.",
-             "Conozca nuestros planes", "/planes/", "", ""),
+            ("principal", "overlay", 0, "oficina-panoramica.jpg", "oficina-panoramica-m.jpg"),
+            ("banners", "overlay", 1, "hero-publicaciones.jpg", None),
+            ("planes", "overlay", 2, "hero-respaldo.jpg", None),
         ]
+        slide_copy = {
+            "banners": {
+                "kicker": "Publicaciones",
+                "title": "Lo que conviene saber *antes de firmar*",
+                "subtitle": "Artículos prácticos sobre contratos, laboral, tributario, penal económico y propiedad industrial.",
+                "primary_text": "Ver las publicaciones",
+                "primary_url": "/blog/",
+                "secondary_text": "",
+                "secondary_url": "",
+            },
+        }
         keys = []
-        for key, variant, order, image, mobile, kicker, title, subtitle, ptext, purl, stext, surl in slides:
+        for key, variant, order, image, mobile in slides:
             keys.append(key)
+            copy = HERO_SLIDES.get(key) or slide_copy[key]
             slide, _ = HeroSlide.objects.update_or_create(
                 key=key,
                 defaults={
                     "variant": variant, "order": order, "is_active": True,
-                    "kicker": kicker, "title": title, "subtitle": subtitle,
-                    "primary_text": ptext, "primary_url": purl,
-                    "secondary_text": stext, "secondary_url": surl,
+                    "kicker": copy["kicker"],
+                    "title": copy["title"],
+                    "subtitle": copy["subtitle"],
+                    "primary_text": copy["primary_text"],
+                    "primary_url": copy["primary_url"],
+                    "secondary_text": copy.get("secondary_text", ""),
+                    "secondary_url": copy.get("secondary_url", ""),
                 },
             )
             attach_image(slide, "image", image)
