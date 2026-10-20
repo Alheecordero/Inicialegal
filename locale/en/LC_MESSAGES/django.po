@@ -348,3 +348,6 @@ msgstr "That email address was already subscribed."
 
 msgid "Ingrese un correo válido."
 msgstr "Please enter a valid email address."
+
+msgid "Empresas que acompañamos y confían en nosotros"
+msgstr "Companies we work with and trust us"
