@@ -355,8 +355,14 @@ msgstr "Companies we work with and trust us"
 msgid "Nuestra forma de trabajar"
 msgstr "How we work"
 
-msgid "Comprendemos su negocio antes de recomendar"
-msgstr "We understand your business before we advise"
+msgid "Comprendemos su empresa antes de recomendar"
+msgstr "We understand your company before we advise"
+
+msgid "Cobertura para su operación"
+msgstr "Coverage for your operations"
+
+msgid "Desde la constitución hasta compliance y controversias: las mismas materias de nuestros planes anuales, con abogados especializados en cada área."
+msgstr "From incorporation through compliance and disputes: the same matters covered by our annual plans, with specialised lawyers in each area."
 
 msgid "Ordenamos el riesgo jurídico con criterio preventivo"
 msgstr "We manage legal risk with a preventive approach"

@@ -8,7 +8,7 @@ ABOUT_TEXT = (
     "<p><strong>Inicia Legal</strong> es un estudio jurídico corporativo en Santiago. Asesoramos a "
     "<strong>emprendedores, e-commerce, startups y pymes en crecimiento</strong>, así como a socios y "
     "administradores, en las materias que definen la operación diaria.</p>"
-    "<p><strong>Cómo trabajamos:</strong> comprendemos su negocio, ordenamos el riesgo jurídico y "
+    "<p><strong>Cómo trabajamos:</strong> comprendemos su empresa, ordenamos el riesgo jurídico y "
     "entregamos una recomendación aplicable, con un <strong>equipo multidisciplinario en una sola "
     "conversación</strong> (societario, laboral, tributario, penal económico y compliance, protección "
     "de datos y propiedad industrial).</p>"
@@ -22,7 +22,7 @@ ABOUT_TEXT = (
 SITE_FIELDS = {
     "tagline": "Respaldo legal anual para pymes y empresas en crecimiento en Chile",
     "hero_kicker": "Estudio jurídico para pymes y empresas en crecimiento",
-    "hero_title": "Respaldo legal *con criterio de negocio*",
+    "hero_title": "Respaldo legal *con visión de empresa*",
     "hero_subtitle": (
         "Equipo integral en societario, contratos, laboral, tributario, compliance y datos. "
         "Planes anuales desde 5 UF mensuales + IVA. Atención presencial en Santiago y remota en todo Chile."
@@ -57,7 +57,7 @@ SITE_FIELDS = {
 HERO_SLIDES = {
     "principal": {
         "kicker": "Estudio jurídico para pymes y empresas en crecimiento",
-        "title": "Respaldo legal *con criterio de negocio*",
+        "title": "Respaldo legal *con visión de empresa*",
         "subtitle": SITE_FIELDS["hero_subtitle"],
         "primary_text": "Agende una conversación inicial",
         "primary_url": "/contacto/",

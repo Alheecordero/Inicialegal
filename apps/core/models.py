@@ -81,8 +81,8 @@ class SiteSettings(models.Model):
         default="Estudio jurídico para pymes y empresas en crecimiento",
     )
     hero_title = models.CharField(
-        "título del hero", max_length=200, default="Respaldo legal *con criterio de negocio*",
-        help_text="Encierra entre asteriscos la parte que quieres destacar en dorado. Ej: Respaldo legal *con criterio de negocio*",
+        "título del hero", max_length=200, default="Respaldo legal *con visión de empresa*",
+        help_text="Encierra entre asteriscos la parte que quieres destacar en dorado. Ej: Respaldo legal *con visión de empresa*",
     )
     hero_subtitle = models.TextField(
         "subtítulo del hero", blank=True,
