@@ -1,5 +1,6 @@
 import re
 from decimal import Decimal
+from urllib.parse import quote_plus
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -62,8 +63,8 @@ class SiteSettings(models.Model):
         "mensaje inicial WhatsApp", max_length=200,
         default="Hola, me gustaría recibir más información sobre los servicios de Inicia Legal.",
     )
-    address = models.CharField("dirección", max_length=200, blank=True, default="Los Militares N°5620, oficina N°905")
-    city = models.CharField("ciudad", max_length=100, blank=True, default="Las Condes, Santiago")
+    address = models.CharField("dirección", max_length=200, blank=True, default="Agustinas N°1442, oficina N°302, Torre A")
+    city = models.CharField("ciudad", max_length=100, blank=True, default="Santiago")
     schedule = models.CharField("horario de atención", max_length=120, blank=True, default="Lunes a viernes, 9:00 a 18:00 hrs.")
     map_embed_url = models.URLField("URL de mapa (Google Maps embed)", blank=True)
 
@@ -142,6 +143,24 @@ class SiteSettings(models.Model):
     def load(cls):
         obj, _ = cls.objects.get_or_create(pk=1)
         return obj
+
+    @property
+    def maps_location(self):
+        return ", ".join(part for part in (self.address, self.city) if part)
+
+    @property
+    def maps_directions_url(self):
+        if not self.maps_location:
+            return ""
+        return f"https://www.google.com/maps/dir/?api=1&destination={quote_plus(self.maps_location)}"
+
+    @property
+    def maps_embed_src(self):
+        if self.map_embed_url:
+            return self.map_embed_url
+        if not self.maps_location:
+            return ""
+        return f"https://www.google.com/maps?q={quote_plus(self.maps_location)}&output=embed"
 
     @property
     def whatsapp_link(self):

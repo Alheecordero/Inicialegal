@@ -217,11 +217,10 @@ class Command(BaseCommand):
             if getattr(s, field) == old:
                 setattr(s, field, SiteSettings._meta.get_field(field).default)
                 changed = True
-        # Dirección: se completa solo si aún no hay una registrada
-        if not s.address:
+        if not s.address or "Militares" in s.address:
             s.address = SiteSettings._meta.get_field("address").default
             changed = True
-        if s.city == "Santiago, Chile":
+        if s.city in ("Santiago, Chile", "Las Condes, Santiago"):
             s.city = SiteSettings._meta.get_field("city").default
             changed = True
         s.cta_title = "Solicite una reunión"
@@ -260,7 +259,7 @@ class Command(BaseCommand):
         )
         s.cookie_consent_text = SiteSettings._meta.get_field("cookie_consent_text").default
         s.meta_description = (
-            "Estudio jurídico corporativo en Las Condes. Asesoría a empresas en derecho societario, "
+            "Estudio jurídico corporativo en Santiago. Asesoría a empresas en derecho societario, "
             "laboral, tributario, penal económico y compliance."
         )
         s.google_analytics_id = "G-RH0BM2DENP"
@@ -396,7 +395,7 @@ class Command(BaseCommand):
             ("Acompañamiento especializado", "Equipo jurídico disponible en las principales áreas críticas de la empresa."),
         ]
         team = ("bi-people", "Equipo jurídico especializado", "Acceso a un equipo en materias corporativas, laborales, tributarias, de penal económico y compliance, de datos y de propiedad industrial.")
-        consults = ("bi-chat-dots", "Asesorías legales", "Consultas ordinarias durante la vigencia del plan.")
+        consults = ("bi-chat-dots", "Asesorías legales ilimitadas", "Asesorías legales ilimitadas durante la vigencia del plan.")
         audits = ("bi-clipboard-check", "Auditoría laboral", "2 auditorías anuales, una por semestre.")
         reviews = ("bi-file-earmark-text", "Revisión de contratos", "Hasta 3 contratos mensuales.")
         ejecutivo = ("bi-bank", "Cobranza judicial", "Cobranza judicial de facturas, cheques y pagarés.")
@@ -473,12 +472,12 @@ class Command(BaseCommand):
         Stat.objects.filter(
             label__in=[
                 "Abogados especializados",
-                "Socias fundadoras",
                 "Áreas de práctica clave",
                 "Meses de respaldo permanente",
                 "Descuento en servicios adicionales",
             ]
         ).update(is_active=False)
+        Stat.objects.filter(label__icontains="fundador").delete()
         self.stdout.write("· Cifras de trayectoria retiradas")
 
     def seed_faqs(self, plans):
@@ -493,11 +492,11 @@ class Command(BaseCommand):
             FAQ.objects.update_or_create(question=q, plan=None, defaults={"answer": a, "order": i})
         per_plan = {
             "plan-legal-pyme": (
-                "Incluye equipo jurídico especializado, consultas ordinarias durante la vigencia, 2 contratos anuales a la medida, "
+                "Incluye equipo jurídico especializado, asesorías legales ilimitadas durante la vigencia, 2 contratos anuales a la medida, "
                 "2 auditorías laborales al año, revisión de hasta 3 contratos mensuales y cobranza judicial de facturas, cheques y pagarés."
             ),
             "plan-legal-advance": (
-                "Incluye equipo jurídico especializado, consultas ordinarias durante la vigencia, 4 contratos anuales a la medida, "
+                "Incluye equipo jurídico especializado, asesorías legales ilimitadas durante la vigencia, 4 contratos anuales a la medida, "
                 "2 auditorías laborales al año, revisión de hasta 3 contratos mensuales, cobranza judicial de facturas, cheques y pagarés "
                 "y juicio laboral ordinario o monitorio."
             ),
@@ -519,9 +518,9 @@ class Command(BaseCommand):
 
     def seed_team(self, areas):
         data = [
-            ("angela-montiel", "Ángela María Montiel Báez", "Socia fundadora", "Abogada corporativa", "angela-montiel.jpg", "",
+            ("angela-montiel", "Ángela María Montiel Báez", "Abogada", "Abogada corporativa", "angela-montiel-v2.jpg", "",
              ["Corporativo", "Tributario", "Tecnología y datos"],
-             "<p><strong>Ángela María Montiel Báez</strong> es abogada corporativa y socia fundadora de Inicia Legal. "
+             "<p><strong>Ángela María Montiel Báez</strong> es abogada corporativa de Inicia Legal. "
              "Acompaña a empresas y pymes en la estructuración de sus relaciones contractuales, la prevención de "
              "conflictos y la toma de decisiones con respaldo jurídico.</p>"
              "<h3>Formación</h3><ul>"
@@ -531,9 +530,9 @@ class Command(BaseCommand):
              "<li>Diplomado en Tributación Corporativa, Universidad Andrés Bello (2026).</li>"
              "</ul>"
              "<h3>Áreas de ejercicio</h3><p>Derecho societario, contratación civil, contratación pública, responsabilidad civil y tributación corporativa.</p>"),
-            ("natalia-acuna", "Natalia Acuña Illanes", "Socia fundadora", "Abogada penalista", "natalia-acuna.jpg", "natalia.acuna@inicialegal.cl",
+            ("natalia-acuna", "Natalia Acuña Illanes", "Abogada", "Abogada penalista", "natalia-acuna.jpg", "natalia.acuna@inicialegal.cl",
              ["Penal económico y compliance"],
-             "<p><strong>Natalia Acuña Illanes</strong> es abogada penalista y socia fundadora de Inicia Legal. "
+             "<p><strong>Natalia Acuña Illanes</strong> es abogada penalista de Inicia Legal. "
              "Se especializa en la prevención y el análisis de riesgos asociados a delitos económicos y a la "
              "responsabilidad penal de las empresas, así como en materias de cumplimiento ambiental.</p>"
              "<h3>Formación</h3><ul>"
@@ -573,6 +572,25 @@ class Command(BaseCommand):
             )
             attach_image(m, "photo", photo)
             m.areas.set([areas[a] for a in area_names if a in areas])
+        for member in TeamMember.objects.all():
+            changed = []
+            for field in ("role", "bio", "role_en", "bio_en"):
+                if not hasattr(member, field):
+                    continue
+                value = getattr(member, field) or ""
+                cleaned = (
+                    value.replace(" y socia fundadora", "")
+                    .replace(" y socio fundador", "")
+                    .replace(" and founding partner", "")
+                    .replace("Socia fundadora", "Abogada")
+                    .replace("Socio fundador", "Abogado")
+                    .replace("Founding partner", "Lawyer")
+                )
+                if cleaned != value:
+                    setattr(member, field, cleaned)
+                    changed.append(field)
+            if changed:
+                member.save(update_fields=changed)
         self.stdout.write(f"· Equipo ({len(data)})")
 
     def seed_hero(self):
@@ -635,7 +653,7 @@ class Command(BaseCommand):
              "<p>El acceso y uso del sitio web de Inicia Legal implica el conocimiento y aceptación de la presente Política de Privacidad.</p>"
              "<h2>II. Responsable del tratamiento</h2>"
              "<p><strong>Responsable:</strong> Inicia Legal 360 - Estudio Jurídico SpA, RUT: 78.206.685-4.</p>"
-             "<p><strong>Dirección:</strong> Los Militares N.° 5620, oficina N.° 905, comuna de Las Condes.</p>"
+             "<p><strong>Dirección:</strong> Agustinas N.° 1442, oficina N.° 302, Torre A, Santiago.</p>"
              "<p><strong>Encargado de Protección de Datos (DPD):</strong> Angela Montiel Báez.</p>"
              "<p><strong>Contacto para el ejercicio de derechos:</strong> <a href=\"mailto:angelamontiel@inicialegal.cl\">angelamontiel@inicialegal.cl</a>.</p>"
              "<h2>III. Principios rectores del tratamiento</h2>"

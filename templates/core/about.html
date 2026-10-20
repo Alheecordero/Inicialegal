@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static core_extras i18n %}
 {% block title %}{% trans "Nosotros" %} · {{ site.site_name }}{% endblock %}
-{% block meta_description %}Conoce a Inicia Legal: {{ site.about_title }}. {{ site.tagline }}{% endblock %}
+{% block meta_description %}Estudio jurídico corporativo en Santiago. Asesoramos a empresas, sus socios y sus administradores. {{ site.tagline }}{% endblock %}
 
 {% block content %}
 {% include "includes/page_header.html" with title="Nosotros" kicker=site.about_kicker lead=site.tagline %}
@@ -20,6 +20,7 @@
         <h2 class="section-title">{{ site.about_title }}</h2>
         <div class="divider-gold"></div>
         <div class="rich-content">{{ site.about_text|safe }}</div>
+        <p>Asesoramos a empresas, a sus socios y a sus administradores, de forma presencial en Santiago y a distancia. Los asuntos penales de personas naturales son atendidos por Abogadas Penalistas, firma relacionada.</p>
       </div>
     </div>
   </div>
@@ -85,7 +86,7 @@
       <div class="col-6 col-md-4 col-lg-3">
         <a href="{{ m.get_absolute_url }}" class="team-card d-block">
           {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" class="photo" loading="lazy">{% else %}<div class="avatar">{{ m.initials }}</div>{% endif %}
-          <h3>{{ m.name }}</h3><div class="role">{{ m.role }}</div>{% if m.specialty %}<div class="specialty">{{ m.specialty }}</div>{% endif %}
+          <h3>{{ m.name }}</h3>{% if m.specialty %}<div class="specialty">{{ m.specialty }}</div>{% endif %}
         </a>
       </div>
       {% endfor %}

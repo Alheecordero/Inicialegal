@@ -18,7 +18,7 @@
           <p class="text-muted mb-4">{% trans "Complete el formulario y un abogado del estudio le contactará." %}</p>
           <form method="post" novalidate>
             {% csrf_token %}
-            <input type="hidden" name="source" value="formulario-contacto">
+            <input type="hidden" name="source" value="{{ form_source|default:'formulario-contacto' }}">
             {{ form.website }}
             {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
             <div class="row g-3">
@@ -88,8 +88,8 @@
         {% endif %}
       </div>
     </div>
-    {% if site.map_embed_url %}
-    <div class="map-wrap mt-5"><iframe src="{{ site.map_embed_url }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa"></iframe></div>
+    {% if site.maps_embed_src %}
+    <div class="map-wrap mt-5"><iframe src="{{ site.maps_embed_src }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de {{ site.site_name }}"></iframe></div>
     {% endif %}
   </div>
 </section>

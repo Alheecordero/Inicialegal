@@ -1,0 +1,5 @@
+{% if site.maps_embed_src %}
+<div class="location-map{% if modifier %} {{ modifier }}{% endif %}">
+  <iframe src="{{ site.maps_embed_src }}" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Mapa de {{ site.site_name }}"></iframe>
+</div>
+{% endif %}

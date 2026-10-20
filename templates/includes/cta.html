@@ -2,6 +2,33 @@
 {% if site.cta_title %}
 <section class="cta-band section">
   <div class="container">
+    {% if show_map and site.maps_embed_src %}
+    <div class="row align-items-center g-4">
+      <div class="col-lg-6">
+        <h2 class="mb-2">{{ site.cta_title }}</h2>
+        <p class="mb-3">{{ site.cta_text }}</p>
+        {% if site.maps_location %}
+        <address class="cta-location mb-2">
+          <i class="bi bi-geo-alt text-gold me-2" aria-hidden="true"></i>{{ site.maps_location }}
+        </address>
+        {% endif %}
+        {% if site.schedule %}
+        <p class="cta-schedule mb-4">
+          <i class="bi bi-clock text-gold me-2" aria-hidden="true"></i>{{ site.schedule }}
+        </p>
+        {% endif %}
+        <div class="cta-actions">
+          <a href="{{ site.cta_button_url|default:'/contacto/'|localized_href }}" class="btn btn-gold btn-lg">{{ site.cta_button_text|default:"Solicite una reunión" }}</a>
+          {% if site.maps_directions_url %}
+          <a href="{{ site.maps_directions_url }}" class="btn btn-outline-light btn-lg" target="_blank" rel="noopener">Cómo llegar</a>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-lg-6">
+        {% include "includes/location_map.html" with modifier="location-map-cta" %}
+      </div>
+    </div>
+    {% else %}
     <div class="row align-items-center g-4">
       <div class="col-lg-8">
         <h2 class="mb-2">{{ site.cta_title }}</h2>
@@ -11,6 +38,7 @@
         <a href="{{ site.cta_button_url|default:'/contacto/'|localized_href }}" class="btn btn-gold btn-lg">{{ site.cta_button_text|default:"Solicite una reunión" }}</a>
       </div>
     </div>
+    {% endif %}
   </div>
 </section>
 {% endif %}

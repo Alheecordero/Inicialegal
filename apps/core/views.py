@@ -4,8 +4,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
 from django.db import IntegrityError
-from django.http import JsonResponse
+from django.http import HttpResponsePermanentRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.template.loader import render_to_string
 from django.utils.translation import get_language, gettext as _
 from django.views.decorators.http import require_POST
@@ -159,10 +160,42 @@ def page_detail(request, slug):
     return render(request, "core/page_detail.html", {"page": page})
 
 
+PROMO_SOURCE = "asesoria-inicial-gratis"
+IG_SOURCE = "instagram"
+IG_SUBJECTS = {
+    "asesoria": "Solicitud de asesoría desde Instagram",
+    "contrato": "Revisión de contrato desde Instagram",
+}
+
+
+def instagram(request):
+    return render(request, "core/instagram.html")
+
+
+def instagram_short(request):
+    target = reverse("core:instagram")
+    query = request.META.get("QUERY_STRING", "")
+    if query:
+        target = f"{target}?{query}"
+    return HttpResponsePermanentRedirect(target)
+
+
 def contact(request):
     initial = {}
     plan_slug = request.GET.get("plan")
     service_slug = request.GET.get("servicio")
+    posted_source = request.POST.get("source", "") if request.method == "POST" else ""
+    origin = request.GET.get("origen", "")
+    from_promo = origin == PROMO_SOURCE or posted_source == PROMO_SOURCE
+    from_ig = origin == IG_SOURCE or posted_source == IG_SOURCE
+    if from_ig:
+        form_source = IG_SOURCE
+    elif from_promo:
+        form_source = PROMO_SOURCE
+    else:
+        form_source = "formulario-contacto"
+    if from_promo and "subject" not in initial:
+        initial["subject"] = "Asesoría inicial gratis"
     if plan_slug:
         plan = Plan.objects.filter(slug=plan_slug, is_active=True).first()
         if plan:
@@ -173,25 +206,39 @@ def contact(request):
         if service:
             initial["service"] = service
             initial["subject"] = f"Consulta sobre {service.name}"
+    if from_ig:
+        initial["subject"] = IG_SUBJECTS.get(request.GET.get("tema", ""), IG_SUBJECTS["asesoria"])
 
     if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():
             msg = form.save(commit=False)
-            msg.source = request.POST.get("source", "web")
+            if posted_source in {PROMO_SOURCE, IG_SOURCE}:
+                msg.source = posted_source
+            else:
+                msg.source = request.POST.get("source", "web")
             msg.privacy_accepted = True
             msg.save()
             _notify_contact(msg)
             messages.success(request, _("Recibimos su mensaje. Le contactaremos a la brevedad."))
+            if msg.source in {PROMO_SOURCE, IG_SOURCE}:
+                request.session["lead_source"] = msg.source
             return redirect("core:contact_success")
         messages.error(request, _("Revise los campos marcados e inténtelo nuevamente."))
     else:
         form = ContactForm(initial=initial)
-    return render(request, "core/contact.html", {"form": form})
+    return render(request, "core/contact.html", {"form": form, "form_source": form_source})
 
 
 def contact_success(request):
-    return render(request, "core/contact_success.html", {"posts": Post.published.all()[:3]})
+    lead_source = request.session.pop("lead_source", "")
+    if lead_source not in {PROMO_SOURCE, IG_SOURCE}:
+        lead_source = ""
+    return render(
+        request,
+        "core/contact_success.html",
+        {"posts": Post.published.all()[:3], "lead_source": lead_source},
+    )
 
 
 def _send_branded_mail(subject, text_template, html_template, to, ctx, *, reply_to=None, from_email=None):

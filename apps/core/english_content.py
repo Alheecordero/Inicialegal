@@ -107,7 +107,7 @@ def _settings():
             "tax law, economic criminal law and compliance."
         ),
         meta_description=(
-            "Corporate law firm in Las Condes. Advice to companies on corporate law, "
+            "Corporate law firm in Santiago. Advice to companies on corporate law, "
             "labour law, tax law, economic criminal law and compliance."
         ),
         cookie_consent_title="Manage consent",
@@ -322,9 +322,9 @@ def _plans():
             "Specialised legal team",
             "Access to a team in corporate, labour, tax, economic criminal law and compliance, data and industrial property matters.",
         ),
-        "Asesorías legales": (
-            "Legal advice",
-            "Ordinary queries during the term of the plan.",
+        "Asesorías legales ilimitadas": (
+            "Unlimited legal advice",
+            "Unlimited legal advice during the term of the plan.",
         ),
         "Confección de contratos": (
             "Contract drafting",
@@ -393,9 +393,9 @@ def _plans():
 def _team():
     copy = {
         "angela-montiel": (
-            "Founding partner",
+            "Lawyer",
             "Corporate lawyer",
-            "<p><strong>Ángela María Montiel Báez</strong> is a corporate lawyer and founding partner of Inicia Legal. "
+            "<p><strong>Ángela María Montiel Báez</strong> is a corporate lawyer at Inicia Legal. "
             "She advises companies and SMEs on the structure of their contractual relationships, the prevention of "
             "disputes and decision-making with legal support.</p>"
             "<h3>Education</h3><ul>"
@@ -407,9 +407,9 @@ def _team():
             "<h3>Areas of practice</h3><p>Company law, civil contracting, public procurement, civil liability and corporate taxation.</p>",
         ),
         "natalia-acuna": (
-            "Founding partner",
+            "Lawyer",
             "Criminal lawyer",
-            "<p><strong>Natalia Acuña Illanes</strong> is a criminal lawyer and founding partner of Inicia Legal. "
+            "<p><strong>Natalia Acuña Illanes</strong> is a criminal lawyer at Inicia Legal. "
             "She specialises in the prevention and analysis of risks associated with economic crime and with the "
             "criminal liability of companies, as well as in environmental compliance.</p>"
             "<h3>Education</h3><ul>"

@@ -149,6 +149,23 @@
   }
 
   // Acordeón de imágenes (áreas): se expande al pasar el cursor; en táctil, el primer toque expande y el segundo navega
+  if ("IntersectionObserver" in window) {
+    var bgObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var url = entry.target.getAttribute("data-bg");
+        if (url) entry.target.style.backgroundImage = "url('" + url.replace(/'/g, "%27") + "')";
+        bgObserver.unobserve(entry.target);
+      });
+    }, { rootMargin: "400px 0px" });
+    document.querySelectorAll("[data-bg]").forEach(function (el) { bgObserver.observe(el); });
+  } else {
+    document.querySelectorAll("[data-bg]").forEach(function (el) {
+      var url = el.getAttribute("data-bg");
+      if (url) el.style.backgroundImage = "url('" + url.replace(/'/g, "%27") + "')";
+    });
+  }
+
   document.querySelectorAll("[data-area-accordion]").forEach(function (acc) {
     var items = Array.prototype.slice.call(acc.querySelectorAll(".area-acc-item"));
     function activate(el) {
@@ -176,9 +193,23 @@
     var heroDots = Array.prototype.slice.call(hero.querySelectorAll("[data-hero-dot]"));
     var heroIndex = 0;
     var heroTimer = null;
+    function armHero(slide) {
+      if (!slide || slide.getAttribute("data-hero-ready") === "1") return;
+      var bg = slide.getAttribute("data-hero-bg");
+      var bgm = slide.getAttribute("data-hero-bg-m");
+      if (bg) slide.style.setProperty("--hero-bg", "url('" + bg + "')");
+      if (bgm) slide.style.setProperty("--hero-bg-m", "url('" + bgm + "')");
+      var source = slide.querySelector("source[data-srcset]");
+      if (source) {
+        source.srcset = source.getAttribute("data-srcset");
+        source.removeAttribute("data-srcset");
+      }
+      slide.setAttribute("data-hero-ready", "1");
+    }
     function showHero(next) {
       if (!heroSlides.length || next === heroIndex) return;
       var current = heroSlides[heroIndex];
+      armHero(heroSlides[(next + heroSlides.length) % heroSlides.length]);
       current.classList.remove("is-active");
       current.classList.add("is-leaving");
       current.setAttribute("aria-hidden", "true");
@@ -204,6 +235,7 @@
     hero.addEventListener("focusin", stopHero);
     hero.addEventListener("focusout", function (e) { if (!hero.contains(e.relatedTarget)) startHero(); });
     startHero();
+    window.setTimeout(function () { heroSlides.forEach(armHero); }, 4000);
   }
 
   // Planes del inicio: una tarjeta a la vez, con flechas y deslizamiento
@@ -359,6 +391,122 @@
     // Aviso desactivado desde el administrador: se carga analítica directamente
     loadAnalytics();
   }
+
+  // Banner de asesoría gratis (cuenta regresiva + Google Analytics)
+  var PROMO_ID = "asesoria_inicial_gratis";
+  var promoQueue = [];
+  var promoViewSent = false;
+  function analyticsChoice() {
+    if (!cfg.gaId) return false;
+    if (!cfg.consentRequired && !document.getElementById("cookieConsent")) return true;
+    var consent = readConsent();
+    if (!consent) return null;
+    return !!consent.analytics;
+  }
+  function sendPromo(name, extra) {
+    var choice = analyticsChoice();
+    if (choice === false) return;
+    var params = {
+      promotion_id: PROMO_ID,
+      promotion_name: "Asesoría inicial gratis",
+      creative_name: "banner_cuenta_regresiva",
+      creative_slot: "banner_inferior",
+      transport_type: "beacon",
+    };
+    if (extra) Object.keys(extra).forEach(function (key) { params[key] = extra[key]; });
+    if (choice === null || !gaLoaded) {
+      promoQueue.push([name, params]);
+      return;
+    }
+    window.gtag("event", name, params);
+  }
+  function flushPromo() {
+    if (analyticsChoice() !== true) {
+      if (analyticsChoice() === false) promoQueue = [];
+      return;
+    }
+    if (!gaLoaded) loadAnalytics();
+    var queued = promoQueue.splice(0);
+    queued.forEach(function (item) { window.gtag("event", item[0], item[1]); });
+  }
+  document.addEventListener("il:consent", flushPromo);
+
+  var promo = document.getElementById("promoBanner");
+  if (promo) {
+    var promoEnd = new Date(promo.getAttribute("data-promo-end")).getTime();
+    var promoParts = {
+      d: promo.querySelector("[data-promo-part='d']"),
+      h: promo.querySelector("[data-promo-part='h']"),
+      m: promo.querySelector("[data-promo-part='m']"),
+      s: promo.querySelector("[data-promo-part='s']"),
+    };
+    var promoTimer = null;
+    var promoVisible = false;
+    function hidePromo() {
+      promo.hidden = true;
+      promoVisible = false;
+      document.body.classList.remove("has-promo");
+      if (promoTimer) window.clearInterval(promoTimer);
+    }
+    function padPromo(n) { return String(n).padStart(2, "0"); }
+    function tickPromo() {
+      var left = promoEnd - Date.now();
+      if (!promoEnd || left <= 0) { hidePromo(); return; }
+      var total = Math.floor(left / 1000);
+      var days = Math.floor(total / 86400);
+      var hours = Math.floor((total % 86400) / 3600);
+      var minutes = Math.floor((total % 3600) / 60);
+      var seconds = total % 60;
+      promoParts.d.textContent = padPromo(days);
+      promoParts.h.textContent = padPromo(hours);
+      promoParts.m.textContent = padPromo(minutes);
+      promoParts.s.textContent = padPromo(seconds);
+      if (!promoVisible) {
+        promo.hidden = false;
+        promoVisible = true;
+        document.body.classList.add("has-promo");
+        if (!promoViewSent) {
+          promoViewSent = true;
+          sendPromo("view_promotion");
+        }
+      }
+    }
+    var promoClose = promo.querySelector("[data-promo-close]");
+    if (promoClose) {
+      promoClose.addEventListener("click", function () {
+        sendPromo("promo_banner_close");
+        try { sessionStorage.setItem("il-promo-hide", "1"); } catch (e) {}
+        hidePromo();
+      });
+    }
+    var promoHidden = false;
+    try { promoHidden = sessionStorage.getItem("il-promo-hide") === "1"; } catch (e) {}
+    if (document.body.classList.contains("ig-landing")) promoHidden = false;
+    if (!promoHidden) {
+      tickPromo();
+      promoTimer = window.setInterval(tickPromo, 1000);
+    }
+  }
+
+  var promoLead = document.querySelector("[data-promo-lead]");
+  if (promoLead) {
+    sendPromo("generate_lead", {
+      lead_source: "formulario",
+      method: "formulario",
+      promotion_id: promoLead.getAttribute("data-promo-lead") || PROMO_ID,
+    });
+  }
+  if (document.body.classList.contains("ig-landing")) {
+    var igQuery = new URLSearchParams(window.location.search);
+    sendPromo("instagram_bio_visit", {
+      promotion_id: "instagram_bio",
+      promotion_name: "Enlace de la bio de Instagram",
+      source: igQuery.get("utm_source") || "instagram",
+      medium: igQuery.get("utm_medium") || "social",
+      campaign: igQuery.get("utm_campaign") || "bio",
+    });
+  }
+  flushPromo();
 
   // Compartir con Web Share API si está disponible
   var shareBtn = document.querySelector("[data-share]");

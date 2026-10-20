@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicia Legal · Desde Instagram{% endblock %}
+{% block meta_description %}Estudio jurídico corporativo. Solicite asesoría, revise un contrato o escriba por WhatsApp.{% endblock %}
+{% block canonical %}{{ site_url }}{% url 'core:instagram' %}{% endblock %}
+{% block body_class %}ig-landing{% endblock %}
+{% block hreflang %}
+<link rel="alternate" hreflang="es-CL" href="{{ site_url }}{% url 'core:instagram' %}">
+{% endblock %}
+{% block extra_head %}
+<meta name="robots" content="noindex, follow">
+{% endblock %}
+
+{% block content %}
+{% include "includes/promo_banner.html" %}
+<div class="ig-shell">
+  <header class="ig-hero">
+    <img class="ig-logo" src="{% if site.logo_white %}{{ site.logo_white.url }}{% else %}{% static 'img/logo-white.png' %}{% endif %}" alt="{{ site.site_name }}" width="866" height="288" fetchpriority="high" decoding="async">
+    <h1>Asesoría para su empresa.</h1>
+    <p class="ig-lead">La primera reunión no tiene costo.</p>
+    <div class="ig-actions">
+      <a class="btn btn-gold" href="{% url 'core:contact' %}?origen=instagram&amp;tema=asesoria">Solicitar asesoría</a>
+      <a class="btn btn-outline-light" href="{% url 'core:contact' %}?origen=instagram&amp;tema=contrato">Analizar mi contrato</a>
+      <a class="btn btn-outline-light" href="https://wa.me/{{ site.whatsapp }}?text={{ 'Hola, escribo desde el enlace de Instagram de Inicia Legal.'|urlencode }}" target="_blank" rel="noopener"><i class="bi bi-whatsapp" aria-hidden="true"></i> WhatsApp</a>
+    </div>
+  </header>
+
+  <nav class="ig-links" aria-label="Accesos desde Instagram">
+    <a class="ig-link" href="{% url 'core:service_list' %}">
+      <span class="ig-link-icon"><i class="bi bi-briefcase"></i></span>
+      <span class="ig-link-copy">
+        <strong>Servicios legales</strong>
+        <small>{% for a in nav_areas %}{{ a.name }}{% if not forloop.last %} · {% endif %}{% endfor %}</small>
+      </span>
+      <i class="bi bi-arrow-right" aria-hidden="true"></i>
+    </a>
+    <a class="ig-link" href="{% url 'blog:post_list' %}">
+      <span class="ig-link-icon"><i class="bi bi-journal-text"></i></span>
+      <span class="ig-link-copy">
+        <strong>Publicaciones</strong>
+        <small>Textos del estudio sobre la operación de la empresa.</small>
+      </span>
+      <i class="bi bi-arrow-right" aria-hidden="true"></i>
+    </a>
+    <a class="ig-link" href="{% url 'core:home' %}">
+      <span class="ig-link-icon"><i class="bi bi-house"></i></span>
+      <span class="ig-link-copy">
+        <strong>Sitio principal</strong>
+        <small>inicialegal.cl</small>
+      </span>
+      <i class="bi bi-arrow-right" aria-hidden="true"></i>
+    </a>
+  </nav>
+
+  <p class="ig-foot">Estudio jurídico corporativo · {{ site.city|default:"Santiago" }}{% if site.privacy_policy_url %} · <a href="{{ site.privacy_policy_url }}">Privacidad</a>{% endif %}</p>
+</div>
+{% endblock %}

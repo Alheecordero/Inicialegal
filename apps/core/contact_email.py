@@ -5,6 +5,8 @@ from .models import ContactMessage, NewsletterSubscriber, SiteSettings
 SOURCE_LABELS = {
     "web": "Sitio web",
     "formulario-contacto": "Formulario de contacto",
+    "asesoria-inicial-gratis": "Formulario · asesoría inicial gratis",
+    "instagram": "Formulario · enlace de Instagram",
 }
 
 
