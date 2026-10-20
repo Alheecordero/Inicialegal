@@ -358,6 +358,9 @@ msgstr "Trust"
 msgid "Organizaciones que eligen nuestro respaldo legal en Santiago y en todo Chile."
 msgstr "Organisations that choose our legal support in Santiago and across Chile."
 
+msgid "Logos de empresas cliente"
+msgstr "Client company logos"
+
 msgid "Nuestra forma de trabajar"
 msgstr "How we work"
 
