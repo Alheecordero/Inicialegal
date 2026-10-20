@@ -240,13 +240,20 @@ img { max-width: 100%; height: auto; }
 .about-figure { position: relative; margin: 0 1.25rem 1.25rem 0; }
 .about-figure::before { content: ""; position: absolute; top: 1.25rem; left: 1.25rem; right: -1.25rem; bottom: -1.25rem; border: 1px solid var(--il-gold); border-radius: 20px; opacity: .6; z-index: 0; }
 .about-figure::after { content: ""; position: absolute; top: -14px; left: -14px; width: 90px; height: 90px; border-radius: 50%; background: radial-gradient(circle, var(--il-gold-light), transparent 70%); z-index: 0; opacity: .8; }
-.about-figure img { position: relative; z-index: 1; width: 100%; aspect-ratio: 4/4.4; object-fit: cover; border-radius: 20px; box-shadow: var(--il-shadow); }
-@media (min-width: 992px) { .about-figure img { aspect-ratio: 4/4.6; } }
-/* La imagen ocupa el alto del texto, sin imponer un retrato más alto que la columna */
+.about-figure img {
+  position: relative; z-index: 1; width: 100%; height: auto;
+  aspect-ratio: 5 / 6; max-height: 420px;
+  object-fit: cover; object-position: center 32%;
+  border-radius: 20px; box-shadow: var(--il-shadow);
+}
 @media (min-width: 992px) {
-  .about-fusion { align-items: stretch !important; }
-  .about-figure { display: flex; height: auto; margin-bottom: 0; }
-  .about-figure img { height: 100%; max-height: none; aspect-ratio: auto; object-fit: cover; object-position: center 30%; }
+  .about-fusion { align-items: center !important; }
+  .about-figure { margin-bottom: 0; }
+  .about-figure img {
+    aspect-ratio: 4 / 5;
+    max-height: min(520px, 58vh);
+    object-position: center 28%;
+  }
 }
 /* Móvil: texto fusionado sobre la imagen para no duplicar el alto */
 @media (max-width: 991.98px) {
