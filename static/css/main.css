@@ -1017,6 +1017,7 @@ body:has(.promo-banner:not([hidden])) .cookie-consent-card { pointer-events: aut
 .ig-foot { margin: 0; padding: 0 1.25rem 1.5rem; text-align: center; color: var(--il-muted); font-size: .78rem; }
 /* Clientes / confianza */
 .section-clients {
+  background: #fff;
   border-top: 1px solid var(--il-border);
   border-bottom: 1px solid var(--il-border);
 }
@@ -1038,8 +1039,8 @@ body:has(.promo-banner:not([hidden])) .cookie-consent-card { pointer-events: aut
   justify-content: center;
   min-height: 96px;
   padding: .75rem 1rem;
-  background: #fff;
-  border: 1px solid var(--il-border);
+  background: var(--il-cream);
+  border: 1px solid rgba(21, 32, 42, .08);
   border-radius: 16px;
   box-shadow: 0 12px 32px -28px rgba(21, 32, 42, .45);
   transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
