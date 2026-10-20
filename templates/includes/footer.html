@@ -45,7 +45,7 @@
         <ul>
           <li><i class="bi bi-envelope me-2 text-gold"></i><a href="mailto:{{ site.email }}">{{ site.email }}</a></li>
           <li><i class="bi bi-telephone me-2 text-gold"></i><a href="tel:{{ site.phone|cut:' ' }}">{{ site.phone }}</a></li>
-          {% if site.address or site.city %}<li><i class="bi bi-geo-alt me-2 text-gold"></i><a href="https://www.google.com/maps/search/?api=1&query={{ site.address|urlencode }}%20{{ site.city|urlencode }}" target="_blank" rel="noopener">{{ site.address }}{% if site.address and site.city %}, {% endif %}{{ site.city }}</a></li>{% endif %}
+          {% if site.address or site.city %}<li><i class="bi bi-geo-alt me-2 text-gold"></i><a href="{{ site.maps_place_url }}" target="_blank" rel="noopener">{{ site.address }}{% if site.address and site.city %}, {% endif %}{{ site.city }}</a></li>{% endif %}
           {% if site.schedule %}<li><i class="bi bi-clock me-2 text-gold"></i>{{ site.schedule }}</li>{% endif %}
         </ul>
         <div class="newsletter mt-4">

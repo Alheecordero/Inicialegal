@@ -23,7 +23,16 @@ from .models import (
 class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Identidad", {"fields": ("site_name", "tagline", "logo", "logo_white", "favicon", "announcement", "announcement_url")}),
-        ("Contacto", {"fields": ("email", "phone", "whatsapp", "whatsapp_message", "address", "city", "schedule", "map_embed_url")}),
+        (
+            "Contacto",
+            {
+                "fields": (
+                    "email", "phone", "whatsapp", "whatsapp_message",
+                    "address", "city", "schedule",
+                    "map_latitude", "map_longitude", "map_embed_url",
+                ),
+            },
+        ),
         ("Redes sociales", {"fields": ("instagram", "linkedin", "facebook", "tiktok", "youtube"), "classes": ("collapse",)}),
         ("Portada (hero)", {"fields": ("hero_kicker", "hero_title", "hero_subtitle", "hero_image", "hero_image_mobile", "hero_primary_text", "hero_primary_url", "hero_secondary_text", "hero_secondary_url"), "description": "Se usa solo si el carrusel del inicio no tiene diapositivas activas."}),
         ("Sección Nosotros", {"fields": ("about_kicker", "about_title", "about_text", "about_image")}),

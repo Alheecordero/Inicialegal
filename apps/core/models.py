@@ -66,7 +66,22 @@ class SiteSettings(models.Model):
     address = models.CharField("dirección", max_length=200, blank=True, default="Agustinas N°1442, oficina N°302, Torre A")
     city = models.CharField("ciudad", max_length=100, blank=True, default="Santiago")
     schedule = models.CharField("horario de atención", max_length=120, blank=True, default="Lunes a viernes, 9:00 a 18:00 hrs.")
-    map_embed_url = models.URLField("URL de mapa (Google Maps embed)", blank=True)
+    map_embed_url = models.URLField(
+        "URL de mapa (Google Maps embed)", blank=True,
+        help_text="Opcional. Si se deja vacío se usa mapa embebido desde coordenadas o dirección.",
+    )
+    map_latitude = models.DecimalField(
+        "mapa · latitud", max_digits=9, decimal_places=6, blank=True, null=True,
+        default=Decimal("-33.441480"),
+        validators=[MinValueValidator(Decimal("-90")), MaxValueValidator(Decimal("90"))],
+        help_text="Pin del mapa (ej. -33.441480 para Agustinas 1442).",
+    )
+    map_longitude = models.DecimalField(
+        "mapa · longitud", max_digits=9, decimal_places=6, blank=True, null=True,
+        default=Decimal("-70.657053"),
+        validators=[MinValueValidator(Decimal("-180")), MaxValueValidator(Decimal("180"))],
+        help_text="Pin del mapa (ej. -70.657053 para Agustinas 1442).",
+    )
 
     # Redes sociales
     instagram = models.URLField("Instagram", blank=True)
@@ -176,18 +191,45 @@ class SiteSettings(models.Model):
         return ", ".join(part for part in (self.address, self.city) if part)
 
     @property
+    def map_coordinates(self):
+        if self.map_latitude is None or self.map_longitude is None:
+            return None
+        lat = format(Decimal(self.map_latitude), "f")
+        lng = format(Decimal(self.map_longitude), "f")
+        return lat, lng
+
+    @property
     def maps_directions_url(self):
+        coords = self.map_coordinates
+        if coords:
+            lat, lng = coords
+            return f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
         if not self.maps_location:
             return ""
         return f"https://www.google.com/maps/dir/?api=1&destination={quote_plus(self.maps_location)}"
 
     @property
+    def maps_place_url(self):
+        """Enlace para abrir la ubicación exacta en Google Maps."""
+        coords = self.map_coordinates
+        if coords:
+            lat, lng = coords
+            return f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"
+        if not self.maps_location:
+            return ""
+        return f"https://www.google.com/maps/search/?api=1&query={quote_plus(self.maps_location)}"
+
+    @property
     def maps_embed_src(self):
         if self.map_embed_url:
             return self.map_embed_url
+        coords = self.map_coordinates
+        if coords:
+            lat, lng = coords
+            return f"https://www.google.com/maps?q={lat},{lng}&hl=es&z=17&output=embed"
         if not self.maps_location:
             return ""
-        return f"https://www.google.com/maps?q={quote_plus(self.maps_location)}&output=embed"
+        return f"https://www.google.com/maps?q={quote_plus(self.maps_location)}&hl=es&output=embed"
 
     @property
     def whatsapp_link(self):

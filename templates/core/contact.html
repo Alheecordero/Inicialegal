@@ -77,7 +77,7 @@
           <div class="contact-info-item"><i class="bi bi-envelope"></i><div><strong>{% trans "Email" %}</strong><a href="mailto:{{ site.email }}">{{ site.email }}</a></div></div>
           <div class="contact-info-item"><i class="bi bi-telephone"></i><div><strong>{% trans "Teléfono" %}</strong><a href="tel:{{ site.phone|cut:' ' }}">{{ site.phone }}</a></div></div>
           <div class="contact-info-item"><i class="bi bi-whatsapp"></i><div><strong>WhatsApp</strong><a href="{{ site.whatsapp_link }}" target="_blank" rel="noopener">{% trans "Escriba por WhatsApp" %}</a></div></div>
-          {% if site.address or site.city %}<div class="contact-info-item"><i class="bi bi-geo-alt"></i><div><strong>{% trans "Ubicación" %}</strong><a href="https://www.google.com/maps/search/?api=1&query={{ site.address|urlencode }}%20{{ site.city|urlencode }}" target="_blank" rel="noopener">{{ site.address }}{% if site.address and site.city %}, {% endif %}{{ site.city }}</a></div></div>{% endif %}
+          {% if site.address or site.city %}<div class="contact-info-item"><i class="bi bi-geo-alt"></i><div><strong>{% trans "Ubicación" %}</strong><a href="{{ site.maps_place_url }}" target="_blank" rel="noopener">{{ site.address }}{% if site.address and site.city %}, {% endif %}{{ site.city }}</a></div></div>{% endif %}
           {% if site.schedule %}<div class="contact-info-item"><i class="bi bi-clock"></i><div><strong>{% trans "Horario" %}</strong><span>{{ site.schedule }}</span></div></div>{% endif %}
         </div>
         {% if site.social_links %}
