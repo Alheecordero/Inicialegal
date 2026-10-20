@@ -200,20 +200,20 @@
 </section>
 {% endif %}
 
-<section class="client-ribbon" aria-label="{% trans 'Empresas que acompañamos y confían en nosotros' %}">
-  <p class="client-ribbon-label">{% trans "Empresas que acompañamos y confían en nosotros" %}</p>
-  <div class="client-ribbon-viewport">
-    <div class="client-ribbon-track">
-      {% for copy in "12" %}
-      <ul class="client-ribbon-set"{% if not forloop.first %} aria-hidden="true"{% endif %}>
-        <li><img class="client-logo" src="{% static 'img/clients/rebus.png' %}" alt="Rebus" width="280" height="120"></li>
-        <li><img class="client-logo" src="{% static 'img/clients/vsp.png' %}" alt="VSP Compromiso Veterinario" width="320" height="160"></li>
-        <li><img class="client-logo" src="{% static 'img/clients/manosya.jpg' %}" alt="ManosYa" width="240" height="220"></li>
-        <li><img class="client-logo" src="{% static 'img/clients/grupo-del-valle.jpg' %}" alt="Grupo del Valle" width="240" height="240"></li>
-        <li><img class="client-logo" src="{% static 'img/clients/platanitos.jpg' %}" alt="Platanitos" width="360" height="140"></li>
-      </ul>
-      {% endfor %}
+<section class="section section-clients bg-cream" id="clientes" aria-labelledby="clients-title">
+  <div class="container">
+    <div class="text-center mb-4 mb-lg-5 reveal">
+      <div class="kicker center">{% trans "Confianza" %}</div>
+      <h2 class="section-title" id="clients-title">{% trans "Empresas que acompañamos y confían en nosotros" %}</h2>
+      <p class="section-lead mx-auto">{% trans "Organizaciones que eligen nuestro respaldo legal en Santiago y en todo Chile." %}</p>
     </div>
+    <ul class="client-logo-grid reveal">
+      <li><img class="client-logo" src="{% static 'img/clients/rebus.png' %}" alt="Rebus" width="280" height="120" loading="lazy" decoding="async"></li>
+      <li><img class="client-logo" src="{% static 'img/clients/vsp.png' %}" alt="VSP Compromiso Veterinario" width="320" height="160" loading="lazy" decoding="async"></li>
+      <li><img class="client-logo" src="{% static 'img/clients/manosya.jpg' %}" alt="ManosYa" width="240" height="220" loading="lazy" decoding="async"></li>
+      <li><img class="client-logo" src="{% static 'img/clients/grupo-del-valle.jpg' %}" alt="Grupo del Valle" width="240" height="240" loading="lazy" decoding="async"></li>
+      <li><img class="client-logo" src="{% static 'img/clients/platanitos.jpg' %}" alt="Platanitos" width="360" height="140" loading="lazy" decoding="async"></li>
+    </ul>
   </div>
 </section>
 

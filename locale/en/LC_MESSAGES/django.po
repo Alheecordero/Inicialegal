@@ -352,6 +352,12 @@ msgstr "Please enter a valid email address."
 msgid "Empresas que acompañamos y confían en nosotros"
 msgstr "Companies we work with and trust us"
 
+msgid "Confianza"
+msgstr "Trust"
+
+msgid "Organizaciones que eligen nuestro respaldo legal en Santiago y en todo Chile."
+msgstr "Organisations that choose our legal support in Santiago and across Chile."
+
 msgid "Nuestra forma de trabajar"
 msgstr "How we work"
 
