@@ -6,6 +6,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from apps.blog.feeds import LatestPostsFeed
+from apps.core.legacy_redirects import legacy_redirect_patterns
 from apps.blog.sitemaps import PostSitemap
 from apps.core.sitemaps import (
     PageSitemap,
@@ -27,6 +28,7 @@ sitemaps = {
 }
 
 urlpatterns = [
+    *legacy_redirect_patterns(),
     path(settings.ADMIN_PATH, admin.site.urls),
     path("ckeditor5/", include("django_ckeditor_5.urls")),
     path("blog/feed/", LatestPostsFeed(), name="blog_feed"),

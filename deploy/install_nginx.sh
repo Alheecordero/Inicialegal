@@ -10,6 +10,7 @@ DST=/etc/nginx/sites-available/inicialegal
 
 install -m 644 "$APP_DIR/deploy/nginx-inicialegal-proxy.conf" /etc/nginx/snippets/inicialegal-proxy.conf
 install -m 644 "$APP_DIR/deploy/nginx-inicialegal-bots.conf" /etc/nginx/conf.d/inicialegal-bots.conf
+install -m 644 "$APP_DIR/deploy/nginx-inicialegal-cloudflare.conf" /etc/nginx/conf.d/inicialegal-cloudflare.conf
 
 if [ -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
   install -m 644 "$SRC" "$DST"

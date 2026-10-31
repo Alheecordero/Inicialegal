@@ -17,6 +17,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 cp .env.example .env             # ajustar valores si es necesario
 python manage.py migrate
+python manage.py createcachetable   # caché compartida (límites anti-spam)
 python manage.py seed --admin    # contenido inicial + superusuario admin / admin1234
 python manage.py runserver
 ```
@@ -81,8 +82,9 @@ El sitio vive en `/var/www/inicialegal` con PostgreSQL local (BD y rol `iniciale
 | `deploy/remote_update.sh` | Actualización en el servidor (lo invoca `deploy.sh`). |
 | `deploy/install_nginx.sh` | Instala la config de nginx; usa Let's Encrypt si existe, si no un autofirmado temporal. |
 | `deploy/issue_cert.sh` | Emite el certificado Let's Encrypt (requiere que Cloudflare apunte solo a este servidor). |
-| `deploy/nginx-inicialegal.conf` | vhost: HTTPS, rate limiting, `noindex`, bloqueo de rutas de escaneo. |
-| `deploy/nginx-inicialegal-bots.conf` | `map` de User-Agents de bots/crawlers/IA → 403 (quitar o vaciar al salir a producción). |
+| `deploy/nginx-inicialegal.conf` | vhost: HTTPS, rate limiting, bloqueo de rutas de escaneo. |
+| `deploy/nginx-inicialegal-cloudflare.conf` | `geo` con los rangos de Cloudflare: el origen cierra (444) toda conexión que no venga de Cloudflare. Revisar los rangos si Cloudflare los cambia. |
+| `deploy/nginx-inicialegal-bots.conf` | `map` de scrapers SEO y escáneres → 403. Buscadores y crawlers de IA quedan permitidos. |
 
 Publicar cambios:
 
@@ -96,5 +98,5 @@ El correo del formulario usa `consolemail://` (va al journal de gunicorn) hasta 
 ### Salir de "modo desarrollo"
 
 1. En `/var/www/inicialegal/.env` poner `SITE_INDEXING=True`.
-2. Eliminar `/etc/nginx/conf.d/inicialegal-bots.conf` (o dejar solo scrapers) y quitar la cabecera `X-Robots-Tag` del vhost.
+2. Dejar `deploy/nginx-inicialegal-bots.conf` solo con scrapers y escáneres (los crawlers de IA los mide Cloudflare en **AI Crawl Control**).
 3. `./deploy/deploy.sh`.

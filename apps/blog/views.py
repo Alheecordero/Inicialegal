@@ -4,8 +4,12 @@ from django.core.paginator import Paginator
 from django.db.models import Count, F, Q
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.core import ratelimit
+
 from .forms import CommentForm
 from .models import Category, Post, Tag
+
+COMMENTS_PER_IP_HOUR = 5
 
 
 def _sidebar_context():
@@ -70,6 +74,9 @@ def post_detail(request, slug):
     form = CommentForm()
     if request.method == "POST" and post.allow_comments:
         form = CommentForm(request.POST)
+        if ratelimit.hit("comment:" + ratelimit.client_ip(request), COMMENTS_PER_IP_HOUR, 60 * 60):
+            messages.error(request, "Recibimos varios comentarios seguidos. Inténtalo nuevamente más tarde.")
+            return redirect(post.get_absolute_url() + "#comentarios")
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post

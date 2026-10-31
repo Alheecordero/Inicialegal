@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 # Copia de seguridad PostgreSQL antes de migrar (servidor).
 set -euo pipefail
+# Los volcados llevan datos personales y hashes de contraseñas: solo root.
+umask 077
 cd /var/www/inicialegal
 BACKUP_DIR=/var/backups/inicialegal
 mkdir -p "$BACKUP_DIR"
+chmod 700 "$BACKUP_DIR"
 STAMP=$(date +%Y%m%d-%H%M%S)
 FILE="$BACKUP_DIR/db-$STAMP.sql.gz"
 set -a

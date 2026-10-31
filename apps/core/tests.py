@@ -1,6 +1,7 @@
-from django.test import TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 
+from .legacy_redirects import LEGACY_PATHS
 from .models import FAQ, SiteSettings
 
 
@@ -27,3 +28,115 @@ class CorePageTests(TestCase):
         self.assertIn("-33.441480,-70.657053", site.maps_directions_url)
         self.assertIn("-33.441480,-70.657053", site.maps_place_url)
         self.assertIn("Agustinas", site.maps_location)
+
+
+class LegacyRedirectTests(SimpleTestCase):
+    def test_old_urls_redirect_permanently(self):
+        samples = {
+            "/inicio/": "/",
+            "/privacy-policy/": "/p/privacidad/",
+            "/landing-page-tributario/": "/areas/derecho-tributario/",
+            "/2025/09/15/registro-de-marcas-ante-el-inapi/": "/blog/registro-de-marcas-en-inapi/",
+            "/2025/09/15/errores-comunes-al-emprender-en-chile-y-como-evitarlos/": (
+                "/blog/errores-comunes-al-emprender-en-chile-y-como-evitarlos/"
+            ),
+        }
+        for source, target in samples.items():
+            response = self.client.get(source)
+            self.assertRedirects(response, target, status_code=301, fetch_redirect_response=False)
+
+    def test_every_legacy_path_is_a_permanent_redirect(self):
+        for source, target in LEGACY_PATHS.items():
+            response = self.client.get("/" + source)
+            self.assertEqual(response.status_code, 301)
+            self.assertEqual(response["Location"], target)
+
+
+@override_settings(
+    ALLOWED_HOSTS=["testserver"],
+    EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+    CONTACT_NOTIFY_EMAIL="contacto@inicialegal.cl",
+)
+class AntiSpamTests(TestCase):
+    def setUp(self):
+        from django.core.cache import cache
+
+        cache.clear()
+
+    def _contact(self, **extra):
+        data = {
+            "name": "Ana Pérez",
+            "email": "ana@example.com",
+            "subject": "Consulta",
+            "message": "Necesito ayuda con un contrato.",
+            "accept": "on",
+            "website": "",
+        }
+        data.update(extra)
+        return self.client.post(reverse("core:contact"), data, REMOTE_ADDR="203.0.113.5")
+
+    def test_honeypot_is_a_text_field_and_rejects_bots(self):
+        from .models import ContactMessage
+
+        page = self.client.get(reverse("core:contact"))
+        self.assertContains(page, 'type="text" name="website"')
+
+        self._contact(website="http://spam.example")
+        self.assertFalse(ContactMessage.objects.exists())
+
+    def test_unknown_source_is_stored_as_web(self):
+        from .models import ContactMessage
+
+        self._contact(source="x" * 200)
+        self.assertEqual(ContactMessage.objects.get().source, "web")
+
+    def test_contact_is_limited_per_ip(self):
+        from .models import ContactMessage
+        from .views import CONTACT_PER_IP_HOUR
+
+        for _ in range(CONTACT_PER_IP_HOUR):
+            self._contact()
+        response = self._contact()
+
+        self.assertEqual(response.status_code, 429)
+        self.assertEqual(ContactMessage.objects.count(), CONTACT_PER_IP_HOUR)
+
+    def test_confirmation_mails_per_recipient_are_capped(self):
+        from django.core import mail
+
+        from .views import MAILS_PER_RECIPIENT_DAY
+
+        for i in range(MAILS_PER_RECIPIENT_DAY + 1):
+            self.client.post(
+                reverse("core:contact"),
+                {"name": "Ana", "email": "victima@example.com", "message": "x", "accept": "on"},
+                REMOTE_ADDR=f"203.0.113.{i + 10}",
+            )
+        to_victim = [m for m in mail.outbox if m.to == ["victima@example.com"]]
+        self.assertEqual(len(to_victim), MAILS_PER_RECIPIENT_DAY)
+
+    def test_newsletter_does_not_resend_to_subscribed_address(self):
+        from django.core import mail
+
+        url = reverse("core:newsletter")
+        data = {"email": "lector@example.com", "accept": "on"}
+        self.client.post(url, data, HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+        self.client.post(url, data, HTTP_X_REQUESTED_WITH="XMLHttpRequest")
+
+        self.assertEqual(len(mail.outbox), 1)
+
+    def test_newsletter_ignores_foreign_referer(self):
+        response = self.client.post(
+            reverse("core:newsletter"),
+            {"email": "lector@example.com", "accept": "on"},
+            HTTP_REFERER="https://evil.example/",
+        )
+        self.assertEqual(response["Location"], "/")
+
+    def test_client_ip_ignores_cf_connecting_ip(self):
+        from django.test import RequestFactory
+
+        from .ratelimit import client_ip
+
+        request = RequestFactory().get("/", HTTP_CF_CONNECTING_IP="1.2.3.4", HTTP_X_REAL_IP="198.51.100.7")
+        self.assertEqual(client_ip(request), "198.51.100.7")

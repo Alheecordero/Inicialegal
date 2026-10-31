@@ -8,6 +8,7 @@ from django.http import HttpResponsePermanentRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.template.loader import render_to_string
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import get_language, gettext as _
 from django.views.decorators.http import require_POST
 
@@ -15,6 +16,7 @@ from apps.blog.models import Post
 
 logger = logging.getLogger(__name__)
 
+from . import ratelimit
 from .contact_email import contact_email_context, newsletter_email_context
 from .forms import ContactForm, NewsletterForm
 from .offers import build_plan_offer
@@ -162,6 +164,14 @@ def page_detail(request, slug):
 
 PROMO_SOURCE = "asesoria-inicial-gratis"
 IG_SOURCE = "instagram"
+CONTACT_SOURCES = {"web", "formulario-contacto", PROMO_SOURCE, IG_SOURCE}
+
+# Límites anti-spam: envíos por IP y correos por destinatario.
+CONTACT_PER_IP_HOUR = 5
+NEWSLETTER_PER_IP_HOUR = 5
+MAILS_PER_RECIPIENT_DAY = 3
+HOUR = 60 * 60
+DAY = 24 * HOUR
 IG_SUBJECTS = {
     "asesoria": "Solicitud de asesoría desde Instagram",
     "contrato": "Revisión de contrato desde Instagram",
@@ -211,12 +221,12 @@ def contact(request):
 
     if request.method == "POST":
         form = ContactForm(request.POST)
+        if ratelimit.hit("contact:" + ratelimit.client_ip(request), CONTACT_PER_IP_HOUR, HOUR):
+            messages.error(request, _("Recibimos varias solicitudes seguidas. Inténtelo nuevamente más tarde o escríbanos por WhatsApp."))
+            return render(request, "core/contact.html", {"form": form, "form_source": form_source}, status=429)
         if form.is_valid():
             msg = form.save(commit=False)
-            if posted_source in {PROMO_SOURCE, IG_SOURCE}:
-                msg.source = posted_source
-            else:
-                msg.source = request.POST.get("source", "web")
+            msg.source = posted_source if posted_source in CONTACT_SOURCES else "web"
             msg.privacy_accepted = True
             msg.save()
             _notify_contact(msg)
@@ -274,6 +284,10 @@ def _notify_contact(msg):
     except Exception:
         logger.exception("No se pudo avisar a %s del contacto %s", office, msg.pk)
     if not msg.email or msg.email.lower() == office.lower():
+        return
+    # El formulario acepta cualquier dirección: tope de confirmaciones para no usarlo contra terceros.
+    if ratelimit.hit("mail-to:" + msg.email.lower(), MAILS_PER_RECIPIENT_DAY, DAY):
+        logger.warning("Confirmación omitida para %s: tope diario alcanzado", msg.email)
         return
     try:
         english = (get_language() or "").startswith("en")
@@ -333,6 +347,12 @@ def _notify_newsletter_subscribe(sub, *, already_listed: bool):
 def newsletter_subscribe(request):
     form = NewsletterForm(request.POST)
     is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest"
+    if ratelimit.hit("newsletter:" + ratelimit.client_ip(request), NEWSLETTER_PER_IP_HOUR, HOUR):
+        text = _("Recibimos varias solicitudes seguidas. Inténtelo nuevamente más tarde.")
+        if is_ajax:
+            return JsonResponse({"ok": False, "message": text}, status=429)
+        messages.error(request, text)
+        return _back(request)
     if form.is_valid():
         email = form.cleaned_data["email"]
         try:
@@ -341,7 +361,9 @@ def newsletter_subscribe(request):
             sub.privacy_accepted = True
             sub.is_active = True
             sub.save(update_fields=["is_active", "privacy_accepted"])
-            _notify_newsletter_subscribe(sub, already_listed=already_listed)
+            # Un correo ya suscrito no recibe otro aviso: evita reenvíos a pedido de cualquiera.
+            if not already_listed and not ratelimit.hit("mail-to:" + email, MAILS_PER_RECIPIENT_DAY, DAY):
+                _notify_newsletter_subscribe(sub, already_listed=False)
             text = _("Gracias. Su suscripción quedó registrada.") if not already_listed else _("Ese correo ya estaba suscrito. Gracias.")
             ok = True
         except IntegrityError:
@@ -355,7 +377,15 @@ def newsletter_subscribe(request):
     if is_ajax:
         return JsonResponse({"ok": ok, "message": text})
     (messages.success if ok else messages.error)(request, text)
-    return redirect(request.META.get("HTTP_REFERER", "/"))
+    return _back(request)
+
+
+def _back(request):
+    """Vuelve a la página de origen solo si es de este sitio."""
+    referer = request.META.get("HTTP_REFERER", "")
+    if url_has_allowed_host_and_scheme(referer, allowed_hosts={request.get_host()}, require_https=request.is_secure()):
+        return redirect(referer)
+    return redirect("/")
 
 
 def error_404(request, exception=None):

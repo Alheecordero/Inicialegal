@@ -1,26 +1,26 @@
 import json
+import re
 
 from django.conf import settings
-from django.core.cache import cache
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+
+from apps.core.ratelimit import client_ip, hit
 
 from .models import AssistantConversation, AssistantMessage
 from .services import answer_question
 
 
-def _client_ip(request):
-    return request.META.get("HTTP_CF_CONNECTING_IP") or request.META.get("REMOTE_ADDR") or ""
+# La ruta va al prompt del modelo: solo caracteres de una URL del sitio, nada de texto libre.
+PAGE_PATH_RE = re.compile(r"^/[A-Za-z0-9/_\-.]{0,119}$")
 
 
 def _rate_limited(request):
-    ip = _client_ip(request)
-    key = f"il-assistant:{ip or request.session.session_key or 'anon'}"
-    count = cache.get(key, 0)
-    if count >= settings.ASSISTANT_RATE_LIMIT:
+    ip = client_ip(request)
+    key = f"assistant:{ip or request.session.session_key or 'anon'}"
+    if hit(key, settings.ASSISTANT_RATE_LIMIT, 60):
         return True
-    cache.set(key, count + 1, 60)
-    return False
+    return hit("assistant:global-day", settings.ASSISTANT_DAILY_LIMIT, 24 * 60 * 60)
 
 
 def _log_exchange(request, user_message, assistant_message):
@@ -31,7 +31,7 @@ def _log_exchange(request, user_message, assistant_message):
     conversation, _ = AssistantConversation.objects.get_or_create(
         session_key=request.session.session_key,
         defaults={
-            "ip_address": _client_ip(request) or None,
+            "ip_address": client_ip(request) or None,
             "user_agent": request.META.get("HTTP_USER_AGENT", "")[:255],
         },
     )
@@ -56,10 +56,8 @@ def _clean_history(value):
 
 
 def _clean_page_path(value):
-    path = str(value or "").strip()
-    if not path.startswith("/"):
-        return ""
-    return path[:220]
+    path = str(value or "").strip().split("?", 1)[0].split("#", 1)[0]
+    return path if PAGE_PATH_RE.match(path) else ""
 
 
 @require_POST

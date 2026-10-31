@@ -4,6 +4,7 @@ Configuración Django para inicialegal.cl
 from pathlib import Path
 
 import environ
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,12 +27,15 @@ env = environ.Env(
     ASSISTANT_MAX_INPUT_CHARS=(int, 900),
     ASSISTANT_MAX_CONTEXT_ITEMS=(int, 5),
     ASSISTANT_RATE_LIMIT=(int, 12),
+    ASSISTANT_DAILY_LIMIT=(int, 1500),
     ASSISTANT_LOG_CONVERSATIONS=(bool, False),
 )
 environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
+if not DEBUG and SECRET_KEY == "cambia-esta-clave-en-produccion":
+    raise ImproperlyConfigured("SECRET_KEY no está configurada en .env")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 CSRF_TRUSTED_ORIGINS = env("CSRF_TRUSTED_ORIGINS")
 SITE_URL = env("SITE_URL")
@@ -92,6 +96,15 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {"default": env.db("DATABASE_URL")}
 
+# Caché en la base de datos: la comparten todos los workers de gunicorn, así los límites
+# de intentos (panel, asistente, formularios) cuentan de verdad. Requiere `createcachetable`.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "il_cache",
+    }
+}
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -146,6 +159,7 @@ ASSISTANT_TIMEOUT = env("ASSISTANT_TIMEOUT")
 ASSISTANT_MAX_INPUT_CHARS = env("ASSISTANT_MAX_INPUT_CHARS")
 ASSISTANT_MAX_CONTEXT_ITEMS = env("ASSISTANT_MAX_CONTEXT_ITEMS")
 ASSISTANT_RATE_LIMIT = env("ASSISTANT_RATE_LIMIT")
+ASSISTANT_DAILY_LIMIT = env("ASSISTANT_DAILY_LIMIT")
 ASSISTANT_LOG_CONVERSATIONS = env("ASSISTANT_LOG_CONVERSATIONS")
 
 # Ruta del panel. No usar /admin/: es la dirección que prueban los escáneres.
@@ -158,6 +172,19 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 60 * 60 * 24 * 30
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+# Errores y avisos a stderr: gunicorn los deja en journald (journalctl -u gunicorn-inicialegal).
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {"plain": {"format": "%(levelname)s %(name)s %(message)s"}},
+    "handlers": {"stderr": {"class": "logging.StreamHandler", "formatter": "plain"}},
+    "root": {"handlers": ["stderr"], "level": "WARNING"},
+    "loggers": {
+        "django": {"handlers": ["stderr"], "level": "WARNING", "propagate": False},
+        "apps": {"handlers": ["stderr"], "level": "INFO", "propagate": False},
+    },
+}
 
 # Paginación blog
 BLOG_PAGINATE_BY = 6

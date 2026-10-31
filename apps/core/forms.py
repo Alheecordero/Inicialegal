@@ -31,7 +31,17 @@ class GroupedServiceChoiceField(forms.ModelChoiceField):
 
 class ContactForm(forms.ModelForm):
     # Honeypot anti-spam
-    website = forms.CharField(required=False, widget=forms.HiddenInput)
+    website = forms.CharField(
+        required=False,
+        label="",
+        # Campo de texto real (los bots lo rellenan), fuera de la vista y del foco para las personas.
+        widget=forms.TextInput(attrs={
+            "autocomplete": "off",
+            "tabindex": "-1",
+            "aria-hidden": "true",
+            "style": "position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;",
+        }),
+    )
     accept = forms.BooleanField(
         label=_("He leído y acepto la Política de Privacidad."),
         required=True,

@@ -1,7 +1,8 @@
 from django.conf import settings
-from django.core.cache import cache
 from django.http import HttpResponse
 from django.utils import translation
+
+from . import ratelimit
 
 
 class SiteLocaleMiddleware:
@@ -52,14 +53,13 @@ class AdminLoginThrottleMiddleware:
         login_path = "/" + settings.ADMIN_PATH.strip("/") + "/login/"
         if request.path != login_path or request.method != "POST":
             return self.get_response(request)
-        ip = request.META.get("HTTP_CF_CONNECTING_IP") or request.META.get("REMOTE_ADDR") or ""
-        key = "il-admin-fail:" + ip
-        if cache.get(key, 0) >= self.MAX_FAILS:
+        key = "admin-fail:" + ratelimit.client_ip(request)
+        if ratelimit.peek(key) >= self.MAX_FAILS:
             return HttpResponse("Demasiados intentos. Espere unos minutos e inténtelo de nuevo.", status=429)
         response = self.get_response(request)
         location = response.get("Location", "")
         if response.status_code == 302 and "login" not in location:
-            cache.delete(key)
+            ratelimit.reset(key)
         elif response.status_code == 200:
-            cache.set(key, cache.get(key, 0) + 1, self.WINDOW)
+            ratelimit.hit(key, self.MAX_FAILS, self.WINDOW)
         return response

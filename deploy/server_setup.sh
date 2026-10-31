@@ -42,7 +42,8 @@ EMAIL_URL=consolemail://
 DEFAULT_FROM_EMAIL="Inicia Legal <no-reply@$DOMAIN>"
 CONTACT_NOTIFY_EMAIL=contacto@$DOMAIN
 EOF
-  chmod 600 .env
+  chown root:www-data .env
+  chmod 640 .env
 fi
 
 # ---------- Python ----------
@@ -53,6 +54,7 @@ venv/bin/pip install -q --upgrade pip
 venv/bin/pip install -q -r requirements.txt
 # (django-environ lee .env por sí mismo; no hace falta `source`)
 venv/bin/python manage.py migrate --noinput
+venv/bin/python manage.py createcachetable
 venv/bin/python manage.py collectstatic --noinput
 venv/bin/python manage.py seed
 
@@ -66,6 +68,7 @@ systemctl restart gunicorn-inicialegal.service || true
 # ---------- nginx + certificado ----------
 install -m 644 deploy/nginx-inicialegal-proxy.conf /etc/nginx/snippets/inicialegal-proxy.conf
 install -m 644 deploy/nginx-inicialegal-bots.conf /etc/nginx/conf.d/inicialegal-bots.conf
+install -m 644 deploy/nginx-inicialegal-cloudflare.conf /etc/nginx/conf.d/inicialegal-cloudflare.conf
 if [ ! -d /etc/letsencrypt/live/$DOMAIN ]; then
   install -m 644 deploy/nginx-inicialegal-bootstrap.conf /etc/nginx/sites-available/inicialegal
   ln -sf /etc/nginx/sites-available/inicialegal /etc/nginx/sites-enabled/inicialegal
