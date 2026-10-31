@@ -16,7 +16,7 @@ from apps.blog.models import Post
 
 logger = logging.getLogger(__name__)
 
-from . import ratelimit
+from . import ratelimit, turnstile
 from .contact_email import contact_email_context, newsletter_email_context
 from .forms import ContactForm, NewsletterForm
 from .offers import build_plan_offer
@@ -92,7 +92,7 @@ _LEGACY_AREAS = {
 
 def area_detail(request, slug):
     if slug in _LEGACY_AREAS:
-        return redirect("core:area_detail", _LEGACY_AREAS[slug])
+        return redirect("core:area_detail", _LEGACY_AREAS[slug], permanent=True)
     area = get_object_or_404(PracticeArea, slug=slug, is_active=True)
     context = {
         "area": area,
@@ -224,6 +224,8 @@ def contact(request):
         if ratelimit.hit("contact:" + ratelimit.client_ip(request), CONTACT_PER_IP_HOUR, HOUR):
             messages.error(request, _("Recibimos varias solicitudes seguidas. Inténtelo nuevamente más tarde o escríbanos por WhatsApp."))
             return render(request, "core/contact.html", {"form": form, "form_source": form_source}, status=429)
+        if not turnstile.verify(request):
+            form.add_error(None, _("No pudimos verificar que el envío lo hizo una persona. Inténtelo nuevamente."))
         if form.is_valid():
             msg = form.save(commit=False)
             msg.source = posted_source if posted_source in CONTACT_SOURCES else "web"
@@ -351,6 +353,12 @@ def newsletter_subscribe(request):
         text = _("Recibimos varias solicitudes seguidas. Inténtelo nuevamente más tarde.")
         if is_ajax:
             return JsonResponse({"ok": False, "message": text}, status=429)
+        messages.error(request, text)
+        return _back(request)
+    if not turnstile.verify(request):
+        text = _("No pudimos verificar que el envío lo hizo una persona. Inténtelo nuevamente.")
+        if is_ajax:
+            return JsonResponse({"ok": False, "message": text}, status=400)
         messages.error(request, text)
         return _back(request)
     if form.is_valid():

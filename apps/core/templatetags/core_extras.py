@@ -1,6 +1,7 @@
 import re
 
 from django import template
+from django.templatetags.static import static
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language
@@ -74,3 +75,37 @@ def localized_href(url):
     if url.startswith("/"):
         return "/en" + url
     return url
+
+
+@register.simple_tag(takes_context=True)
+def legal_service_ld(context):
+    """JSON-LD LegalService con los datos de contacto de SiteSettings (para la portada)."""
+    import json
+
+    site, site_url = context["site"], context["site_url"]
+    data = {
+        "@context": "https://schema.org",
+        "@type": "LegalService",
+        "@id": f"{site_url}/#organizacion",
+        "name": site.site_name,
+        "url": f"{site_url}/",
+        "description": site.meta_description,
+        "email": site.email,
+        "telephone": site.phone,
+        "areaServed": {"@type": "Country", "name": "Chile"},
+    }
+    data["logo"] = data["image"] = site_url + (site.logo.url if site.logo else static("img/logo.png"))
+    if site.address:
+        data["address"] = {
+            "@type": "PostalAddress",
+            "streetAddress": site.address,
+            "addressLocality": site.city or "Santiago",
+            "addressCountry": "CL",
+        }
+    if site.map_latitude is not None and site.map_longitude is not None:
+        data["geo"] = {"@type": "GeoCoordinates", "latitude": float(site.map_latitude), "longitude": float(site.map_longitude)}
+    same_as = [u for u in (site.instagram, site.linkedin, site.facebook, site.tiktok, site.youtube) if u]
+    if same_as:
+        data["sameAs"] = same_as
+    raw = json.dumps(data, ensure_ascii=False).replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+    return mark_safe(f'<script type="application/ld+json">{raw}</script>')

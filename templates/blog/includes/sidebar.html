@@ -39,6 +39,7 @@
       {% csrf_token %}
       <input type="email" name="email" class="form-control mb-2" placeholder="Tu correo electrónico" required>
       {% include "includes/newsletter_consent.html" with consent_id="newsletter-accept-sidebar" %}
+      {% include "includes/turnstile.html" %}
       <button class="btn btn-gold w-100 mt-2" type="submit">Suscribirme</button>
       <div data-feedback class="small mt-2"></div>
     </form>

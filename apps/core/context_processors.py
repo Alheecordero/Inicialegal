@@ -5,15 +5,12 @@ from .models import Page, Plan, PracticeArea, Service, SiteSettings
 
 
 def site_context(request):
-    path = request.path or "/"
-    query = request.META.get("QUERY_STRING", "")
-    canonical = path + (f"?{query}" if query else "")
     return {
         "site": SiteSettings.load(),
         "site_url": settings.SITE_URL,
         "site_indexing": settings.SITE_INDEXING,
         "assistant_enabled": settings.ASSISTANT_ENABLED,
-        "canonical_path": canonical,
+        "turnstile_site_key": settings.TURNSTILE_SITE_KEY if settings.TURNSTILE_SECRET_KEY else "",
         "nav_areas": PracticeArea.objects.filter(is_active=True).only("name", "slug"),
         "nav_services": Service.objects.filter(is_active=True).only("name", "slug")[:8],
         "nav_plans": Plan.objects.filter(is_active=True).only("name", "slug"),

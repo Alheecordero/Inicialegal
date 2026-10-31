@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 from django.db.models import Count, F, Q
 from django.shortcuts import get_object_or_404, redirect, render
 
-from apps.core import ratelimit
+from apps.core import ratelimit, turnstile
 
 from .forms import CommentForm
 from .models import Category, Post, Tag
@@ -77,6 +77,8 @@ def post_detail(request, slug):
         if ratelimit.hit("comment:" + ratelimit.client_ip(request), COMMENTS_PER_IP_HOUR, 60 * 60):
             messages.error(request, "Recibimos varios comentarios seguidos. Inténtalo nuevamente más tarde.")
             return redirect(post.get_absolute_url() + "#comentarios")
+        if not turnstile.verify(request):
+            form.add_error(None, "No pudimos verificar que el comentario lo escribió una persona. Inténtalo nuevamente.")
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post

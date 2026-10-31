@@ -140,3 +140,70 @@ class AntiSpamTests(TestCase):
 
         request = RequestFactory().get("/", HTTP_CF_CONNECTING_IP="1.2.3.4", HTTP_X_REAL_IP="198.51.100.7")
         self.assertEqual(client_ip(request), "198.51.100.7")
+
+
+class SeoTests(TestCase):
+    def test_home_has_single_h1_and_legal_service_ld(self):
+        from .models import HeroSlide
+
+        for i in range(3):
+            HeroSlide.objects.create(key=f"s{i}", title=f"Título {i}", order=i, is_active=True)
+        html = self.client.get("/").content.decode()
+        self.assertEqual(html.count("<h1"), 1)
+        self.assertIn('"@type": "LegalService"', html)
+
+    def test_hreflang_ignores_query_string(self):
+        html = self.client.get("/?utm_source=x").content.decode()
+        self.assertIn('hreflang="es-CL" href="http', html)
+        self.assertNotIn("utm_source", html.split('hreflang="es-CL"')[1].split(">")[0])
+
+    def test_legacy_area_redirect_is_permanent(self):
+        resp = self.client.get(reverse("core:area_detail", args=["derecho-societario"]))
+        self.assertEqual(resp.status_code, 301)
+
+
+@override_settings(TURNSTILE_SITE_KEY="site", TURNSTILE_SECRET_KEY="secret")
+class TurnstileTests(TestCase):
+    def setUp(self):
+        from django.core.cache import cache
+
+        cache.clear()
+
+    def _post_contact(self, **extra):
+        data = {"name": "Ana", "email": "ana@example.com", "subject": "Hola", "message": "Consulta", "accept": "on", **extra}
+        return self.client.post(reverse("core:contact"), data)
+
+    def test_widget_rendered_when_enabled(self):
+        html = self.client.get(reverse("core:contact")).content.decode()
+        self.assertIn('class="cf-turnstile" data-sitekey="site"', html)
+        self.assertIn("challenges.cloudflare.com/turnstile/v0/api.js", html)
+
+    def test_contact_without_token_is_rejected(self):
+        from .models import ContactMessage
+
+        resp = self._post_contact()
+        self.assertEqual(resp.status_code, 200)
+        self.assertFalse(ContactMessage.objects.exists())
+
+    def test_contact_with_valid_token_is_saved(self):
+        from unittest import mock
+
+        from .models import ContactMessage
+
+        with mock.patch("apps.core.turnstile.urlopen") as fake:
+            fake.return_value.__enter__.return_value.read.return_value = b'{"success": true}'
+            resp = self._post_contact(**{"cf-turnstile-response": "tok"})
+        self.assertEqual(resp.status_code, 302)
+        self.assertTrue(ContactMessage.objects.exists())
+
+    def test_newsletter_rejects_invalid_token(self):
+        from unittest import mock
+
+        with mock.patch("apps.core.turnstile.urlopen") as fake:
+            fake.return_value.__enter__.return_value.read.return_value = b'{"success": false}'
+            resp = self.client.post(
+                reverse("core:newsletter"),
+                {"email": "a@example.com", "accept": "on", "cf-turnstile-response": "tok"},
+                HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+            )
+        self.assertEqual(resp.status_code, 400)

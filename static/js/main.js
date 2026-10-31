@@ -81,7 +81,11 @@
         .catch(function () {
           if (feedback) { feedback.textContent = "Ocurrió un error, inténtalo nuevamente."; feedback.className = "small mt-2 text-warning"; }
         })
-        .finally(function () { if (btn) btn.disabled = false; });
+        .finally(function () {
+          if (btn) btn.disabled = false;
+          var widget = form.querySelector(".cf-turnstile");
+          if (widget && window.turnstile) window.turnstile.reset(widget);
+        });
     });
   });
 

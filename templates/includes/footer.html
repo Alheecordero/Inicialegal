@@ -58,6 +58,7 @@
               <button class="btn btn-gold" type="submit" aria-label="{% trans 'Suscribirme' %}"><i class="bi bi-send"></i></button>
             </div>
             {% include "includes/newsletter_consent.html" with consent_id="newsletter-accept-footer" %}
+            {% include "includes/turnstile.html" %}
             <div data-feedback class="small mt-2"></div>
           </form>
         </div>

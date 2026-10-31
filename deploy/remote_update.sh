@@ -6,6 +6,7 @@ venv/bin/pip install -q -r requirements.txt
 bash deploy/backup_db.sh
 venv/bin/python manage.py migrate --noinput
 venv/bin/python manage.py createcachetable
+venv/bin/python manage.py sync_brochures
 # refresh_commercial_copy ya no corre aquí: pisaba lo editado en el panel. Ejecutarlo a mano si se quiere.
 venv/bin/python manage.py collectstatic --noinput
 venv/bin/python manage.py check --deploy --fail-level ERROR

@@ -28,6 +28,8 @@ env = environ.Env(
     ASSISTANT_MAX_CONTEXT_ITEMS=(int, 5),
     ASSISTANT_RATE_LIMIT=(int, 12),
     ASSISTANT_DAILY_LIMIT=(int, 1500),
+    TURNSTILE_SITE_KEY=(str, ""),
+    TURNSTILE_SECRET_KEY=(str, ""),
     ASSISTANT_LOG_CONVERSATIONS=(bool, False),
 )
 environ.Env.read_env(BASE_DIR / ".env")
@@ -160,6 +162,10 @@ ASSISTANT_MAX_INPUT_CHARS = env("ASSISTANT_MAX_INPUT_CHARS")
 ASSISTANT_MAX_CONTEXT_ITEMS = env("ASSISTANT_MAX_CONTEXT_ITEMS")
 ASSISTANT_RATE_LIMIT = env("ASSISTANT_RATE_LIMIT")
 ASSISTANT_DAILY_LIMIT = env("ASSISTANT_DAILY_LIMIT")
+
+# Cloudflare Turnstile en contacto, newsletter y comentarios (vacío = apagado)
+TURNSTILE_SITE_KEY = env("TURNSTILE_SITE_KEY")
+TURNSTILE_SECRET_KEY = env("TURNSTILE_SECRET_KEY")
 ASSISTANT_LOG_CONVERSATIONS = env("ASSISTANT_LOG_CONVERSATIONS")
 
 # Ruta del panel. No usar /admin/: es la dirección que prueban los escáneres.
