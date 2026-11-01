@@ -48,7 +48,6 @@ urlpatterns = [
         "BingSiteAuth.xml",
         TemplateView.as_view(template_name="BingSiteAuth.xml", content_type="application/xml"),
     ),
-    path("asistente/", include("apps.assistant.urls", namespace="assistant")),
     path("blog/", include("apps.blog.urls", namespace="blog")),
     path("", include("apps.core.urls", namespace="core")),
 ]
