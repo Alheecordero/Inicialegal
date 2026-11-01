@@ -13,6 +13,7 @@ EnvironmentFile=/var/www/inicialegal/.env
 Environment=DJANGO_SETTINGS_MODULE=config.settings
 ExecStart=/var/www/inicialegal/venv/bin/gunicorn \
     --access-logfile - \
+    --no-control-socket \
     --workers 3 \
     --timeout 120 \
     --bind unix:/run/gunicorn-inicialegal.sock \
