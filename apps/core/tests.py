@@ -207,3 +207,51 @@ class TurnstileTests(TestCase):
                 HTTP_X_REQUESTED_WITH="XMLHttpRequest",
             )
         self.assertEqual(resp.status_code, 400)
+
+
+class Ley21719Tests(TestCase):
+    def setUp(self):
+        from django.core.cache import cache
+
+        cache.clear()
+
+    def test_landing_renders_with_faq_schema_and_lead_form(self):
+        resp = self.client.get(reverse("core:ley_21719"))
+        self.assertContains(resp, '"@type":"FAQPage"')
+        self.assertContains(resp, 'name="lead" value="checklist-21719"')
+        self.assertContains(resp, "<h1", count=1)
+
+    def test_landing_is_in_sitemap(self):
+        self.assertContains(self.client.get("/sitemap.xml"), "/ley-21719/")
+
+    def test_checklist_has_17_items_and_is_noindex(self):
+        resp = self.client.get(reverse("core:ley_21719_checklist"))
+        self.assertContains(resp, 'type="checkbox" id="ck', count=17)
+        self.assertContains(resp, 'content="noindex, follow"')
+
+    def test_subscribing_from_landing_returns_checklist(self):
+        from .models import NewsletterSubscriber
+
+        resp = self.client.post(
+            reverse("core:newsletter"),
+            {"email": "pyme@example.com", "accept": "on", "lead": "checklist-21719"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(resp.json()["download"], reverse("core:ley_21719_checklist"))
+        self.assertTrue(NewsletterSubscriber.objects.filter(email="pyme@example.com").exists())
+
+    def test_plain_newsletter_has_no_download(self):
+        resp = self.client.post(
+            reverse("core:newsletter"),
+            {"email": "otro@example.com", "accept": "on"},
+            HTTP_X_REQUESTED_WITH="XMLHttpRequest",
+        )
+        self.assertEqual(resp.json()["download"], "")
+
+    def test_days_left(self):
+        import datetime
+
+        from .ley_21719_content import days_left
+
+        self.assertEqual(days_left(datetime.date(2026, 11, 1)), 30)
+        self.assertEqual(days_left(datetime.date(2027, 1, 1)), 0)

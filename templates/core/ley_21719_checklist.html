@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Checklist Ley N.° 21.719 · {{ site.site_name }}{% endblock %}
+{% block extra_head %}<meta name="robots" content="noindex, follow">{% endblock %}
+
+{% block content %}
+{% include "includes/page_header.html" with title="Checklist de cumplimiento Ley N.° 21.719" kicker="Protección de datos personales" lead="Marque lo que su empresa ya cumple. Lo que quede sin marcar es su plan de trabajo." %}
+<section class="section checklist-21719">
+  <div class="container">
+    <div class="mx-auto" style="max-width:820px">
+      <p class="d-print-none"><button type="button" class="btn btn-gold btn-sm" onclick="window.print()"><i class="bi bi-printer me-1"></i> Imprimir o guardar como PDF</button></p>
+      {% for group, items in checklist %}
+      <h2 class="h4 mt-4 mb-3">{{ forloop.counter }}. {{ group }}</h2>
+      {% for item in items %}
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="ck{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+        <label class="form-check-label" for="ck{{ forloop.parentloop.counter }}-{{ forloop.counter }}">{{ item }}</label>
+      </div>
+      {% endfor %}
+      {% endfor %}
+      <div class="card-il mt-5">
+        <h2 class="h5">¿Quedaron casillas sin marcar?</h2>
+        <p class="text-muted">Le ayudamos a priorizar y cerrar las brechas antes de la entrada en vigencia. La primera reunión no tiene costo.</p>
+        <a href="{% url 'core:contact' %}?servicio=tecnologia-datos-dpd-diagnostico" class="btn btn-gold me-2 mb-2">Solicitar un diagnóstico</a>
+        <a href="{{ site.whatsapp_link }}" target="_blank" rel="noopener" class="btn btn-outline-gold mb-2"><i class="bi bi-whatsapp me-1"></i> WhatsApp</a>
+        <p class="small text-muted mt-3 mb-0">{{ site.site_name }} · {{ site.email }} · {{ site.phone }} · {{ site_url }}</p>
+      </div>
+      <p class="small text-muted mt-4">Contenido informativo de carácter general; no constituye asesoría legal para un caso particular.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

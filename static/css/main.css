@@ -1105,3 +1105,12 @@ body:has(.promo-banner:not([hidden])) .cookie-consent-card { pointer-events: aut
   .ig-hero { min-height: auto; padding: 2.75rem 1.75rem 1.5rem; }
   .ig-foot { padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px)); }
 }
+
+/* Impresión del checklist Ley 21.719 (y cualquier página): solo el contenido */
+@media print {
+  .announcement, .navbar-il, .footer, .assistant-widget, #promoBanner, #cookieConsent, .back-to-top, .whatsapp-float { display: none !important; }
+  .page-header { padding: 1rem 0 !important; background: none !important; color: #000 !important; }
+  .page-header .breadcrumb { display: none; }
+  .checklist-21719 { padding-top: 0 !important; }
+  .checklist-21719 .card-il { break-inside: avoid; }
+}

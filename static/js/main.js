@@ -76,7 +76,18 @@
             feedback.textContent = data.message;
             feedback.className = "small mt-2 " + (data.ok ? "text-success" : "text-warning");
           }
-          if (data.ok) form.reset();
+          if (data.ok) {
+            form.reset();
+            sendEvent("sign_up", { method: form.getAttribute("data-lead") || "newsletter" });
+            if (data.download && feedback) {
+              var link = document.createElement("a");
+              link.href = data.download;
+              link.className = "btn btn-gold btn-sm mt-2 d-inline-block";
+              link.textContent = "Abrir el checklist";
+              feedback.appendChild(document.createElement("br"));
+              feedback.appendChild(link);
+            }
+          }
         })
         .catch(function () {
           if (feedback) { feedback.textContent = "Ocurrió un error, inténtalo nuevamente."; feedback.className = "small mt-2 text-warning"; }
@@ -407,22 +418,27 @@
     if (!consent) return null;
     return !!consent.analytics;
   }
-  function sendPromo(name, extra) {
+  // Envía un evento a GA4; si el usuario aún no decide sobre cookies, queda en cola.
+  function sendEvent(name, params) {
     var choice = analyticsChoice();
     if (choice === false) return;
-    var params = {
-      promotion_id: PROMO_ID,
-      promotion_name: "Asesoría inicial gratis",
-      creative_name: "banner_cuenta_regresiva",
-      creative_slot: "banner_inferior",
-      transport_type: "beacon",
-    };
-    if (extra) Object.keys(extra).forEach(function (key) { params[key] = extra[key]; });
+    params = params || {};
+    params.transport_type = "beacon";
     if (choice === null || !gaLoaded) {
       promoQueue.push([name, params]);
       return;
     }
     window.gtag("event", name, params);
+  }
+  function sendPromo(name, extra) {
+    var params = {
+      promotion_id: PROMO_ID,
+      promotion_name: "Asesoría inicial gratis",
+      creative_name: "banner_cuenta_regresiva",
+      creative_slot: "banner_inferior",
+    };
+    if (extra) Object.keys(extra).forEach(function (key) { params[key] = extra[key]; });
+    sendEvent(name, params);
   }
   function flushPromo() {
     if (analyticsChoice() !== true) {
@@ -500,6 +516,21 @@
       promotion_id: promoLead.getAttribute("data-promo-lead") || PROMO_ID,
     });
   }
+  // Conversiones: contacto enviado, WhatsApp, teléfono, correo y descarga de brochures
+  if (!promoLead && document.querySelector("[data-contact-lead]")) {
+    sendEvent("generate_lead", { lead_source: "formulario", method: "formulario" });
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest("a[href]") : null;
+    if (!a) return;
+    var href = a.getAttribute("href") || "";
+    var where = { link_url: href.split("?")[0], page_path: location.pathname };
+    if (/wa\.me\/\d|api\.whatsapp\.com/.test(href)) sendEvent("contact_whatsapp", where);
+    else if (href.indexOf("tel:") === 0) sendEvent("contact_phone", where);
+    else if (href.indexOf("mailto:") === 0) sendEvent("contact_email", where);
+    else if (/\.pdf($|\?)/i.test(href)) sendEvent("file_download", { file_name: href.split("/").pop().split("?")[0], page_path: location.pathname });
+  });
+
   if (document.body.classList.contains("ig-landing")) {
     var igQuery = new URLSearchParams(window.location.search);
     sendPromo("instagram_bio_visit", {

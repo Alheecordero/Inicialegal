@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load core_extras %}
+{% block title %}Ley N.° 21.719 de protección de datos: guía para empresas · {{ site.site_name }}{% endblock %}
+{% block meta_description %}Qué exige la Ley N.° 21.719 de protección de datos personales, desde cuándo rige, multas y cómo adecuar su empresa. Descargue el checklist gratuito.{% endblock %}
+{% block og_title %}Ley N.° 21.719: lo que su empresa debe hacer antes del 1 de diciembre de 2026{% endblock %}
+{% block extra_head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{% for q, a in faqs %}{"@type":"Question","name":"{{ q|escapejs }}","acceptedAnswer":{"@type":"Answer","text":"{{ a|escapejs }}"}}{% if not forloop.last %},{% endif %}{% endfor %}]}
+</script>
+{% endblock %}
+
+{% block content %}
+{% include "includes/page_header.html" with title="Ley N.° 21.719 de protección de datos personales" kicker="Guía para empresas" lead="Lo que exige la nueva ley, desde cuándo rige y cómo preparar a su empresa." %}
+
+<section class="section-sm bg-cream">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8">
+        {% if days_left %}
+        <h2 class="h3 mb-2">Quedan <span class="text-gold">{{ days_left }} día{{ days_left|pluralize }}</span> para la entrada en vigencia</h2>
+        <p class="mb-0">Desde el {{ entry_into_force|date:"j \d\e F \d\e Y" }}, la Agencia de Protección de Datos Personales podrá fiscalizar y sancionar a las empresas que no cumplan.</p>
+        {% else %}
+        <h2 class="h3 mb-2">La ley ya está vigente</h2>
+        <p class="mb-0">Desde el {{ entry_into_force|date:"j \d\e F \d\e Y" }}, la Agencia de Protección de Datos Personales fiscaliza y sanciona a las empresas que no cumplen.</p>
+        {% endif %}
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <a href="#checklist" class="btn btn-gold">Descargar checklist gratuito</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Lo esencial de la ley</h2>
+    <div class="row g-4 mt-1">
+      {% for p in key_points %}
+      <div class="col-md-6 col-lg-3">
+        <div class="card-il">
+          <i class="{{ p.icon|ph }} text-gold fs-2 d-block mb-3" aria-hidden="true"></i>
+          <h3 class="h5">{{ p.title }}</h3>
+          <p class="mb-0 text-muted">{{ p.text }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section bg-cream">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-5">
+        <h2 class="section-title">Qué debe hacer su empresa</h2>
+        <p class="section-lead">La ley exige demostrar el cumplimiento, no solo declararlo. Estas son las obligaciones que más afectan a las pymes.</p>
+        <a href="{% url 'core:contact' %}?servicio=tecnologia-datos-dpd-diagnostico" class="btn btn-gold mt-2">Solicitar un diagnóstico</a>
+      </div>
+      <div class="col-lg-7">
+        <div class="row g-3">
+          {% for title, text in obligations %}
+          <div class="col-md-6">
+            <div class="feature-row">
+              <i class="bi bi-check2-circle text-gold fs-4" aria-hidden="true"></i>
+              <div><h3 class="h6 mb-1">{{ title }}</h3><p class="small text-muted mb-0">{{ text }}</p></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="checklist">
+  <div class="container">
+    <div class="row justify-content-center"><div class="col-lg-8">
+      <div class="card-il">
+        <div class="kicker">Gratis</div>
+        <h2 class="h3">Checklist de cumplimiento Ley N.° 21.719</h2>
+        <p class="text-muted">17 preguntas para saber en qué está su empresa: inventario de datos, consentimientos, derechos de los titulares, seguridad y proveedores. Ingrese su correo y ábralo al instante.</p>
+        <form action="{% url 'core:newsletter' %}" method="post" data-newsletter data-lead="{{ checklist_lead }}">
+          {% csrf_token %}
+          <input type="hidden" name="lead" value="{{ checklist_lead }}">
+          <div class="input-group">
+            <input type="email" name="email" class="form-control" placeholder="Correo de su empresa" aria-label="Correo electrónico" required>
+            <button class="btn btn-gold" type="submit">Recibir checklist</button>
+          </div>
+          {% include "includes/newsletter_consent.html" with consent_id="newsletter-accept-21719" %}
+          {% include "includes/turnstile.html" %}
+          <div data-feedback class="small mt-2"></div>
+        </form>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="section bg-cream">
+  <div class="container">
+    <div class="row justify-content-center"><div class="col-lg-9">
+      <h2 class="section-title text-center mb-4">Preguntas frecuentes</h2>
+      <div class="accordion accordion-il" id="faq21719">
+        {% for q, a in faqs %}
+        <div class="accordion-item">
+          <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ley{{ forloop.counter }}">{{ q }}</button></h3>
+          <div id="ley{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#faq21719"><div class="accordion-body">{{ a|linebreaks }}</div></div>
+        </div>
+        {% endfor %}
+      </div>
+      <p class="small text-muted mt-4 mb-0">Contenido informativo de carácter general; no constituye asesoría legal para un caso particular.</p>
+    </div></div>
+  </div>
+</section>
+
+<section class="cta-band section">
+  <div class="container text-center">
+    <h2 class="mb-2">Prepare a su empresa antes del plazo</h2>
+    <p class="mb-4 mx-auto" style="max-width:640px">Revisamos cómo trata los datos hoy, priorizamos lo urgente y dejamos el plan de adecuación listo. La primera reunión no tiene costo.</p>
+    <a href="{% url 'core:contact' %}?servicio=tecnologia-datos-dpd-diagnostico" class="btn btn-gold me-2 mb-2">Agendar una reunión</a>
+    <a href="{{ site.whatsapp_link }}" target="_blank" rel="noopener" class="btn btn-outline-light mb-2"><i class="bi bi-whatsapp me-1"></i> Escribir por WhatsApp</a>
+  </div>
+</section>
+{% endblock %}

@@ -15,7 +15,7 @@
       <div class="col-lg-7">
         <div class="contact-card">
           <h2 class="h3 mb-1">{% trans "Formulario" %}</h2>
-          <p class="text-muted mb-4">{% trans "Complete el formulario y un abogado del estudio le contactará." %}</p>
+          <p class="text-muted mb-4">{% trans "Complete el formulario y un abogado del estudio le contactará." %} <strong class="text-body">{% trans "Respondemos en menos de 24 horas hábiles." %}</strong></p>
           <form method="post" novalidate>
             {% csrf_token %}
             <input type="hidden" name="source" value="{{ form_source|default:'formulario-contacto' }}">

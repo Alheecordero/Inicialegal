@@ -16,7 +16,7 @@ from apps.blog.models import Post
 
 logger = logging.getLogger(__name__)
 
-from . import ratelimit, turnstile
+from . import ley_21719_content as ley_21719, ratelimit, turnstile
 from .contact_email import contact_email_context, newsletter_email_context
 from .forms import ContactForm, NewsletterForm
 from .offers import build_plan_offer
@@ -180,6 +180,22 @@ IG_SUBJECTS = {
 
 def instagram(request):
     return render(request, "core/instagram.html")
+
+
+def ley_21719_landing(request):
+    context = {
+        "days_left": ley_21719.days_left(),
+        "entry_into_force": ley_21719.ENTRY_INTO_FORCE,
+        "key_points": ley_21719.KEY_POINTS,
+        "obligations": ley_21719.OBLIGATIONS,
+        "faqs": ley_21719.FAQS,
+        "checklist_lead": ley_21719.CHECKLIST_LEAD,
+    }
+    return render(request, "core/ley_21719.html", context)
+
+
+def ley_21719_checklist(request):
+    return render(request, "core/ley_21719_checklist.html", {"checklist": ley_21719.CHECKLIST})
 
 
 def instagram_short(request):
@@ -382,10 +398,14 @@ def newsletter_subscribe(request):
         else:
             text = _("Ingrese un correo válido.")
         ok = False
+    download = ""
+    if ok and request.POST.get("lead") == ley_21719.CHECKLIST_LEAD:
+        download = reverse("core:ley_21719_checklist")
+        text = _("Listo. Aquí tiene su checklist; también le enviaremos nuestras publicaciones.")
     if is_ajax:
-        return JsonResponse({"ok": ok, "message": text})
+        return JsonResponse({"ok": ok, "message": text, "download": download})
     (messages.success if ok else messages.error)(request, text)
-    return _back(request)
+    return redirect(download) if download else _back(request)
 
 
 def _back(request):

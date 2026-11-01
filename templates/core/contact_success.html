@@ -2,7 +2,7 @@
 {% block title %}Mensaje recibido · {{ site.site_name }}{% endblock %}
 {% block extra_head %}<meta name="robots" content="noindex, follow">{% endblock %}
 {% block content %}
-{% if lead_source %}<div data-promo-lead="{{ lead_source }}" hidden></div>{% endif %}
+{% if lead_source %}<div data-promo-lead="{{ lead_source }}" hidden></div>{% else %}<div data-contact-lead hidden></div>{% endif %}
 <section class="section bg-cream">
   <div class="container text-center">
     <div class="mx-auto mb-4" style="width:96px;height:96px;border-radius:50%;background:var(--il-gold-pale);display:flex;align-items:center;justify-content:center"><i class="bi bi-check2-circle text-gold" style="font-size:3rem"></i></div>

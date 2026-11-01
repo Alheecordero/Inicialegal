@@ -29,6 +29,14 @@
     <div class="row g-5">
       <div class="col-lg-8">
         <div class="rich-content">{{ area.description|safe }}</div>
+        {% if area.slug == "tecnologia-y-datos" %}
+        <div class="card-il mt-4">
+          <div class="kicker">Ley N.° 21.719 · rige desde el 1 de diciembre de 2026</div>
+          <h2 class="h5">¿Su empresa está lista para la nueva ley de datos personales?</h2>
+          <p class="text-muted mb-3">Revise qué exige, las multas y descargue el checklist de cumplimiento gratuito.</p>
+          <a href="{% url 'core:ley_21719' %}" class="btn btn-gold btn-sm">Ver la guía</a>
+        </div>
+        {% endif %}
 
         {% if members %}
         <h2 class="h3 mt-5 mb-4">Abogados de esta área</h2>

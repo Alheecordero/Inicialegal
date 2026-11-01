@@ -20,5 +20,7 @@ urlpatterns = [
     path("contacto/", views.contact, name="contact"),
     path("contacto/gracias/", views.contact_success, name="contact_success"),
     path("newsletter/", views.newsletter_subscribe, name="newsletter"),
+    path("ley-21719/", views.ley_21719_landing, name="ley_21719"),
+    path("ley-21719/checklist/", views.ley_21719_checklist, name="ley_21719_checklist"),
     path("p/<slug:slug>/", views.page_detail, name="page_detail"),
 ]
