@@ -182,6 +182,17 @@ def instagram(request):
     return render(request, "core/instagram.html")
 
 
+def llms_txt(request):
+    """Índice en Markdown para asistentes de IA (https://llmstxt.org), armado con el contenido publicado."""
+    context = {
+        "plans": Plan.objects.filter(is_active=True),
+        "areas": PracticeArea.objects.filter(is_active=True),
+        "services": Service.objects.filter(is_active=True).select_related("area"),
+        "posts": Post.published.all()[:30],
+    }
+    return render(request, "llms.txt", context, content_type="text/plain; charset=utf-8")
+
+
 def _require_ley_21719_page():
     if not settings.LEY_21719_PAGE_ENABLED:
         raise Http404

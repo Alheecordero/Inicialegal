@@ -7,7 +7,7 @@
     <div class="footer-main">
       <div class="footer-brand">
         <div class="brand">
-          <img src="{% if site.logo_white %}{{ site.logo_white.url }}{% else %}{% static 'img/logo-white.png' %}{% endif %}" alt="{{ site.site_name }}">
+          <img src="{% if site.logo_white %}{{ site.logo_white.url }}{% else %}{% static 'img/logo-white.png' %}{% endif %}"{% if site.logo_white %}{{ site.logo_white|img_dims }}{% else %} width="480" height="160"{% endif %} alt="{{ site.site_name }}" loading="lazy" decoding="async">
         </div>
         <p>{{ site.footer_text }}</p>
         <p class="small mb-0">{% trans "Los asuntos penales de personas naturales son atendidos por Abogadas Penalistas, firma relacionada." %}</p>

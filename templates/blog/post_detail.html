@@ -43,7 +43,7 @@
   <div class="container">
     {% if post.cover_image %}
     <div class="row justify-content-center"><div class="col-lg-10 post-cover-wrap">
-      <img src="{{ post.cover_image.url }}" alt="{{ post.cover_caption|default:post.title }}" class="post-cover">
+      <img src="{{ post.cover_image.url }}"{{ post.cover_image|img_dims }} alt="{{ post.cover_caption|default:post.title }}" class="post-cover">
       {% if post.cover_caption %}<div class="small text-muted text-center mt-2">{{ post.cover_caption }}</div>{% endif %}
     </div></div>
     {% else %}<div class="pt-5"></div>{% endif %}

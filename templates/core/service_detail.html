@@ -58,7 +58,7 @@
     <div class="row g-5 align-items-start">
       <div class="col-lg-8">
         <article class="service-content-card">
-          {% if service.image %}<img src="{{ service.image.url }}" alt="{{ service.name }}" class="service-detail-image">{% endif %}
+          {% if service.image %}<img src="{{ service.image.url }}"{{ service.image|img_dims }} alt="{{ service.name }}" class="service-detail-image">{% endif %}
           <div class="service-content-head">
             <p class="kicker">{% trans "Alcance del servicio" %}</p>
             <h2>{% trans "Cómo podemos ayudar" %}</h2>

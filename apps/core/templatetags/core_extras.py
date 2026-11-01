@@ -225,3 +225,21 @@ def faq_ld(faqs):
             for f in faqs
         ],
     })
+
+
+_DIMS_CACHE = {}
+
+
+@register.filter
+def img_dims(field):
+    """width/height de una imagen subida (evita saltos de diseño). Se lee una vez por archivo y proceso."""
+    if not field:
+        return ""
+    name = field.name
+    if name not in _DIMS_CACHE:
+        try:
+            _DIMS_CACHE[name] = (field.width, field.height)
+        except Exception:  # archivo ausente o ilegible: sin medidas
+            _DIMS_CACHE[name] = None
+    dims = _DIMS_CACHE[name]
+    return mark_safe(f' width="{dims[0]}" height="{dims[1]}"') if dims else ""

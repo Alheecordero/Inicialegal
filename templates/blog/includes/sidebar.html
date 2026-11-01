@@ -1,3 +1,4 @@
+{% load core_extras %}
 <aside class="blog-sidebar">
   <div class="sidebar-widget">
     <h4>Buscar</h4>
@@ -19,7 +20,7 @@
     <h4>Artículos recientes</h4>
     {% for p in recent_posts %}
     <div class="recent-post">
-      {% if p.cover_image %}<img src="{{ p.cover_image.url }}" alt="{{ p.title }}" loading="lazy">{% else %}<div class="ph"><i class="bi bi-journal-text"></i></div>{% endif %}
+      {% if p.cover_image %}<img src="{{ p.cover_image.url }}"{{ p.cover_image|img_dims }} alt="{{ p.title }}" loading="lazy">{% else %}<div class="ph"><i class="bi bi-journal-text"></i></div>{% endif %}
       <div><a href="{{ p.get_absolute_url }}">{{ p.title|truncatechars:60 }}</a><small>{{ p.published_at|date:"d M Y" }}</small></div>
     </div>
     {% endfor %}

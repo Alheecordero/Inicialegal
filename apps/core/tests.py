@@ -305,3 +305,38 @@ class StructuredDataTests(TestCase):
             self.assertIn("Service", {d["@type"] for d in data}, url)
             crumbs = next(d for d in data if d["@type"] == "BreadcrumbList")
             self.assertTrue(crumbs["itemListElement"][-1]["item"].endswith(url))
+
+
+class AiAndMetaTests(TestCase):
+    def test_llms_txt_lists_published_content(self):
+        from .models import Plan
+
+        Plan.objects.create(name="Plan Visible", slug="plan-visible", is_active=True)
+        Plan.objects.create(name="Plan Oculto", slug="plan-oculto", is_active=False)
+        resp = self.client.get("/llms.txt")
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(resp["Content-Type"].startswith("text/plain"))
+        body = resp.content.decode()
+        self.assertTrue(body.startswith("# "))
+        self.assertIn("/planes/plan-visible/", body)
+        self.assertNotIn("plan-oculto", body)
+
+    def test_legal_page_description_is_not_the_home_one(self):
+        from .models import Page
+
+        site = SiteSettings.load()
+        Page.objects.create(title="Privacidad", slug="privacidad", content="<p>Tratamos sus datos así.</p>", is_published=True)
+        html = self.client.get("/p/privacidad/").content.decode()
+        self.assertIn('content="Tratamos sus datos así."', html)
+        self.assertNotIn(f'name="description" content="{site.meta_description}"', html)
+
+    def test_img_dims_filter_handles_missing_files(self):
+        from unittest import mock
+
+        from .templatetags.core_extras import img_dims
+
+        field = mock.Mock()
+        field.name = "no/existe.webp"
+        type(field).width = mock.PropertyMock(side_effect=FileNotFoundError)
+        self.assertEqual(img_dims(field), "")
+        self.assertEqual(img_dims(None), "")

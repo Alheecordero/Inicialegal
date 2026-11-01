@@ -24,7 +24,7 @@
   <div class="container">
     <article class="team-roster-card">
       <div class="team-roster-photo">
-        {% if member.photo %}<img src="{{ member.photo.url }}" alt="{{ member.name }}">{% else %}<span class="avatar">{{ member.initials }}</span>{% endif %}
+        {% if member.photo %}<img src="{{ member.photo.url }}"{{ member.photo|img_dims }} alt="{{ member.name }}">{% else %}<span class="avatar">{{ member.initials }}</span>{% endif %}
       </div>
       <div class="team-roster-body">
         <div class="role">{{ member.role }}</div>

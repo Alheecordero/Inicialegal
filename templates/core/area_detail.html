@@ -46,7 +46,7 @@
         <h2 class="h3 mt-5 mb-4">Abogados de esta área</h2>
         <div class="row g-4">
           {% for m in members %}
-          <div class="col-6 col-md-4"><a href="{{ m.get_absolute_url }}" class="team-card d-block">{% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" class="photo">{% else %}<div class="avatar">{{ m.initials }}</div>{% endif %}<h3>{{ m.name }}</h3><div class="role">{{ m.role }}</div></a></div>
+          <div class="col-6 col-md-4"><a href="{{ m.get_absolute_url }}" class="team-card d-block">{% if m.photo %}<img src="{{ m.photo.url }}"{{ m.photo|img_dims }} alt="{{ m.name }}" class="photo">{% else %}<div class="avatar">{{ m.initials }}</div>{% endif %}<h3>{{ m.name }}</h3><div class="role">{{ m.role }}</div></a></div>
           {% endfor %}
         </div>
         {% endif %}

@@ -33,7 +33,7 @@
         </div>
       </div>
       <div class="col-lg-5">
-        {% if plan.image %}<img src="{{ plan.image.url }}" alt="{{ plan.name }}" class="rounded-il shadow-il w-100">{% else %}
+        {% if plan.image %}<img src="{{ plan.image.url }}"{{ plan.image|img_dims }} alt="{{ plan.name }}" class="rounded-il shadow-il w-100">{% else %}
         <div class="price-box">
           <div class="small text-uppercase fw-bold text-gold" style="letter-spacing:.12em">Asesoría legal continua</div>
           <div class="font-serif fs-2 text-navy my-2">Equipo especializado.<br>Prevención real.</div>

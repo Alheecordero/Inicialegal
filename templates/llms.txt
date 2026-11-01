@@ -1,0 +1,39 @@
+{% autoescape off %}# {{ site.site_name }}
+
+> {{ site.meta_description }}
+
+{{ site.tagline }}
+
+## Contacto
+
+- Sitio: {{ site_url }}/
+- Correo: {{ site.email }}
+- Teléfono y WhatsApp: {{ site.phone }}
+{% if site.address %}- Dirección: {{ site.address }}{% if site.city %}, {{ site.city }}{% endif %}, Chile
+{% endif %}{% if site.schedule %}- Horario: {{ site.schedule }}
+{% endif %}- Solicitar una reunión: {{ site_url }}{% url 'core:contact' %}
+
+## Planes legales para empresas
+{% for p in plans %}
+- [{{ p.name }}]({{ site_url }}{{ p.get_absolute_url }}): {{ p.tagline|default:p.summary|striptags|truncatechars:220 }}{% if p.price_annual %} Valor anual: {{ p.price_annual|floatformat:0 }} {{ p.currency }} {{ p.price_suffix }}.{% endif %}{% endfor %}
+
+## Áreas de práctica
+{% for a in areas %}
+- [{{ a.name }}]({{ site_url }}{{ a.get_absolute_url }}): {{ a.short_description }}{% endfor %}
+
+## Servicios
+{% for s in services %}
+- [{{ s.name }}]({{ site_url }}{{ s.get_absolute_url }}){% if s.area %} ({{ s.area.name }}){% endif %}{% endfor %}
+
+## Publicaciones
+{% for post in posts %}
+- [{{ post.title }}]({{ site_url }}{{ post.get_absolute_url }}): {{ post.seo_description|truncatechars:200 }}{% endfor %}
+
+## Más información
+
+- [Nosotros]({{ site_url }}{% url 'core:about' %})
+- [Equipo]({{ site_url }}{% url 'core:team_list' %})
+- [Preguntas frecuentes]({{ site_url }}{% url 'core:faq' %})
+- [Todos los servicios]({{ site_url }}{% url 'core:service_list' %})
+- [Mapa del sitio]({{ site_url }}/sitemap.xml)
+{% endautoescape %}

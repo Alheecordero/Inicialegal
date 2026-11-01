@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block title %}{{ page.title }} · {{ site.site_name }}{% endblock %}
-{% block meta_description %}{{ page.meta_description|default:page.subtitle|default:site.meta_description }}{% endblock %}
+{% block meta_description %}{% if page.meta_description %}{{ page.meta_description }}{% elif page.subtitle %}{{ page.subtitle }}{% else %}{{ page.content|striptags|truncatechars:158 }}{% endif %}{% endblock %}
 {% block og_title %}{{ page.title }} · {{ site.site_name }}{% endblock %}
 
 {% block content %}

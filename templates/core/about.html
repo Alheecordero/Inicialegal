@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static core_extras i18n %}
 {% block title %}{% trans "Nosotros" %} · {{ site.site_name }}{% endblock %}
-{% block meta_description %}Estudio jurídico corporativo en Santiago. Asesoramos a empresas, sus socios y sus administradores. {{ site.tagline }}{% endblock %}
+{% block meta_description %}{% filter truncatechars:158 %}Estudio jurídico corporativo en Santiago. Asesoramos a empresas, sus socios y sus administradores. {{ site.tagline }}{% endfilter %}{% endblock %}
 
 {% block content %}
 {% include "includes/page_header.html" with title="Nosotros" kicker=site.about_kicker lead=site.tagline %}
@@ -11,9 +11,9 @@
     <div class="row align-items-center g-5">
       <div class="col-lg-6 order-lg-2">
         {% if site.about_image %}
-          <figure class="about-figure"><img src="{{ site.about_image.url }}" alt="{{ site.about_title }}"></figure>
+          <figure class="about-figure"><img src="{{ site.about_image.url }}"{{ site.about_image|img_dims }} alt="{{ site.about_title }}"></figure>
         {% elif site.hero_image %}
-          <figure class="about-figure"><img src="{{ site.hero_image.url }}" alt="{{ site.about_title }}"></figure>
+          <figure class="about-figure"><img src="{{ site.hero_image.url }}"{{ site.hero_image|img_dims }} alt="{{ site.about_title }}"></figure>
         {% endif %}
       </div>
       <div class="col-lg-6 order-lg-1">
@@ -65,7 +65,7 @@
       {% for a in areas %}
       <div class="col-md-6 col-xl">
         <a href="{{ a.get_absolute_url }}" class="area-tile h-100">
-          {% if a.image %}<img src="{{ a.image.url }}" alt="{{ a.name }}" loading="lazy">{% endif %}
+          {% if a.image %}<img src="{{ a.image.url }}"{{ a.image|img_dims }} alt="{{ a.name }}" loading="lazy">{% endif %}
           <i class="{{ a.icon|ph }} area-icon"></i><h3>{{ a.name }}</h3><p>{{ a.short_description }}</p>
         </a>
       </div>
@@ -86,7 +86,7 @@
       {% for m in team %}
       <div class="col-6 col-md-4 col-lg-3">
         <a href="{{ m.get_absolute_url }}" class="team-card d-block">
-          {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" class="photo" loading="lazy">{% else %}<div class="avatar">{{ m.initials }}</div>{% endif %}
+          {% if m.photo %}<img src="{{ m.photo.url }}"{{ m.photo|img_dims }} alt="{{ m.name }}" class="photo" loading="lazy">{% else %}<div class="avatar">{{ m.initials }}</div>{% endif %}
           <h3>{{ m.name }}</h3>{% if m.specialty %}<div class="specialty">{{ m.specialty }}</div>{% endif %}
         </a>
       </div>
@@ -105,7 +105,7 @@
         <div class="testimonial">
           <div class="stars">{% for _ in t.stars %}<i class="bi bi-star-fill"></i>{% endfor %}</div>
           <blockquote>“{{ t.quote }}”</blockquote>
-          <div class="who">{% if t.photo %}<img src="{{ t.photo.url }}" alt="{{ t.client_name }}">{% else %}<span class="avatar">{{ t.client_name|first }}</span>{% endif %}<div><strong>{{ t.client_name }}</strong><small>{{ t.position }}{% if t.position and t.company %} · {% endif %}{{ t.company }}</small></div></div>
+          <div class="who">{% if t.photo %}<img src="{{ t.photo.url }}"{{ t.photo|img_dims }} alt="{{ t.client_name }}">{% else %}<span class="avatar">{{ t.client_name|first }}</span>{% endif %}<div><strong>{{ t.client_name }}</strong><small>{{ t.position }}{% if t.position and t.company %} · {% endif %}{{ t.company }}</small></div></div>
         </div>
       </div>
       {% endfor %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load core_extras i18n %}
 {% block title %}{% if category %}{{ category.name }} · {% elif tag %}#{{ tag.name }} · {% elif query %}Búsqueda: {{ query }} · {% endif %}Publicaciones · {{ site.site_name }}{% endblock %}
-{% block meta_description %}{% if category and category.description %}{{ category.description }}{% else %}Artículos y novedades legales para empresas y personas, escritos por el equipo de Inicia Legal.{% endif %}{% endblock %}
+{% block meta_description %}{% if category and category.description %}{{ category.description }}{% elif category %}Artículos sobre {{ category.name|lower }} para empresas, escritos por el equipo de Inicia Legal.{% else %}Artículos y novedades legales para empresas, escritos por el equipo de Inicia Legal.{% endif %}{% endblock %}
 
 {% block content %}
 {% if category %}
@@ -35,7 +35,7 @@
   <div class="container">
     {% if featured %}
     <article class="featured-post mb-5">
-      {% if featured.cover_image %}<img src="{{ featured.cover_image.url }}" alt="{{ featured.title }}">{% endif %}
+      {% if featured.cover_image %}<img src="{{ featured.cover_image.url }}"{{ featured.cover_image|img_dims }} alt="{{ featured.title }}">{% endif %}
       <div class="body">
         <div class="d-flex align-items-center gap-3 mb-3">
           {% if featured.category %}<a class="cat-badge" href="{{ featured.category.get_absolute_url }}" style="background: {{ featured.category.color }}">{{ featured.category.name }}</a>{% endif %}

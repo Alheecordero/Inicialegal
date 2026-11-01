@@ -155,7 +155,7 @@
       {% if site.about_image %}
       <div class="col-lg-6 reveal">
         <figure class="about-figure">
-          <img src="{{ site.about_image.url }}" alt="{{ site.about_title }}" decoding="async" loading="lazy">
+          <img src="{{ site.about_image.url }}"{{ site.about_image|img_dims }} alt="{{ site.about_title }}" decoding="async" loading="lazy">
         </figure>
       </div>
       {% endif %}
@@ -278,7 +278,7 @@
           <div class="stars">{% for _ in t.stars %}<i class="bi bi-star-fill"></i>{% endfor %}</div>
           <blockquote>“{{ t.quote }}”</blockquote>
           <div class="who">
-            {% if t.photo %}<img src="{{ t.photo.url }}" alt="{{ t.client_name }}" loading="lazy">{% else %}<span class="avatar">{{ t.client_name|first }}</span>{% endif %}
+            {% if t.photo %}<img src="{{ t.photo.url }}"{{ t.photo|img_dims }} alt="{{ t.client_name }}" loading="lazy">{% else %}<span class="avatar">{{ t.client_name|first }}</span>{% endif %}
             <div><strong>{{ t.client_name }}</strong><small>{{ t.position }}{% if t.position and t.company %} · {% endif %}{{ t.company }}</small></div>
           </div>
         </div>

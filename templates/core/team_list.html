@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n core_extras %}
 {% block title %}Equipo de abogados en Santiago · {{ site.site_name }}{% endblock %}
 {% block meta_description %}Conoce al equipo de abogados de Inicia Legal, especializados en materias civil, comercial, laboral, tributaria y penal económica.{% endblock %}
 
@@ -12,7 +12,7 @@
       {% for m in team %}
       <article class="team-roster-card">
         <div class="team-roster-photo">
-          {% if m.photo %}<img src="{{ m.photo.url }}" alt="{{ m.name }}" loading="lazy">{% else %}<span class="avatar">{{ m.initials }}</span>{% endif %}
+          {% if m.photo %}<img src="{{ m.photo.url }}"{{ m.photo|img_dims }} alt="{{ m.name }}" loading="lazy">{% else %}<span class="avatar">{{ m.initials }}</span>{% endif %}
         </div>
         <div class="team-roster-body">
           <div class="role">{{ m.role }}</div>

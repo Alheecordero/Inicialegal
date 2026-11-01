@@ -6,6 +6,7 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 
 from apps.blog.feeds import LatestPostsFeed
+from apps.core import views as core_views
 from apps.core.legacy_redirects import legacy_redirect_patterns
 from apps.blog.sitemaps import PostSitemap
 from apps.core.sitemaps import (
@@ -38,6 +39,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="robots.txt", content_type="text/plain"),
         name="robots",
     ),
+    path("llms.txt", core_views.llms_txt, name="llms_txt"),
     path(
         "googlef65bbc244d1047fc.html",
         TemplateView.as_view(template_name="googlef65bbc244d1047fc.html", content_type="text/html"),
