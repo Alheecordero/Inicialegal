@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% load humanize core_extras i18n %}
-{% block title %}{{ plan.name }} · {{ site.site_name }}{% endblock %}
+{% block title %}{{ plan.name }}: asesoría legal anual para pymes · {{ site.site_name }}{% endblock %}
+{% block extra_head %}
+{% plan_ld plan %}
+{% faq_ld faqs %}
+{% breadcrumb_ld "Planes" "/planes/" plan.name %}
+{% endblock %}
 {% block meta_description %}{{ plan.summary|truncatechars:158 }}{% endblock %}
 {% block og_title %}{{ plan.name }} · {{ site.site_name }}{% endblock %}
 {% block og_description %}{{ plan.summary|truncatechars:200 }}{% endblock %}

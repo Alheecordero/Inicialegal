@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
@@ -9,7 +10,10 @@ class StaticViewSitemap(Sitemap):
     changefreq = "weekly"
 
     def items(self):
-        return ["core:home", "core:about", "core:service_list", "core:plan_list", "core:team_list", "core:faq", "core:contact", "core:ley_21719", "blog:post_list"]
+        items = ["core:home", "core:about", "core:service_list", "core:plan_list", "core:team_list", "core:faq", "core:contact", "blog:post_list"]
+        if settings.LEY_21719_PAGE_ENABLED:
+            items.append("core:ley_21719")
+        return items
 
     def location(self, item):
         return reverse(item)

@@ -1,8 +1,12 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n core_extras %}
 {% block title %}{{ member.name }} · {{ member.role }} · {{ site.site_name }}{% endblock %}
 {% block meta_description %}{{ member.name }}, {{ member.role }}{% if member.specialty %} en {{ member.specialty }}{% endif %} en Inicia Legal.{% endblock %}
 {% block og_type %}profile{% endblock %}
+{% block extra_head %}
+{% person_ld member %}
+{% breadcrumb_ld "Equipo" "/equipo/" member.name %}
+{% endblock %}
 {% block og_title %}{{ member.name }} · {{ site.site_name }}{% endblock %}
 {% block og_image %}{% if member.photo %}{{ site_url }}{{ member.photo.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 

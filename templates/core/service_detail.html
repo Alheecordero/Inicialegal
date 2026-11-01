@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% load core_extras i18n %}
-{% block title %}{{ service.name }} · {{ site.site_name }}{% endblock %}
+{% block title %}{{ service.name }}{% if service.name|length <= 35 %} · Abogados para empresas{% endif %} · {{ site.site_name }}{% endblock %}
+{% block extra_head %}
+{% service_ld service service.area.name %}
+{% if service.area %}{% breadcrumb_ld "Servicios" "/servicios/" service.area.name service.area.get_absolute_url service.name %}{% else %}{% breadcrumb_ld "Servicios" "/servicios/" service.name %}{% endif %}
+{% endblock %}
 {% block meta_description %}{{ service.short_description }}{% endblock %}
 {% block og_title %}{{ service.name }} · {{ site.site_name }}{% endblock %}
 {% block og_description %}{{ service.short_description }}{% endblock %}

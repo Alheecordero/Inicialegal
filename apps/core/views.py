@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMultiAlternatives
 from django.db import IntegrityError
-from django.http import HttpResponsePermanentRedirect, JsonResponse
+from django.http import Http404, HttpResponsePermanentRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.template.loader import render_to_string
@@ -182,7 +182,13 @@ def instagram(request):
     return render(request, "core/instagram.html")
 
 
+def _require_ley_21719_page():
+    if not settings.LEY_21719_PAGE_ENABLED:
+        raise Http404
+
+
 def ley_21719_landing(request):
+    _require_ley_21719_page()
     context = {
         "days_left": ley_21719.days_left(),
         "entry_into_force": ley_21719.ENTRY_INTO_FORCE,
@@ -195,6 +201,7 @@ def ley_21719_landing(request):
 
 
 def ley_21719_checklist(request):
+    _require_ley_21719_page()
     return render(request, "core/ley_21719_checklist.html", {"checklist": ley_21719.CHECKLIST})
 
 
@@ -399,7 +406,7 @@ def newsletter_subscribe(request):
             text = _("Ingrese un correo válido.")
         ok = False
     download = ""
-    if ok and request.POST.get("lead") == ley_21719.CHECKLIST_LEAD:
+    if ok and settings.LEY_21719_PAGE_ENABLED and request.POST.get("lead") == ley_21719.CHECKLIST_LEAD:
         download = reverse("core:ley_21719_checklist")
         text = _("Listo. Aquí tiene su checklist; también le enviaremos nuestras publicaciones.")
     if is_ajax:

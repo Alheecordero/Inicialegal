@@ -10,6 +10,7 @@ def site_context(request):
         "site_url": settings.SITE_URL,
         "site_indexing": settings.SITE_INDEXING,
         "assistant_enabled": settings.ASSISTANT_ENABLED,
+        "ley_21719_page": settings.LEY_21719_PAGE_ENABLED,
         "turnstile_site_key": settings.TURNSTILE_SITE_KEY if settings.TURNSTILE_SECRET_KEY else "",
         "nav_areas": PracticeArea.objects.filter(is_active=True).only("name", "slug"),
         "nav_services": Service.objects.filter(is_active=True).only("name", "slug")[:8],

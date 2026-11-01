@@ -3,6 +3,7 @@
 
 {% block extra_head %}
 {% legal_service_ld %}
+{% faq_ld faqs %}
 {% if hero_slides %}
 {% with slide=hero_slides.0 %}
 {% if slide.image %}<link rel="preload" as="image" href="{{ slide.image.url }}" media="(min-width: 768px)" fetchpriority="high">{% endif %}

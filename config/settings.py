@@ -30,6 +30,7 @@ env = environ.Env(
     ASSISTANT_DAILY_LIMIT=(int, 1500),
     TURNSTILE_SITE_KEY=(str, ""),
     TURNSTILE_SECRET_KEY=(str, ""),
+    LEY_21719_PAGE_ENABLED=(bool, False),
     ASSISTANT_LOG_CONVERSATIONS=(bool, False),
 )
 environ.Env.read_env(BASE_DIR / ".env")
@@ -166,6 +167,9 @@ ASSISTANT_DAILY_LIMIT = env("ASSISTANT_DAILY_LIMIT")
 # Cloudflare Turnstile en contacto, newsletter y comentarios (vacío = apagado)
 TURNSTILE_SITE_KEY = env("TURNSTILE_SITE_KEY")
 TURNSTILE_SECRET_KEY = env("TURNSTILE_SECRET_KEY")
+
+# Guía /ley-21719/: apagada hasta que el abogado editor apruebe sus textos (apps/core/ley_21719_content.py)
+LEY_21719_PAGE_ENABLED = env("LEY_21719_PAGE_ENABLED")
 ASSISTANT_LOG_CONVERSATIONS = env("ASSISTANT_LOG_CONVERSATIONS")
 
 # Ruta del panel. No usar /admin/: es la dirección que prueban los escáneres.

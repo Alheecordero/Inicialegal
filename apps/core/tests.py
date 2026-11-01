@@ -209,6 +209,14 @@ class TurnstileTests(TestCase):
         self.assertEqual(resp.status_code, 400)
 
 
+class Ley21719DisabledTests(TestCase):
+    def test_guide_is_off_by_default(self):
+        self.assertEqual(self.client.get("/ley-21719/").status_code, 404)
+        self.assertEqual(self.client.get("/ley-21719/checklist/").status_code, 404)
+        self.assertNotContains(self.client.get("/sitemap.xml"), "/ley-21719/")
+
+
+@override_settings(LEY_21719_PAGE_ENABLED=True)
 class Ley21719Tests(TestCase):
     def setUp(self):
         from django.core.cache import cache
@@ -255,3 +263,45 @@ class Ley21719Tests(TestCase):
 
         self.assertEqual(days_left(datetime.date(2026, 11, 1)), 30)
         self.assertEqual(days_left(datetime.date(2027, 1, 1)), 0)
+
+
+class LegacyDatedPostTests(TestCase):
+    def test_unknown_dated_url_goes_to_blog(self):
+        resp = self.client.get("/2024/01/01/algo-que-no-existe/")
+        self.assertRedirects(resp, "/blog/", status_code=301, fetch_redirect_response=False)
+
+
+class StructuredDataTests(TestCase):
+    def _ld(self, html):
+        import json
+        import re
+
+        return [json.loads(m) for m in re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)]
+
+    def test_plan_has_offer_in_clf_and_breadcrumbs(self):
+        from .models import Plan
+
+        plan = Plan.objects.create(name="Plan Prueba", slug="plan-prueba", currency="UF", price_annual=60, is_active=True)
+        data = self._ld(self.client.get(plan.get_absolute_url()).content.decode())
+        types = {d["@type"] for d in data}
+        self.assertIn("BreadcrumbList", types)
+        service = next(d for d in data if d["@type"] == "Service")
+        self.assertEqual(service["offers"]["priceCurrency"], "CLF")
+        self.assertFalse(service["offers"]["priceSpecification"]["valueAddedTaxIncluded"])
+
+    def test_faq_page_schema_matches_visible_faqs(self):
+        FAQ.objects.create(question="¿Pregunta?", answer="<p>Respuesta</p>", is_active=True)
+        data = self._ld(self.client.get(reverse("core:faq")).content.decode())
+        faq = next(d for d in data if d["@type"] == "FAQPage")
+        self.assertEqual(faq["mainEntity"][0]["acceptedAnswer"]["text"], "Respuesta")
+
+    def test_service_and_area_pages_have_service_schema(self):
+        from .models import PracticeArea, Service
+
+        area = PracticeArea.objects.create(name="Laboral", slug="laboral", short_description="x", is_active=True)
+        service = Service.objects.create(name="Contratos", slug="contratos", short_description="y", area=area, is_active=True)
+        for url in (area.get_absolute_url(), service.get_absolute_url()):
+            data = self._ld(self.client.get(url).content.decode())
+            self.assertIn("Service", {d["@type"] for d in data}, url)
+            crumbs = next(d for d in data if d["@type"] == "BreadcrumbList")
+            self.assertTrue(crumbs["itemListElement"][-1]["item"].endswith(url))
