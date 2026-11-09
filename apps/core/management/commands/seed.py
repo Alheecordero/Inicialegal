@@ -790,14 +790,15 @@ class Command(BaseCommand):
                 defaults={
                     "category": cats[article["category"]],
                     "content": article["content"],
-                    "excerpt": "",
+                    "excerpt": article.get("excerpt", ""),
                     "status": Post.PUBLISHED,
                     "is_featured": article["featured"],
                     "published_at": published,
                     "author_display": article["author"],
+                    **({"slug": article["slug"]} if article.get("slug") else {}),
                 },
             )
-            post.tags.clear()
+            post.tags.set([Tag.objects.get_or_create(name=name)[0] for name in article.get("tags", [])])
             area = article.get("area")
             post.areas.set([areas[area]] if area and area in areas else [])
             attach_image(post, "cover_image", article.get("cover"))

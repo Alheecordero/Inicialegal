@@ -5,6 +5,11 @@ El texto se conserva tal como fue escrito.
 
 from apps.core.blog_article_reorganizacion import CONTENT as REORGANIZACION_CONTENT
 from apps.core.blog_article_reorganizacion import TITLE as REORGANIZACION_TITLE
+from apps.core.blog_article_ley21850 import CONTENT as LEY21850_CONTENT
+from apps.core.blog_article_ley21850 import EXCERPT as LEY21850_EXCERPT
+from apps.core.blog_article_ley21850 import SLUG as LEY21850_SLUG
+from apps.core.blog_article_ley21850 import TAGS as LEY21850_TAGS
+from apps.core.blog_article_ley21850 import TITLE as LEY21850_TITLE
 
 ARTICLES = [{'title': 'SpA: la sociedad preferida por los emprendedores en Chile (y cuándo no conviene '
            'usarla)',
@@ -562,4 +567,15 @@ ARTICLES = [{'title': 'SpA: la sociedad preferida por los emprendedores en Chile
   'category': 'Societario',
   'area': 'Corporativo',
   'featured': True,
-  'cover': 'blog-reorganizacion-empresarial.jpg'}]
+  'cover': 'blog-reorganizacion-empresarial.jpg'},
+ {'title': LEY21850_TITLE,
+  'slug': LEY21850_SLUG,
+  'content': LEY21850_CONTENT,
+  'excerpt': LEY21850_EXCERPT,
+  'published': '2026-11-09T09:00:00',
+  'author': '',
+  'category': 'Tributario',
+  'area': 'Tributario',
+  'tags': LEY21850_TAGS,
+  'featured': True,
+  'cover': 'blog-ley-21850-donaciones.jpg'}]
